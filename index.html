@@ -146,7 +146,7 @@
 
         <div>
           <span class="font-serif font-bold text-xl tracking-tight text-ink-900 block leading-tight">Thư Hiên</span>
-          <span class="text-[10px] tracking-wider uppercase text-ink-500 font-medium hidden sm:block">Đọc sách bên hiên nhà</span>
+          <span class="text-[10px] tracking-wide text-ink-500 font-medium hidden sm:block">Đọc sách bên hiên nhà</span>
         </div>
       </div>
 
@@ -165,15 +165,15 @@
           <svg class="w-4 h-4 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>
-          <span>Góc Review (Chủ Đề)</span>
+          <span>Góc Review</span>
         </button>
 
-        <!-- Tab 3: Trao Đổi & Bán Lại Sách -->
+        <!-- Tab 3: Bán & Trao Đổi Sách -->
         <button type="button" id="nav-tab-exchange" onclick="app.switchTab('exchange')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-ink-700 hover:text-ink-900 hover:bg-parchment-100 transition flex items-center gap-1.5">
           <svg class="w-4 h-4 text-terracotta-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
           </svg>
-          <span>Trao Đổi & Bán Lại</span>
+          <span>Bán & Trao Đổi Sách</span>
           <span class="w-2 h-2 rounded-full bg-terracotta-500 animate-pulse"></span>
         </button>
 
@@ -224,7 +224,7 @@
         <!-- User Account Menu Dropdown Container -->
         <div class="relative" id="user-menu-wrapper">
           <button type="button" onclick="app.toggleUserMenu()" id="btn-user-menu" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1.5 rounded-full border border-ink-200/90 bg-parchment-100 hover:bg-parchment-200 transition text-ink-800 text-xs font-medium shadow-sm">
-            <div id="header-avatar" class="w-7 h-7 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-xs flex items-center justify-center shrink-0 shadow-inner">
+            <div id="header-avatar" class="overflow-hidden w-7 h-7 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-xs flex items-center justify-center shrink-0 shadow-inner">
               ?
             </div>
             <span id="header-user-name" class="hidden lg:inline font-semibold text-ink-900 max-w-[100px] truncate">Độc giả vãng cảnh</span>
@@ -235,7 +235,7 @@
           <div id="user-dropdown-menu" class="hidden absolute right-0 mt-2 w-72 bg-[#FAF6EE] border border-ink-200 rounded-2xl shadow-xl z-50 p-2 text-xs transition-all">
             <div class="p-3 bg-parchment-200/70 rounded-xl mb-1.5 border border-ink-200/50">
               <div class="flex items-center gap-2.5">
-                <div id="dropdown-avatar" class="w-9 h-9 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-sm flex items-center justify-center shrink-0 shadow-sm">
+                <div id="dropdown-avatar" class="overflow-hidden w-9 h-9 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-sm flex items-center justify-center shrink-0 shadow-sm">
                   ?
                 </div>
                 <div class="min-w-0 flex-1">
@@ -313,10 +313,7 @@
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-xs">
           <span class="text-ink-400 font-medium mr-1 text-[11px] uppercase tracking-wider">Chủ đề:</span>
           <button type="button" onclick="app.setPostFilter('all')" id="post-filter-all" class="post-pill px-3 py-1 rounded-full text-xs font-semibold bg-ink-900 text-parchment-50 transition">Tất cả bài viết</button>
-          <button type="button" onclick="app.setPostFilter('trich-dan')" id="post-filter-trich-dan" class="post-pill px-3 py-1 rounded-full text-xs font-medium text-ink-700 bg-parchment-200 hover:bg-parchment-300 transition">Trích dẫn chạm</button>
-          <button type="button" onclick="app.setPostFilter('goc-doc')" id="post-filter-goc-doc" class="post-pill px-3 py-1 rounded-full text-xs font-medium text-ink-700 bg-parchment-200 hover:bg-parchment-300 transition">Góc đọc & Trà</button>
-          <button type="button" onclick="app.setPostFilter('nhat-ky')" id="post-filter-nhat-ky" class="post-pill px-3 py-1 rounded-full text-xs font-medium text-ink-700 bg-parchment-200 hover:bg-parchment-300 transition">Nhật ký đọc</button>
-        </div>
+          </div>
 
         <!-- Thanh Lọc Thẻ Sách (Interactive Tag Cloud Bar) -->
         <div class="mt-2.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-xs">
@@ -366,10 +363,7 @@
         </div>
 
         <button type="button" onclick="app.openNewTopicModal()" class="shrink-0 bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          <span>+ Đề Xuất Đầu Sách Mới</span>
+          <span>Đề Xuất Đầu Sách Mới</span>
         </button>
       </div>
 
@@ -378,10 +372,7 @@
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-xs">
           <span class="text-ink-400 font-medium mr-1 text-[11px] uppercase tracking-wider">Thể loại:</span>
           <button type="button" onclick="app.setTopicGenre('all')" id="topic-genre-all" class="topic-pill px-3 py-1 rounded-full text-xs font-semibold bg-ink-900 text-parchment-50 transition">Tất cả đầu sách</button>
-          <button type="button" onclick="app.setTopicGenre('van-hoc')" id="topic-genre-van-hoc" class="topic-pill px-3 py-1 rounded-full text-xs font-medium text-ink-700 bg-parchment-200 hover:bg-parchment-300 transition">Văn học kinh điển</button>
-          <button type="button" onclick="app.setTopicGenre('triet-hoc')" id="topic-genre-triet-hoc" class="topic-pill px-3 py-1 rounded-full text-xs font-medium text-ink-700 bg-parchment-200 hover:bg-parchment-300 transition">Triết học & Trầm tư</button>
-          <button type="button" onclick="app.setTopicGenre('tam-ly')" id="topic-genre-tam-ly" class="topic-pill px-3 py-1 rounded-full text-xs font-medium text-ink-700 bg-parchment-200 hover:bg-parchment-300 transition">Tâm lý & Lối sống</button>
-        </div>
+          </div>
 
         <div class="flex items-center gap-2 text-xs text-ink-600">
           <span>Sắp xếp:</span>
@@ -417,10 +408,7 @@
         </div>
 
         <button type="button" onclick="app.openNewExchangeModal()" class="shrink-0 bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          <span>+ Đăng Tin Đổi / Bán Sách</span>
+          <span>Đăng Tin Đổi / Bán Sách</span>
         </button>
       </div>
 
@@ -444,16 +432,7 @@
         <!-- Secondary condition filter -->
         <div class="flex items-center gap-2 text-xs text-ink-600">
           <span>Khu vực:</span>
-          <select onchange="app.setExchangeLocation(this.value)" class="bg-parchment-200 border border-ink-200 rounded-lg text-xs py-1.5 px-2.5 focus:outline-none">
-            <option value="all">Toàn quốc (Tất cả)</option>
-            <option value="Hà Nội">Hà Nội</option>
-            <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-            <option value="Đà Nẵng">Đà Nẵng</option>
-<option value="Hải Phòng">Hải Phòng</option>
-<option value="Cần Thơ">Cần Thơ</option>
-<option value="Huế">Huế</option>
-<option value="Quảng Ninh">Quảng Ninh</option>
-          </select>
+          <select onchange="app.setExchangeLocation(this.value)" class="bg-parchment-200 border border-ink-200 rounded-lg text-xs py-1.5 px-2.5 focus:outline-none"><option value="all">Toàn quốc (Tất cả)</option><option value="Hà Nội">Hà Nội</option><option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option><option value="Hải Phòng">Hải Phòng</option><option value="Đà Nẵng">Đà Nẵng</option><option value="Cần Thơ">Cần Thơ</option><option value="Huế">Huế</option><option value="Tuyên Quang">Tuyên Quang</option><option value="Lào Cai">Lào Cai</option><option value="Thái Nguyên">Thái Nguyên</option><option value="Phú Thọ">Phú Thọ</option><option value="Bắc Ninh">Bắc Ninh</option><option value="Hưng Yên">Hưng Yên</option><option value="Ninh Bình">Ninh Bình</option><option value="Quảng Trị">Quảng Trị</option><option value="Quảng Ngãi">Quảng Ngãi</option><option value="Gia Lai">Gia Lai</option><option value="Khánh Hòa">Khánh Hòa</option><option value="Lâm Đồng">Lâm Đồng</option><option value="Đắk Lắk">Đắk Lắk</option><option value="Đồng Nai">Đồng Nai</option><option value="Tây Ninh">Tây Ninh</option><option value="Vĩnh Long">Vĩnh Long</option><option value="Đồng Tháp">Đồng Tháp</option><option value="Cà Mau">Cà Mau</option><option value="An Giang">An Giang</option><option value="Lạng Sơn">Lạng Sơn</option><option value="Cao Bằng">Cao Bằng</option><option value="Lai Châu">Lai Châu</option><option value="Điện Biên">Điện Biên</option><option value="Sơn La">Sơn La</option><option value="Quảng Ninh">Quảng Ninh</option><option value="Thanh Hóa">Thanh Hóa</option><option value="Nghệ An">Nghệ An</option><option value="Hà Tĩnh">Hà Tĩnh</option></select>
         </div>
       </div>
 
@@ -483,7 +462,7 @@
       
       <!-- User Profile Card (Dynamic per Current Account) -->
       <div id="profile-card-container" class="bg-parchment-100 border border-ink-200 rounded-3xl p-6 flex flex-col sm:flex-row items-center sm:items-start gap-5 shadow-sm transition-all">
-        <div id="profile-avatar" class="w-20 h-20 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-2xl flex items-center justify-center shadow-md ring-4 ring-parchment-200 shrink-0">
+        <div id="profile-avatar" class="overflow-hidden w-20 h-20 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-2xl flex items-center justify-center shadow-md ring-4 ring-parchment-200 shrink-0">
           ?
         </div>
         <div class="flex-1 text-center sm:text-left min-w-0">
@@ -578,12 +557,10 @@
 
             <div>
               <span class="font-serif font-bold text-xl text-ink-900 tracking-wide">Thư Hiên</span>
-              <p class="text-[10px] text-leather-600 font-medium uppercase tracking-wider">Đọc sách bên hiên nhà</p>
+              <p class="text-[10px] text-leather-600 font-medium tracking-wide">Đọc sách bên hiên nhà</p>
             </div>
           </div>
-          <p class="text-xs text-ink-600 leading-relaxed font-light">
-            Không gian văn hóa đọc phi lợi nhuận mô phỏng bảng ghim thư viện. Nơi mỗi cuốn sách cũ tìm lại người tri kỷ, và mỗi dòng cảm nghĩ kết nối những tâm hồn đồng điệu giữa cuộc sống xô bồ.
-          </p>
+          <p class="text-xs text-ink-600 leading-relaxed font-light">Để lại những bộn bề, sân si bên thềm, bước vào Thư Hiên chỉ có chúng ta, sách và sự an yên bất tận. Cảm ơn các bạn đã ghé Thư Hiên, hy vọng chúng ta cùng xây nên một cộng đồng yêu con chữ, câu, văn và những điều đẹp đẽ.</p>
           <div class="flex items-center gap-2 pt-1">
             <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-parchment-200 text-ink-800 border border-ink-200">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Thư viện số mở
@@ -649,7 +626,7 @@
             Tôn Chỉ & Kết Nối
           </h4>
           <p class="text-xs text-ink-600 leading-relaxed font-light">
-            "Sách không chỉ là giấy mực, sách là nhịp cầu nối những tư tưởng vĩ đại với cõi lòng người đọc."
+            Mỗi quyển sách là một thế giới đang chờ khám phá. Có khi là thảo nguyên yên bình lộng gió, có lúc là biển khơi mênh mông cuồn cuộn. Dù ở đâu cũng mong bạn tìm được điều mình mong muốn.
           </p>
           <div class="space-y-1.5 text-xs text-ink-600 pt-1">
             <p class="flex items-center gap-2">
@@ -663,7 +640,7 @@
 
       <!-- Đường kẻ ngang & Copyright -->
       <div class="mt-10 pt-6 border-t border-ink-200/70 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-ink-500">
-        <p>© 2026 Thư Hiên — Đọc sách bên hiên nhà. Bản quyền thuộc về cộng đồng bạn đọc.</p>
+        <p>© 2026 Thư Hiên — Đọc sách bên hiên nhà.</p>
         <div class="flex items-center gap-4">
           <a href="javascript:void(0)" onclick="app.showToast('Thư Hiên cam kết tôn trọng bản quyền tác giả và bảo vệ quyền lợi độc giả.')" class="hover:text-leather-600 transition">Quy ước cộng đồng</a>
           <span>•</span>
@@ -721,7 +698,7 @@
 
     <!-- 5. Kệ Sách / Tài Khoản -->
     <button type="button" id="m-nav-shelf" onclick="app.switchTab('shelf')" class="flex flex-col items-center justify-center p-1 text-ink-500 transition relative">
-      <div id="m-nav-avatar" class="w-5 h-5 rounded-full bg-leather-600 text-white text-[9px] font-bold flex items-center justify-center shadow-inner">
+      <div id="m-nav-avatar" class="overflow-hidden w-5 h-5 rounded-full bg-leather-600 text-white text-[9px] font-bold flex items-center justify-center shadow-inner">
         NL
       </div>
       <span class="text-[10px] font-medium mt-0.5">Kệ Sách</span>
@@ -829,11 +806,7 @@
 
         <div>
           <label class="block font-semibold text-ink-800 mb-1">Chủ đề bài chia sẻ</label>
-          <select id="post-input-category" class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none">
-            <option value="trich-dan">Trích dẫn chạm đến tâm can</option>
-            <option value="goc-doc">Góc đọc sách & Không gian trà</option>
-            <option value="nhat-ky">Nhật ký & Cảm xúc đọc sách</option>
-          </select>
+          <input type="text" id="post-input-category" list="post-topic-list" required maxlength="40" placeholder="Ví dụ: Trích dẫn, Góc đọc & Trà, Nhật ký đọc, Review ngắn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs"><datalist id="post-topic-list"><option value="Trích dẫn chạm"><option value="Góc đọc & Trà"><option value="Nhật ký đọc"></datalist>
         </div>
 
         <div>
@@ -878,7 +851,7 @@
             <span class="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Tự do tải ảnh từ máy tính / điện thoại</span>
           </label>
           
-          <input type="file" id="post-file-input" accept="image/*" class="hidden" onchange="app.handleImageUpload(event, 'post')" />
+          <input type="file" id="post-file-input" accept="image/*" multiple class="hidden" onchange="app.handleImageUpload(event, 'post')" />
           
           <!-- Dropzone -->
           <div id="post-upload-dropzone" onclick="document.getElementById('post-file-input').click()" class="border-2 border-dashed border-ink-300 hover:border-leather-600 rounded-2xl p-4 text-center cursor-pointer bg-white/70 hover:bg-parchment-200/70 transition group">
@@ -887,7 +860,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
               </div>
               <p class="font-serif font-semibold text-xs text-ink-900 group-hover:text-leather-700">Bấm hoặc kéo thả để tải ảnh sách từ máy của bạn</p>
-              <p class="text-[10px] text-ink-500">Hỗ trợ JPG, PNG, WebP — Chụp ảnh trực tiếp hoặc chọn ảnh bìa bạn thích</p>
+              <p class="text-[10px] text-ink-500">Tối đa 6 ảnh • JPG, PNG, WebP — Chụp ảnh trực tiếp hoặc chọn ảnh bìa bạn thích</p>
             </div>
           </div>
 
@@ -1022,7 +995,7 @@
           </div>
           <div>
             <label class="block font-semibold text-ink-800 mb-1">Khu vực</label>
-            <input type="text" id="ex-input-location" required placeholder="Ví dụ: Cầu Giấy, Hà Nội..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none" />
+            <select id="ex-input-location" required class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none"><option value="">Chọn tỉnh / thành phố</option><option value="Hà Nội">Hà Nội</option><option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option><option value="Hải Phòng">Hải Phòng</option><option value="Đà Nẵng">Đà Nẵng</option><option value="Cần Thơ">Cần Thơ</option><option value="Huế">Huế</option><option value="Tuyên Quang">Tuyên Quang</option><option value="Lào Cai">Lào Cai</option><option value="Thái Nguyên">Thái Nguyên</option><option value="Phú Thọ">Phú Thọ</option><option value="Bắc Ninh">Bắc Ninh</option><option value="Hưng Yên">Hưng Yên</option><option value="Ninh Bình">Ninh Bình</option><option value="Quảng Trị">Quảng Trị</option><option value="Quảng Ngãi">Quảng Ngãi</option><option value="Gia Lai">Gia Lai</option><option value="Khánh Hòa">Khánh Hòa</option><option value="Lâm Đồng">Lâm Đồng</option><option value="Đắk Lắk">Đắk Lắk</option><option value="Đồng Nai">Đồng Nai</option><option value="Tây Ninh">Tây Ninh</option><option value="Vĩnh Long">Vĩnh Long</option><option value="Đồng Tháp">Đồng Tháp</option><option value="Cà Mau">Cà Mau</option><option value="An Giang">An Giang</option><option value="Lạng Sơn">Lạng Sơn</option><option value="Cao Bằng">Cao Bằng</option><option value="Lai Châu">Lai Châu</option><option value="Điện Biên">Điện Biên</option><option value="Sơn La">Sơn La</option><option value="Quảng Ninh">Quảng Ninh</option><option value="Thanh Hóa">Thanh Hóa</option><option value="Nghệ An">Nghệ An</option><option value="Hà Tĩnh">Hà Tĩnh</option></select>
           </div>
         </div>
 
@@ -1057,7 +1030,7 @@
             <span class="text-[10px] font-normal text-terracotta-700 bg-terracotta-50 px-2 py-0.5 rounded-full border border-terracotta-200">Chụp thực tế tình trạng gáy & trang sách</span>
           </label>
           
-          <input type="file" id="ex-file-input" accept="image/*" class="hidden" onchange="app.handleImageUpload(event, 'exchange')" />
+          <input type="file" id="ex-file-input" accept="image/*" multiple class="hidden" onchange="app.handleImageUpload(event, 'exchange')" />
           
           <!-- Dropzone -->
           <div id="ex-upload-dropzone" onclick="document.getElementById('ex-file-input').click()" class="border-2 border-dashed border-ink-300 hover:border-terracotta-600 rounded-2xl p-4 text-center cursor-pointer bg-white/70 hover:bg-parchment-200/70 transition group">
@@ -1231,16 +1204,22 @@
           </div>
           <div>
             <label class="block font-semibold text-ink-800 mb-1">Thể loại</label>
-            <select id="topic-input-genre" class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none">
-              <option value="van-hoc">Văn học kinh điển</option>
-              <option value="triet-hoc">Triết học & Trầm tư</option>
-              <option value="tam-ly">Tâm lý & Kỹ năng</option>
-              <option value="khoa-hoc">Khoa học & Lịch sử</option>
-            </select>
+            <select id="topic-input-genre" onchange="app.onTopicGenreChange(this.value)" class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none"><option value="van-hoc">Văn học</option><option value="tieu-thuyet">Tiểu thuyết</option><option value="truyen-ngan">Truyện ngắn</option><option value="tho">Thơ</option><option value="kinh-dien">Văn học kinh điển</option><option value="triet-hoc">Triết học</option><option value="tam-ly">Tâm lý học</option><option value="ky-nang">Kỹ năng sống</option><option value="kinh-te">Kinh tế & Kinh doanh</option><option value="lich-su">Lịch sử</option><option value="khoa-hoc">Khoa học</option><option value="tieu-su">Tiểu sử & Hồi ký</option><option value="ton-giao">Tôn giáo & Tâm linh</option><option value="thieu-nhi">Thiếu nhi</option><option value="trinh-tham">Trinh thám & Kinh dị</option><option value="ngon-tinh">Ngôn tình & Lãng mạn</option><option value="vien-tuong">Khoa học viễn tưởng & Giả tưởng</option><option value="nghe-thuat">Nghệ thuật & Âm nhạc</option><option value="van-hoa">Văn hóa & Xã hội</option><option value="giao-duc">Giáo dục & Nuôi dạy con</option><option value="khac">Khác (tự điền)</option></select><input type="text" id="topic-input-genre-other" maxlength="40" placeholder="Nhập thể loại sách..." class="hidden mt-2 w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none">
           </div>
         </div>
 
-        <div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="block font-semibold text-ink-800 mb-1">Bạn chấm cuốn sách này mấy sao? (Tùy chọn)</label>
+<select id="topic-input-rating" class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none"><option value="0">Chưa chấm</option><option value="5">★★★★★ 5/5 — Tuyệt tác</option><option value="4">★★★★☆ 4/5 — Rất hay</option><option value="3">★★★☆☆ 3/5 — Ổn</option><option value="2">★★☆☆☆ 2/5 — Tạm được</option><option value="1">★☆☆☆☆ 1/5 — Không hợp</option></select>
+</div>
+<div>
+<label class="block font-semibold text-ink-800 mb-1">Cảm nhận ngắn về điểm số (Tùy chọn)</label>
+<input type="text" id="topic-input-review" maxlength="200" placeholder="Vì sao bạn chấm như vậy?" class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none">
+</div>
+</div>
+
+<div>
           <label class="block font-semibold text-ink-800 mb-1">Tóm tắt nội dung tác phẩm</label>
           <textarea id="topic-input-synopsis" required rows="3" placeholder="Đôi nét về cốt truyện, bối cảnh và giá trị tư tưởng của cuốn sách..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none"></textarea>
         </div>
@@ -1270,7 +1249,7 @@
             <span class="text-[10px] font-normal text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">Tự do tải ảnh bìa chất lượng cao</span>
           </label>
           
-          <input type="file" id="topic-file-input" accept="image/*" class="hidden" onchange="app.handleImageUpload(event, 'topic')" />
+          <input type="file" id="topic-file-input" accept="image/*" multiple class="hidden" onchange="app.handleImageUpload(event, 'topic')" />
           
           <!-- Dropzone -->
           <div id="topic-upload-dropzone" onclick="document.getElementById('topic-file-input').click()" class="border-2 border-dashed border-ink-300 hover:border-amber-600 rounded-2xl p-4 text-center cursor-pointer bg-white/70 hover:bg-parchment-200/70 transition group">
@@ -1361,42 +1340,30 @@
       </div>
 
       <form onsubmit="app.submitEditProfile(event)" class="mt-4 space-y-3.5 text-xs">
+<div class="flex items-center gap-3">
+<div id="edit-avatar-preview" class="w-16 h-16 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-xl flex items-center justify-center overflow-hidden shrink-0"></div>
+<div class="space-y-1">
+<button type="button" onclick="document.getElementById('edit-avatar-file').click()" class="px-3 py-1.5 rounded-full border border-ink-300 bg-white text-xs font-semibold hover:bg-parchment-100">Tải ảnh đại diện</button>
+<button type="button" onclick="app.removeAvatar()" class="block text-[11px] text-ink-500 hover:text-terracotta-700">Gỡ ảnh</button>
+<input type="file" id="edit-avatar-file" accept="image/*" class="hidden" onchange="app.handleAvatarUpload(event)">
+</div>
+</div>
         <div>
           <label class="block font-semibold text-ink-800 mb-1">Bút danh / Họ tên độc giả <span class="text-terracotta-600">*</span></label>
           <input type="text" id="edit-name" required class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs" />
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-ink-800 mb-1">Phong cách đọc sách (Vibe)</label>
-            <select id="edit-vibe" class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs">
-              <option value="Độc giả hoài niệm">Độc giả hoài niệm</option>
-              <option value="Mọt Sách Thư Hiên">Mọt Sách Thư Hiên</option>
-              <option value="Kẻ lãng du trên trang giấy">Kẻ lãng du trên trang giấy</option>
-              <option value="Triết học & Trà thảo mộc">Triết học & Trà thảo mộc</option>
-              <option value="Người chăm sóc tâm hồn">Người chăm sóc tâm hồn</option>
-              <option value="Mọt sách văn học cổ điển">Mọt sách văn học cổ điển</option>
-              <option value="Bạn đọc say mê khoa học">Bạn đọc say mê khoa học</option>
-            </select>
-          </div>
+          
           <div>
             <label class="block font-semibold text-ink-800 mb-1">Tỉnh thành / Khu vực</label>
-            <select id="edit-location" class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs">
-              <option value="Hà Nội">Hà Nội</option>
-              <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-              <option value="Đà Nẵng">Đà Nẵng</option>
-              <option value="Hải Phòng">Hải Phòng</option>
-              <option value="Cần Thơ">Cần Thơ</option>
-              <option value="Huế">Huế</option>
-              <option value="Quảng Ninh">Quảng Ninh</option>
-              <option value="Toàn quốc (Giao bưu điện)">Toàn quốc (Ship bưu điện)</option>
-            </select>
+            <select id="edit-location" class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs"><option value="Hà Nội">Hà Nội</option><option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option><option value="Hải Phòng">Hải Phòng</option><option value="Đà Nẵng">Đà Nẵng</option><option value="Cần Thơ">Cần Thơ</option><option value="Huế">Huế</option><option value="Tuyên Quang">Tuyên Quang</option><option value="Lào Cai">Lào Cai</option><option value="Thái Nguyên">Thái Nguyên</option><option value="Phú Thọ">Phú Thọ</option><option value="Bắc Ninh">Bắc Ninh</option><option value="Hưng Yên">Hưng Yên</option><option value="Ninh Bình">Ninh Bình</option><option value="Quảng Trị">Quảng Trị</option><option value="Quảng Ngãi">Quảng Ngãi</option><option value="Gia Lai">Gia Lai</option><option value="Khánh Hòa">Khánh Hòa</option><option value="Lâm Đồng">Lâm Đồng</option><option value="Đắk Lắk">Đắk Lắk</option><option value="Đồng Nai">Đồng Nai</option><option value="Tây Ninh">Tây Ninh</option><option value="Vĩnh Long">Vĩnh Long</option><option value="Đồng Tháp">Đồng Tháp</option><option value="Cà Mau">Cà Mau</option><option value="An Giang">An Giang</option><option value="Lạng Sơn">Lạng Sơn</option><option value="Cao Bằng">Cao Bằng</option><option value="Lai Châu">Lai Châu</option><option value="Điện Biên">Điện Biên</option><option value="Sơn La">Sơn La</option><option value="Quảng Ninh">Quảng Ninh</option><option value="Thanh Hóa">Thanh Hóa</option><option value="Nghệ An">Nghệ An</option><option value="Hà Tĩnh">Hà Tĩnh</option><option value="Toàn quốc (Ship bưu điện)">Toàn quốc (Ship bưu điện)</option></select>
           </div>
         </div>
 
         <div>
           <label class="block font-semibold text-ink-800 mb-1">Số điện thoại / Zalo liên hệ</label>
-          <input type="text" id="edit-contact" class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs" />
+          <input type="text" id="edit-contact" class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs" /><label class="flex items-center gap-2 mt-1.5 text-[11px] text-ink-600"><input type="checkbox" id="edit-show-phone" class="rounded"> Hiển thị số điện thoại trên hồ sơ của tôi</label>
         </div>
 
         <div>
@@ -1468,11 +1435,9 @@
       shelfTab: 'my-posts',
 
       // Uploaded Images Storage (FileReader Base64)
-      uploadedImages: {
-        post: null,
-        exchange: null,
-        topic: null
-      },
+      GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
+      pendingAvatar: undefined,
+      uploadedImages: { post: [], exchange: [], topic: [] },
 
       // User Accounts System
       users: [],
@@ -1570,13 +1535,13 @@
         const mNavAvatar = document.getElementById('m-nav-avatar');
 
         if (user) {
-          if (headerAvatar) headerAvatar.innerText = user.avatar;
+          this.setAvatarEl(headerAvatar, user);
           if (headerName) headerName.innerText = user.name;
-          if (dropdownAvatar) dropdownAvatar.innerText = user.avatar;
+          this.setAvatarEl(dropdownAvatar, user);
           if (dropdownName) dropdownName.innerText = user.name;
           if (dropdownVibe) dropdownVibe.innerText = user.vibe;
-          if (dropdownLoc) dropdownLoc.innerText = user.location + (user.contact ? ' • ' + user.contact : '');
-          if (mNavAvatar) mNavAvatar.innerText = user.avatar;
+          if (dropdownLoc) dropdownLoc.innerText = user.location + (user.showPhone && user.contact ? ' • ' + user.contact : '');
+          this.setAvatarEl(mNavAvatar, user);
         } else {
           if (headerAvatar) headerAvatar.innerText = '👤';
           if (headerName) headerName.innerText = 'Độc giả vãng cảnh';
@@ -1599,53 +1564,152 @@
 
 
       // ================= CUSTOM IMAGE UPLOAD HANDLERS (FILEREADER) =================
-      handleImageUpload(e, type) {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
+      slugify(s) {
+        return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'khac';
+      },
 
-        if (!file.type.startsWith('image/')) {
-          this.showToast('Vui lòng chọn đúng tệp định dạng hình ảnh (JPG, PNG, WebP)!');
-          return;
+      compressImage(file, maxDim = 900, quality = 0.72) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onerror = reject;
+          reader.onload = () => {
+            const img = new Image();
+            img.onerror = reject;
+            img.onload = () => {
+              const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+              const c = document.createElement('canvas');
+              c.width = Math.max(1, Math.round(img.width * scale));
+              c.height = Math.max(1, Math.round(img.height * scale));
+              c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+              resolve(c.toDataURL('image/jpeg', quality));
+            };
+            img.src = reader.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      },
+
+      async handleImageUpload(e, type) {
+        const files = Array.from(e.target.files || []);
+        e.target.value = '';
+        if (!files.length) return;
+        const list = this.uploadedImages[type] = this.uploadedImages[type] || [];
+        const room = 6 - list.length;
+        if (room <= 0) { this.showToast('Chỉ đăng được tối đa 6 ảnh.'); return; }
+        for (const f of files.slice(0, room)) {
+          if (!f.type.startsWith('image/')) { this.showToast('Vui lòng chọn tệp hình ảnh (JPG, PNG, WebP).'); continue; }
+          try { list.push(await this.compressImage(f)); } catch (err) { this.showToast('Không đọc được một ảnh, hãy thử ảnh khác.'); }
         }
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const dataUrl = event.target.result;
-          this.uploadedImages[type] = dataUrl;
-          this.updateUploadPreview(type, dataUrl, file.name);
-          this.showToast('Đã tải ảnh lên thành công từ thiết bị của bạn!');
-        };
-        reader.onerror = () => {
-          this.showToast('Có lỗi xảy ra khi đọc tệp ảnh. Vui lòng thử lại!');
-        };
-        reader.readAsDataURL(file);
+        this.renderUploadStrip(type);
+        if (files.length > room) this.showToast('Chỉ đăng được tối đa 6 ảnh, các ảnh dư đã được bỏ qua.');
       },
 
-      updateUploadPreview(type, dataUrl, fileName) {
-        const dropzone = document.getElementById(`${type}-upload-dropzone`);
-        const previewContainer = document.getElementById(`${type}-upload-preview-container`);
-        const previewImg = document.getElementById(`${type}-upload-preview-img`);
-        const filenameLabel = document.getElementById(`${type}-upload-filename`);
-
-        if (dropzone) dropzone.classList.add('hidden');
-        if (previewContainer) previewContainer.classList.remove('hidden');
-        if (previewImg) previewImg.src = dataUrl;
-        if (filenameLabel) filenameLabel.innerText = fileName || 'Ảnh tải từ máy';
+      renderUploadStrip(type) {
+        const list = this.uploadedImages[type] || [];
+        const dz = document.getElementById(`${type}-upload-dropzone`);
+        if (!dz) return;
+        const oldPrev = document.getElementById(`${type}-upload-preview-container`);
+        if (oldPrev) oldPrev.classList.add('hidden');
+        let strip = document.getElementById(`${type}-upload-strip`);
+        if (!strip) {
+          strip = document.createElement('div');
+          strip.id = `${type}-upload-strip`;
+          strip.className = 'grid grid-cols-3 sm:grid-cols-6 gap-2 mt-2';
+          dz.insertAdjacentElement('afterend', strip);
+        }
+        strip.innerHTML = list.map((src, i) => `<div class="relative aspect-square rounded-xl overflow-hidden border border-ink-200 bg-white"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="app.removeUploadedImage('${type}', ${i})" class="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-ink-900/80 text-white text-[11px] leading-none flex items-center justify-center">×</button></div>`).join('');
+        dz.classList.toggle('hidden', list.length >= 6);
       },
 
-      removeUploadedImage(type) {
-        this.uploadedImages[type] = null;
+      removeUploadedImage(type, index) {
+        const list = this.uploadedImages[type] || [];
+        if (typeof index === 'number') list.splice(index, 1); else this.uploadedImages[type] = [];
         const input = document.getElementById(`${type}-file-input`);
         if (input) input.value = '';
+        this.renderUploadStrip(type);
+      },
 
-        const dropzone = document.getElementById(`${type}-upload-dropzone`);
-        const previewContainer = document.getElementById(`${type}-upload-preview-container`);
-        const previewImg = document.getElementById(`${type}-upload-preview-img`);
+      galleryHtml(images, fallback, alt, cls) {
+        const list = (images && images.length) ? images : [fallback];
+        const a = (alt || '').replace(/"/g, '&quot;');
+        if (list.length === 1) return `<img src="${list[0]}" alt="${a}" class="${cls}" />`;
+        return `<div class="relative w-full h-full"><div class="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar">${list.map(s => `<img src="${s}" alt="${a}" class="shrink-0 w-full h-full object-cover snap-center" loading="lazy" />`).join('')}</div><span class="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-ink-900/70 text-white text-[10px] font-semibold pointer-events-none">${list.length} ảnh • vuốt ngang</span></div>`;
+      },
 
-        if (previewContainer) previewContainer.classList.add('hidden');
-        if (dropzone) dropzone.classList.remove('hidden');
-        if (previewImg) previewImg.src = '';
-        this.showToast('Đã gỡ ảnh đã tải lên.');
+      countBadge(n) {
+        return n > 1 ? `<span class="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-ink-900/70 text-white text-[10px] font-semibold">${n} ảnh</span>` : '';
+      },
+
+      setAvatarEl(el, user) {
+        if (!el) return;
+        if (user && user.avatarImg) el.innerHTML = `<img src="${user.avatarImg}" alt="" class="w-full h-full object-cover">`;
+        else el.innerText = user ? user.avatar : '👤';
+      },
+
+      async handleAvatarUpload(e) {
+        const f = e.target.files && e.target.files[0];
+        e.target.value = '';
+        if (!f) return;
+        if (!f.type.startsWith('image/')) { this.showToast('Vui lòng chọn tệp hình ảnh.'); return; }
+        try { this.pendingAvatar = await this.compressImage(f, 256, 0.8); this.renderAvatarPreview(); }
+        catch (err) { this.showToast('Không đọc được ảnh, hãy thử ảnh khác.'); }
+      },
+
+      removeAvatar() { this.pendingAvatar = ''; this.renderAvatarPreview(); },
+
+      renderAvatarPreview() {
+        const user = this.getCurrentUser();
+        const el = document.getElementById('edit-avatar-preview');
+        if (!el || !user) return;
+        const img = this.pendingAvatar === undefined ? user.avatarImg : this.pendingAvatar;
+        if (img) el.innerHTML = `<img src="${img}" alt="" class="w-full h-full object-cover">`; else el.innerText = user.avatar;
+      },
+
+      onTopicGenreChange(v) {
+        const el = document.getElementById('topic-input-genre-other');
+        if (el) el.classList.toggle('hidden', v !== 'khac');
+      },
+
+      renderPostFilters() {
+        const all = document.getElementById('post-filter-all');
+        if (!all) return;
+        document.querySelectorAll('.post-pill.dyn').forEach(b => b.remove());
+        const seen = new Map();
+        this.posts.forEach(p => { if (p.category && !seen.has(p.category)) seen.set(p.category, p.categoryName || p.category); });
+        if (this.postFilter !== 'all' && !seen.has(this.postFilter)) this.postFilter = 'all';
+        let anchor = all;
+        seen.forEach((name, key) => {
+          const b = all.cloneNode(false);
+          b.id = 'post-filter-' + key; b.classList.add('dyn'); b.textContent = name;
+          b.onclick = () => this.setPostFilter(key);
+          anchor.insertAdjacentElement('afterend', b); anchor = b;
+        });
+        document.querySelectorAll('.post-pill').forEach(btn => {
+          const on = btn.id === 'post-filter-' + this.postFilter;
+          btn.classList.toggle('bg-ink-900', on); btn.classList.toggle('text-parchment-50', on); btn.classList.toggle('font-semibold', on);
+          btn.classList.toggle('text-ink-700', !on); btn.classList.toggle('bg-parchment-200', !on); btn.classList.toggle('font-medium', !on);
+        });
+      },
+
+      renderTopicGenreChips() {
+        const all = document.getElementById('topic-genre-all');
+        if (!all) return;
+        document.querySelectorAll('.topic-pill.dyn').forEach(b => b.remove());
+        const seen = new Map();
+        this.topics.forEach(t => { if (t.genre && !seen.has(t.genre)) seen.set(t.genre, t.genreName || t.genre); });
+        if (this.topicGenre !== 'all' && !seen.has(this.topicGenre)) this.topicGenre = 'all';
+        let anchor = all;
+        seen.forEach((name, key) => {
+          const b = all.cloneNode(false);
+          b.id = 'topic-genre-' + key; b.classList.add('dyn'); b.textContent = name;
+          b.onclick = () => this.setTopicGenre(key);
+          anchor.insertAdjacentElement('afterend', b); anchor = b;
+        });
+        document.querySelectorAll('.topic-pill').forEach(btn => {
+          const on = btn.id === 'topic-genre-' + this.topicGenre;
+          btn.classList.toggle('bg-ink-900', on); btn.classList.toggle('text-parchment-50', on); btn.classList.toggle('font-semibold', on);
+          btn.classList.toggle('text-ink-700', !on); btn.classList.toggle('bg-parchment-200', !on); btn.classList.toggle('font-medium', !on);
+        });
       },
 
       // ================= BOOK TAGS FILTERING =================
@@ -1758,7 +1822,7 @@
           return;
         }
         document.getElementById('edit-name').value = user.name;
-        document.getElementById('edit-vibe').value = user.vibe;
+        this.pendingAvatar = undefined; this.renderAvatarPreview(); document.getElementById('edit-show-phone').checked = !!user.showPhone;
         document.getElementById('edit-location').value = user.location;
         document.getElementById('edit-contact').value = user.contact || '';
         document.getElementById('edit-bio').value = user.bio || '';
@@ -1776,7 +1840,7 @@
         if (!user) return;
 
         const name = document.getElementById('edit-name').value.trim();
-        const vibe = document.getElementById('edit-vibe').value;
+        const vibe = user.vibe || 'Độc giả Thư Hiên';
         const location = document.getElementById('edit-location').value;
         const contact = document.getElementById('edit-contact').value.trim();
         const bio = document.getElementById('edit-bio').value.trim();
@@ -1797,6 +1861,8 @@
 
         user.name = name;
         user.vibe = vibe;
+        if (this.pendingAvatar !== undefined) user.avatarImg = this.pendingAvatar;
+        user.showPhone = !!document.getElementById('edit-show-phone').checked;
         user.location = location;
         user.contact = contact;
         user.bio = bio;
@@ -1927,19 +1993,17 @@
           desc.innerText = "Mỗi chủ đề đại diện cho 1 đầu sách cụ thể. Toàn bộ bình luận bên dưới chính là các bài review đánh giá chi tiết.";
           actionBox.innerHTML = `
             <button type="button" onclick="app.openNewTopicModal()" class="bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              <span>+ Thêm Đầu Sách Review</span>
+              <span>Thêm Đầu Sách Review</span>
             </button>
           `;
         } else if (this.currentTab === 'exchange') {
           tag.innerText = "Chợ Sách Sang Nhượng";
           tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-terracotta-100 text-terracotta-900 border border-terracotta-300";
-          title.innerText = "Trao Đổi & Bán Lại Sách (Marketplace)";
+          title.innerText = "Bán & Trao Đổi Sách";
           desc.innerText = "Phân biệt rõ 2 nhu cầu: Đổi sách lấy cuốn khác (Swap) HOẶC Bán lại theo giá mong muốn (Pass lại sách cũ).";
           actionBox.innerHTML = `
             <button type="button" onclick="app.openNewExchangeModal()" class="bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              <span>+ Đăng Tin Đổi / Bán</span>
+              <span>Đăng Tin Đổi / Bán</span>
             </button>
           `;
         } else if (this.currentTab === 'inbox') {
@@ -2002,6 +2066,7 @@
       renderPosts() {
         const grid = document.getElementById('posts-grid');
         if (!grid) return;
+        this.renderPostFilters();
 
         let list = this.posts;
         if (this.postFilter !== 'all') {
@@ -2043,7 +2108,7 @@
               </div>
               <p class="font-serif text-ink-800 text-base">Chưa có bài chia sẻ nào phù hợp</p>
               <p class="text-xs text-ink-500 mt-1">Hãy là người đầu tiên ký gửi trang sách cho chủ đề này nhé.</p>
-              <button type="button" onclick="app.openNewPostModal()" class="mt-4 px-4 py-2 rounded-full bg-ink-900 text-parchment-50 text-xs font-semibold">Viết Bài Chia Sẻ Ngay</button>
+              <button type="button" onclick="app.openNewPostModal()" class="mt-4 px-4 py-2 rounded-full bg-ink-900 text-parchment-50 text-xs font-semibold">Bạn đang tâm đắc điều gì?</button>
             </div>
           `;
           return;
@@ -2056,7 +2121,7 @@
             <div class="flex items-center justify-between gap-3 mb-3">
               <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-full bg-leather-100 border border-leather-400/40 text-leather-600 font-bold text-xs flex items-center justify-center shrink-0">
-                  ${post.authorAvatar || post.author.substring(0, 2).toUpperCase()}
+                  ${post.authorAvatarImg ? `<img src="${post.authorAvatarImg}" alt="" class="w-full h-full object-cover rounded-full">` : (post.authorAvatar || post.author.substring(0, 2).toUpperCase())}
                 </div>
                 <div>
                   <h4 class="font-bold text-xs text-ink-900 leading-tight">${post.author}</h4>
@@ -2087,7 +2152,7 @@
             <!-- Book / Moment Image -->
             ${post.image ? `
               <div class="rounded-2xl overflow-hidden mb-3.5 border border-ink-200/60 aspect-[4/3] bg-parchment-200 relative group">
-                <img src="${post.image}" alt="${post.bookTitle}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
+                <div class="relative w-full h-full"><img src="${post.image}" alt="${post.bookTitle}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />${this.countBadge((post.images || []).length)}</div>
               </div>
             ` : ''}
 
@@ -2142,7 +2207,7 @@
             <div class="flex items-center justify-between pb-3 border-b border-ink-200">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-leather-100 text-leather-600 font-bold flex items-center justify-center border border-leather-300">
-                  ${post.authorAvatar || post.author.substring(0, 2).toUpperCase()}
+                  ${post.authorAvatarImg ? `<img src="${post.authorAvatarImg}" alt="" class="w-full h-full object-cover rounded-full">` : (post.authorAvatar || post.author.substring(0, 2).toUpperCase())}
                 </div>
                 <div>
                   <h3 class="font-bold text-sm text-ink-900">${post.author}</h3>
@@ -2163,7 +2228,7 @@
             <!-- Main Image -->
             ${post.image ? `
               <div class="rounded-2xl overflow-hidden border border-ink-200 max-h-96 bg-parchment-200">
-                <img src="${post.image}" class="w-full h-full object-cover" />
+                ${this.galleryHtml(post.images, post.image, post.bookTitle, 'w-full h-full object-cover')}
               </div>
             ` : ''}
 
@@ -2281,7 +2346,8 @@
       submitNewPost(e) {
         e.preventDefault();
         const book = document.getElementById('post-input-book').value.trim();
-        const cat = document.getElementById('post-input-category').value;
+        const catName = document.getElementById('post-input-category').value.trim() || 'Chia sẻ';
+        const cat = this.slugify(catName);
         const quote = document.getElementById('post-input-quote').value.trim();
         const content = document.getElementById('post-input-content').value.trim();
         
@@ -2305,14 +2371,16 @@
           id: 'post-' + Date.now(),
           author: user.name,
           authorAvatar: user.avatar,
+        authorAvatarImg: user.avatarImg || '',
           authorVibe: user.vibe,
           authorId: user.id,
           bookTitle: book,
           category: cat,
-          categoryName: catNames[cat] || 'Chia sẻ',
+          categoryName: catName,
           quote: quote,
           content: content,
-          image: this.uploadedImages.post || APP_IMAGES[selectedImgIndex] || IMG_0,
+          image: this.uploadedImages.post[0] || APP_IMAGES[selectedImgIndex] || IMG_0,
+        images: this.uploadedImages.post.slice(),
           language: document.getElementById('post-input-language')?.value || 'Tiếng Việt',
           authorTag: document.getElementById('post-input-author')?.value.trim() || '',
           tags: (document.getElementById('post-input-tags')?.value.trim() ? document.getElementById('post-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat([document.getElementById('post-input-language')?.value || 'Tiếng Việt']).filter((v, i, a) => a.indexOf(v) === i),
@@ -2353,6 +2421,7 @@
       renderTopics() {
         const grid = document.getElementById('topics-grid');
         if (!grid) return;
+        this.renderTopicGenreChips();
 
         let list = [...this.topics];
         if (this.topicGenre !== 'all') {
@@ -2395,7 +2464,7 @@
             <div class="col-span-full py-16 text-center">
               <p class="font-serif text-ink-800 text-base">Chưa tìm thấy đầu sách nào phù hợp</p>
               <p class="text-xs text-ink-500 mt-1">Bạn có thể tạo chủ đề mới cho cuốn sách này để cộng đồng cùng đánh giá.</p>
-              <button type="button" onclick="app.openNewTopicModal()" class="mt-4 px-4 py-2 rounded-full bg-amber-800 text-white text-xs font-semibold">+ Thêm Đầu Sách Mới</button>
+              <button type="button" onclick="app.openNewTopicModal()" class="mt-4 px-4 py-2 rounded-full bg-amber-800 text-white text-xs font-semibold">Thêm Đầu Sách Mới</button>
             </div>
           `;
           return;
@@ -2424,7 +2493,7 @@
                 <!-- Book Header with Cover and Metadata -->
                 <div class="flex gap-4 items-start mb-3.5">
                   <div class="w-20 h-28 rounded-xl overflow-hidden shrink-0 shadow-md border border-ink-300 bg-parchment-200">
-                    <img src="${topic.cover || IMG_0}" alt="${topic.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                    <div class="relative w-full h-full"><img src="${topic.cover || IMG_0}" alt="${topic.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />${this.countBadge((topic.covers || []).length)}</div>
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-serif font-bold text-base text-ink-900 leading-snug line-clamp-2">${topic.title}</h3>
@@ -2510,7 +2579,7 @@
             <!-- Book Hero Overview -->
             <div class="flex flex-col sm:flex-row gap-5 items-start bg-parchment-100 rounded-3xl p-5 border border-ink-200">
               <div class="w-28 sm:w-36 rounded-2xl overflow-hidden shadow-lg border border-ink-300 shrink-0 bg-parchment-200">
-                <img src="${topic.cover || IMG_0}" class="w-full h-full object-cover" />
+                ${this.galleryHtml(topic.covers, topic.cover || IMG_0, topic.title, 'w-full h-full object-cover')}
               </div>
               <div class="flex-1 space-y-2">
                 <h2 class="font-serif font-bold text-2xl text-ink-900 leading-tight">${topic.title}</h2>
@@ -2725,7 +2794,13 @@
         e.preventDefault();
         const title = document.getElementById('topic-input-title').value.trim();
         const author = document.getElementById('topic-input-author').value.trim();
-        const genre = document.getElementById('topic-input-genre').value;
+        let genre = document.getElementById('topic-input-genre').value;
+        let customGenre = '';
+        if (genre === 'khac') {
+          customGenre = (document.getElementById('topic-input-genre-other').value || '').trim();
+          if (!customGenre) { this.showToast('Hãy nhập thể loại sách của bạn.'); return; }
+          genre = this.slugify(customGenre);
+        }
         const synopsis = document.getElementById('topic-input-synopsis').value.trim();
 
         let selectedImgIndex = 2;
@@ -2751,14 +2826,25 @@
           author: author,
           translator: '',
           genre: genre,
-          genreName: genreNames[genre] || 'Sách',
-          cover: this.uploadedImages.topic || APP_IMAGES[selectedImgIndex] || IMG_2,
+          genreName: customGenre || ((this.GENRES.find(g => g[0] === genre) || [])[1]) || 'Sách',
+          cover: this.uploadedImages.topic[0] || APP_IMAGES[selectedImgIndex] || IMG_2,
+        covers: this.uploadedImages.topic.slice(),
           language: document.getElementById('topic-input-language')?.value || 'Tiếng Việt',
           tags: (document.getElementById('topic-input-tags')?.value.trim() ? document.getElementById('topic-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat([document.getElementById('topic-input-language')?.value || 'Tiếng Việt']).filter((v, i, a) => a.indexOf(v) === i),
           synopsis: synopsis,
           reviews: []
         };
 
+        const initRating = parseInt(document.getElementById('topic-input-rating')?.value || '0', 10);
+        const initUser = this.getCurrentUser();
+        if (initRating > 0 && initUser) {
+          const note = (document.getElementById('topic-input-review')?.value || '').trim();
+          newTopic.reviews.push({
+            id: 'rev-' + Date.now(), author: initUser.name, avatar: initUser.avatar, badge: initUser.vibe, authorId: initUser.id,
+            rating: initRating, reviewTitle: 'Điểm đánh giá khi thêm sách', readingStatus: 'Đã đọc xong',
+            content: note || 'Chấm điểm cuốn sách khi thêm vào Thư Hiên.', date: 'Vừa xong', helpfulCount: 0, userHelpful: false
+          });
+        }
         this.topics.unshift(newTopic);
         this.saveAll();
         this.removeUploadedImage('topic'); this.closeModal('new-topic-modal');
@@ -2834,7 +2920,7 @@
             <div class="col-span-full py-16 text-center">
               <p class="font-serif text-ink-800 text-base">Chưa có tin trao đổi hoặc bán lại nào phù hợp</p>
               <p class="text-xs text-ink-500 mt-1">Đăng tin để tìm độc giả trao đổi sách hoặc bán lại cuốn sách của bạn.</p>
-              <button type="button" onclick="app.openNewExchangeModal()" class="mt-4 px-4 py-2 rounded-full bg-terracotta-600 text-white text-xs font-semibold">+ Đăng Tin Đổi / Bán Ngay</button>
+              <button type="button" onclick="app.openNewExchangeModal()" class="mt-4 px-4 py-2 rounded-full bg-terracotta-600 text-white text-xs font-semibold">Đăng Tin Đổi / Bán Ngay</button>
             </div>
           `;
           return;
@@ -2867,7 +2953,7 @@
                 <!-- Book Image & Basic Info -->
                 <div class="flex gap-3.5 items-start mb-3.5">
                   <div class="w-20 h-28 rounded-xl overflow-hidden shrink-0 shadow-md border border-ink-300 bg-parchment-200">
-                    <img src="${item.image || IMG_0}" alt="${item.bookTitle}" class="w-full h-full object-cover" />
+                    ${this.galleryHtml(item.images, item.image || IMG_0, item.bookTitle, 'w-full h-full object-cover')}
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-serif font-bold text-base text-ink-900 leading-snug line-clamp-2">${item.bookTitle}</h3>
@@ -3028,7 +3114,8 @@
           ownerPhone: user.contact || "0912 345 678",
           userId: user.id,
           note: note,
-          image: this.uploadedImages.exchange || APP_IMAGES[selectedImgIndex] || IMG_1,
+          image: this.uploadedImages.exchange[0] || APP_IMAGES[selectedImgIndex] || IMG_1,
+        images: this.uploadedImages.exchange.slice(),
           language: document.getElementById('ex-input-language')?.value || 'Tiếng Việt',
           tags: (document.getElementById('ex-input-tags')?.value.trim() ? document.getElementById('ex-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat([document.getElementById('ex-input-language')?.value || 'Tiếng Việt']).filter((v, i, a) => a.indexOf(v) === i),
           time: "Vừa xong",
@@ -3221,12 +3308,12 @@
           const elContact = document.getElementById('profile-contact');
           const elJoined = document.getElementById('profile-joined');
 
-          if (elAvatar) elAvatar.innerText = user.avatar;
+          this.setAvatarEl(elAvatar, user);
           if (elName) elName.innerText = user.name;
           if (elVibe) elVibe.innerText = user.vibe;
           if (elBio) elBio.innerText = `"${user.bio}"`;
           if (elLoc) elLoc.innerText = user.location;
-          if (elContact) elContact.innerText = user.contact || 'Chưa cập nhật SĐT';
+          if (elContact) elContact.innerText = user.contact ? (user.showPhone ? user.contact : 'Số điện thoại đang ẩn') : 'Chưa cập nhật SĐT';
           if (elJoined) elJoined.innerText = user.joinedDate || 'Mới gia nhập';
         }
 
@@ -3265,7 +3352,7 @@
             container.innerHTML = `
               <div class="py-12 text-center space-y-2">
                 <p class="text-xs text-ink-400 italic">Bạn chưa đăng bài chia sẻ nào dưới tài khoản này.</p>
-                <button type="button" onclick="app.openNewPostModal()" class="px-4 py-1.5 rounded-full bg-ink-900 text-white text-xs font-medium hover:bg-leather-600 transition shadow-sm">+ Viết Bài Chia Sẻ Đầu Tiên</button>
+                <button type="button" onclick="app.openNewPostModal()" class="px-4 py-1.5 rounded-full bg-ink-900 text-white text-xs font-medium hover:bg-leather-600 transition shadow-sm">Bạn đang tâm đắc điều gì?</button>
               </div>
             `;
           } else {
