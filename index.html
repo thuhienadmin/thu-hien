@@ -258,12 +258,7 @@
 
             <button type="button" onclick="app.closeUserMenu(); app.openLoginModal();" class="w-full text-left px-3 py-2 rounded-xl text-ink-800 hover:bg-parchment-200 flex items-center gap-2 font-medium transition">
               <svg class="w-4 h-4 text-ink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-              <span>Đổi Tài Khoản / Đăng Nhập</span>
-            </button>
-
-            <button type="button" onclick="app.closeUserMenu(); app.openRegisterModal();" class="w-full text-left px-3 py-2 rounded-xl text-ink-800 hover:bg-parchment-200 flex items-center gap-2 font-medium transition">
-              <svg class="w-4 h-4 text-ink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-              <span>Tạo Tài Khoản Độc Giả Mới</span>
+              <span>Đăng nhập bằng Gmail</span>
             </button>
 
             <div class="border-t border-ink-200/80 my-1"></div>
@@ -506,7 +501,7 @@
               </button>
               <button type="button" onclick="app.openLoginModal()" class="px-3 py-1.5 rounded-full text-xs font-semibold border border-ink-300 bg-parchment-50 hover:bg-parchment-200 text-ink-800 flex items-center gap-1.5 transition shadow-sm">
                 <svg class="w-3.5 h-3.5 text-ink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                <span>Đổi / Tạo Tài Khoản</span>
+                <span>Đổi tài khoản Gmail</span>
               </button>
             </div>
           </div>
@@ -548,12 +543,11 @@
         </div>
         <h3 class="font-serif font-bold text-xl text-ink-900">Chào Mừng Độc Giả Vãng Cảnh</h3>
         <p class="text-xs text-ink-600 max-w-md mx-auto leading-relaxed">
-          Bạn đang dạo bước tại Thư Hiên dưới chế độ khách. Hãy tạo tài khoản hoặc đăng nhập để có kệ sách riêng, đánh dấu trang hay, viết review và ký gửi sách.
+          Bạn đang dạo bước tại Thư Hiên dưới chế độ khách. Hãy đăng nhập bằng Gmail để có kệ sách riêng, đánh dấu trang hay, viết review và ký gửi sách.
         </p>
         <div class="pt-2 flex justify-center gap-3">
-          <button type="button" onclick="app.openLoginModal()" class="px-5 py-2 rounded-full border border-ink-300 text-ink-800 text-xs font-semibold hover:bg-parchment-200">Đăng Nhập</button>
-          <button type="button" onclick="app.openRegisterModal()" class="px-5 py-2 rounded-full bg-ink-900 text-white text-xs font-semibold hover:bg-leather-600 shadow-sm">Tạo Tài Khoản Độc Giả</button>
-        </div>
+          <button type="button" onclick="app.openLoginModal()" class="px-5 py-2 rounded-full border border-ink-300 text-ink-800 text-xs font-semibold hover:bg-parchment-200">Đăng nhập bằng Gmail</button>
+          </div>
       </div>
 
       <!-- Sub-tabs in Profile -->
@@ -1338,150 +1332,17 @@
     </div>
   </div>
 
-  <!-- ================= 8. MODAL ĐĂNG KÝ TÀI KHOẢN ĐỘC GIẢ ================= -->
+  <!-- ================= MODAL ĐĂNG NHẬP GOOGLE ================= -->
+<div id="login-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+<div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-ink-200 text-center">
+<h3 class="font-serif font-bold text-lg text-ink-900">Đăng nhập Thư Hiên</h3>
+<p class="text-xs text-ink-500 mt-1.5 leading-relaxed">Dùng tài khoản Gmail của bạn. Thư Hiên chỉ nhận tên và địa chỉ email để tạo hồ sơ độc giả.</p>
+<button type="button" onclick="app.signInWithGoogle()" class="mt-5 w-full py-2.5 rounded-full border border-ink-300 bg-white hover:bg-parchment-100 text-ink-900 text-xs font-semibold flex items-center justify-center gap-2 transition"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg><span>Đăng nhập bằng Google</span></button>
+<button type="button" onclick="app.closeModal('login-modal')" class="mt-3 text-xs text-ink-500 hover:text-ink-800">Để sau</button>
+</div>
+</div>
 
-  <div id="register-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
-    <div class="bg-[#FAF6EE] rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-ink-200 max-h-[92vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-3 border-b border-ink-200">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-full bg-leather-100 flex items-center justify-center text-leather-600">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-          </div>
-          <div>
-            <h3 class="font-serif font-bold text-lg text-ink-900">Gia Nhập Chốn Đọc Thư Hiên</h3>
-            <p class="text-[11px] text-ink-500">Tạo tài khoản để quản lý kệ sách, lưu giữ trang viết và trao duyên sách</p>
-          </div>
-        </div>
-        <button type="button" onclick="app.closeModal('register-modal')" class="p-1 rounded-full text-ink-400 hover:text-ink-800 hover:bg-parchment-200">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-
-
-      <form onsubmit="app.submitRegister(event)" class="mt-4 space-y-3.5 text-xs">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-ink-800 mb-1">Tên đăng nhập <span class="text-terracotta-600">*</span></label>
-            <input type="text" id="reg-username" required placeholder="vd: triethoc_tra, minhtrang..." class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs" />
-          </div>
-          <div>
-            <label class="block font-semibold text-ink-800 mb-1">Mật khẩu <span class="text-terracotta-600">*</span></label>
-            <input type="password" id="reg-password" required placeholder="Mật khẩu bảo vệ..." class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs" />
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Bút danh / Họ tên độc giả <span class="text-terracotta-600">*</span></label>
-          <input type="text" id="reg-name" required placeholder="vd: Trần Minh Trang, Hoài Nam, Tuệ Nhi..." class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs" />
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-ink-800 mb-1">Phong cách đọc sách (Vibe)</label>
-            <select id="reg-vibe" class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs">
-              <option value="Độc giả hoài niệm">Độc giả hoài niệm</option>
-              <option value="Mọt Sách Thư Hiên" selected>Mọt Sách Thư Hiên</option>
-              <option value="Kẻ lãng du trên trang giấy">Kẻ lãng du trên trang giấy</option>
-              <option value="Triết học & Trà thảo mộc">Triết học & Trà thảo mộc</option>
-              <option value="Người chăm sóc tâm hồn">Người chăm sóc tâm hồn</option>
-              <option value="Mọt sách văn học cổ điển">Mọt sách văn học cổ điển</option>
-              <option value="Bạn đọc say mê khoa học">Bạn đọc say mê khoa học</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-semibold text-ink-800 mb-1">Tỉnh thành / Khu vực</label>
-            <select id="reg-location" class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs">
-              <option value="Hà Nội">Hà Nội</option>
-              <option value="TP. Hồ Chí Minh" selected>TP. Hồ Chí Minh</option>
-              <option value="Đà Nẵng">Đà Nẵng</option>
-              <option value="Hải Phòng">Hải Phòng</option>
-              <option value="Cần Thơ">Cần Thơ</option>
-              <option value="Huế">Huế</option>
-              <option value="Quảng Ninh">Quảng Ninh</option>
-              <option value="Toàn quốc (Giao bưu điện)">Toàn quốc (Ship bưu điện)</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Số điện thoại / Zalo kết nối</label>
-          <input type="text" id="reg-contact" placeholder="vd: 0912 345 678 (dành cho độc giả liên hệ đổi/mua sách)" class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs" />
-        </div>
-
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Châm ngôn đọc sách hoặc Giới thiệu bản thân</label>
-          <textarea id="reg-bio" rows="2" placeholder="vd: 'Đọc sách là trò chuyện với những tâm hồn đẹp nhất của các thế kỷ đã qua.'..." class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs font-serif italic"></textarea>
-        </div>
-
-        <div class="pt-2 flex items-center justify-between">
-          <button type="button" onclick="app.closeModal('register-modal'); app.openLoginModal();" class="text-xs text-leather-600 hover:text-leather-800 underline">Đã có tài khoản? Đăng nhập</button>
-          <div class="flex gap-2">
-            <button type="button" onclick="app.closeModal('register-modal')" class="px-4 py-2 rounded-full border border-ink-300 text-ink-700 hover:bg-parchment-200">Hủy</button>
-            <button type="submit" class="px-5 py-2 rounded-full bg-ink-900 hover:bg-leather-600 text-white font-semibold shadow-sm transition">Tạo Tài Khoản Ngay</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= 9. MODAL ĐĂNG NHẬP & CHUYỂN ĐỔI TÀI KHOẢN ================= -->
-  <div id="login-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
-    <div class="bg-[#FAF6EE] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-ink-200 max-h-[92vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-3 border-b border-ink-200">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-700">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-          </div>
-          <div>
-            <h3 class="font-serif font-bold text-lg text-ink-900">Đăng Nhập Độc Giả</h3>
-            <p class="text-[11px] text-ink-500">Đăng nhập tài khoản hoặc chuyển nhanh giữa các bạn đọc</p>
-          </div>
-        </div>
-        <button type="button" onclick="app.closeModal('login-modal')" class="p-1 rounded-full text-ink-400 hover:text-ink-800 hover:bg-parchment-200">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-
-
-      <!-- Quick Switch Demo Readers Section -->
-      <div class="mt-4">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-semibold text-ink-800">Chuyển nhanh tài khoản độc giả:</span>
-          <span class="text-[10px] text-leather-600 font-medium">Bấm 1 chạm để đổi ngay</span>
-        </div>
-        <div id="quick-switch-users-list" class="space-y-2">
-          <!-- Rendered dynamically -->
-        </div>
-      </div>
-
-      <div class="relative my-4">
-        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-ink-200"></div></div>
-        <div class="relative flex justify-center text-[10px] uppercase font-semibold text-ink-400"><span class="bg-[#FAF6EE] px-2">Hoặc đăng nhập bằng mật khẩu</span></div>
-      </div>
-
-      <!-- Standard Login Form -->
-      <form onsubmit="app.submitLogin(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Tên đăng nhập</label>
-          <input type="text" id="login-username" required placeholder="vd: nguyenlam, minhkhue..." class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs" />
-        </div>
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Mật khẩu</label>
-          <input type="password" id="login-password" required placeholder="Mật khẩu của bạn..." class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs" />
-        </div>
-
-        <div class="pt-2 flex items-center justify-between">
-          <button type="button" onclick="app.closeModal('login-modal'); app.openRegisterModal();" class="text-xs text-leather-600 hover:text-leather-800 underline">Tạo tài khoản mới</button>
-          <div class="flex gap-2">
-            <button type="button" onclick="app.closeModal('login-modal')" class="px-4 py-2 rounded-full border border-ink-300 text-ink-700 hover:bg-parchment-200">Đóng</button>
-            <button type="submit" class="px-5 py-2 rounded-full bg-ink-900 hover:bg-leather-600 text-white font-semibold shadow-sm transition">Đăng Nhập</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= 10. MODAL CHỈNH SỬA HỒ SƠ ĐỘC GIẢ ================= -->
+<!-- ================= 10. MODAL CHỈNH SỬA HỒ SƠ ĐỘC GIẢ ================= -->
   <div id="edit-profile-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
     <div class="bg-[#FAF6EE] rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-ink-200 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-ink-200">
@@ -1570,7 +1431,7 @@
     // Local Storage Helpers
     function getStoredData(key, fallback) {
       try {
-        const item = localStorage.getItem('thuhien_v2_' + key);
+        const item = localStorage.getItem('thuhien_v3_' + key);
         return item ? JSON.parse(item) : fallback;
       } catch (e) {
         return fallback;
@@ -1579,7 +1440,7 @@
 
     function setStoredData(key, data) {
       try {
-        localStorage.setItem('thuhien_v2_' + key, JSON.stringify(data));
+        localStorage.setItem('thuhien_v3_' + key, JSON.stringify(data));
       } catch (e) {
         console.error("Storage error:", e);
       }
@@ -1588,460 +1449,11 @@
     // ================= INITIAL SEED DATA =================
 
     // User Accounts System (Pre-seeded Demo Readers)
-    const SEED_USERS = [
-      {
-        id: "u-1",
-        username: "minhkhue",
-        email: "minhkhue.reader@gmail.com",
-        password: "123",
-        name: "Trần Minh Khuê",
-        avatar: "MK",
-        avatarBg: "bg-leather-600",
-        vibe: "Độc giả hoài niệm",
-        bio: "Đọc sách để hiểu lòng mình và thấu cảm vạn vật giữa thế gian bộn bề.",
-        location: "Hà Nội",
-        contact: "0912 888 999",
-        joinedDate: "Tháng 8, 2024",
-        provider: "google"
-      },
-      {
-        id: "u-2",
-        username: "nguyenlam",
-        email: "nguyenlam.thuhien@gmail.com",
-        password: "123",
-        name: "Nguyễn Lam",
-        avatar: "NL",
-        avatarBg: "bg-amber-700",
-        vibe: "Mọt Sách Thư Hiên",
-        bio: "Đọc sách là trò chuyện với những tâm hồn đẹp nhất của các thế kỷ đã qua. — Descartes",
-        location: "TP. Hồ Chí Minh",
-        contact: "0903 123 456",
-        joinedDate: "Tháng 9, 2024",
-        provider: "google"
-      },
-      {
-        id: "u-3",
-        username: "tuelam",
-        email: "tuelam.danang@gmail.com",
-        password: "123",
-        name: "Tuệ Lâm",
-        avatar: "TL",
-        avatarBg: "bg-emerald-700",
-        vibe: "Người chăm sóc tâm hồn",
-        bio: "Mỗi trang sách là một giọt an yên xoa dịu tâm hồn và đánh thức lòng trắc ẩn.",
-        location: "Đà Nẵng",
-        contact: "0988 777 666",
-        joinedDate: "Tháng 10, 2024",
-        provider: "google"
-      }
-    ];
-
-    // Feature 1: Chia Sẻ Sách (Community Posts Feed)
-    const SEED_POSTS = [
-      {
-        id: "post-1",
-        author: "Minh Trang",
-        authorAvatar: "MT",
-        authorVibe: "Độc giả hoài niệm",
-        bookTitle: "Hoàng Tử Bé",
-        language: "Tiếng Việt",
-        authorTag: "Antoine de Saint-Exupéry",
-        tags: ["Tiếng Việt", "Văn học", "Kinh điển", "Saint-Exupéry", "Chữa lành"],
-        category: "trich-dan",
-        categoryName: "Trích dẫn chạm",
-        quote: "Người ta chỉ nhìn thấy thật rõ ràng bằng trái tim. Cái cốt yếu thì mắt thường không thể thấy.",
-        content: "Chiều nay ngồi bên bậu cửa sổ, mưa giăng mờ phố Tràng Tiền, đọc lại Hoàng Tử Bé lần thứ sáu trong đời. Kỳ lạ là ở mỗi độ tuổi, câu nói của chú cáo lại mang một tầng nghĩa khác. Năm 18 tuổi ngỡ là chuyện tình yêu, năm 28 tuổi mới hiểu đó là lòng trắc ẩn với cuộc đời.",
-        image: IMG_2,
-        time: "3 giờ trước",
-        likes: 68,
-        userLiked: false,
-        userSaved: true,
-        comments: [
-          { author: "Đăng Khoa", text: "Mỗi lần mệt mỏi đọc lại cuốn này thấy như được chữa lành vậy bạn.", time: "2 giờ trước" },
-          { author: "Bình An", text: "Trích dẫn này luôn là kim chỉ nam cho cách mình nhìn nhận con người.", time: "1 giờ trước" }
-        ]
-      },
-      {
-        id: "post-2",
-        author: "Hoàng Nam",
-        authorAvatar: "HN",
-        authorVibe: "Kẻ lãng du trên trang giấy",
-        bookTitle: "Rừng Na Uy",
-        language: "Tiếng Việt",
-        authorTag: "Haruki Murakami",
-        tags: ["Tiếng Việt", "Văn học", "Haruki Murakami", "Trịnh Lữ", "Tuổi trẻ"],
-        category: "goc-doc",
-        categoryName: "Góc đọc & Trà",
-        quote: "Dù trong bất kỳ hoàn cảnh nào, cái chết không phải là đối nghịch của sự sống mà là một phần tất yếu của nó.",
-        content: "Góc đọc sách nhỏ cuối tuần với đĩa nhạc jazz của Bill Evans và một tách cà phê phin đậm đặc. Rừng Na Uy luôn là cuốn sách khiến mình muốn tĩnh lặng hoàn toàn để lắng nghe tiếng lòng mình sau một tuần bận rộn.",
-        image: IMG_1,
-        time: "Hôm qua",
-        likes: 54,
-        userLiked: true,
-        userSaved: false,
-        comments: [
-          { author: "Tuệ Lâm", text: "Góc đọc ấm cúng quá! Bản dịch của Trịnh Lữ rất hợp với không khí này.", time: "Hôm qua" }
-        ]
-      },
-      {
-        id: "post-3",
-        author: "Tuệ Lâm",
-        authorAvatar: "TL",
-        authorVibe: "Người chăm sóc tâm hồn",
-        bookTitle: "Muôn Kiếp Nhân Sinh",
-        language: "Tiếng Việt",
-        authorTag: "Nguyên Phong",
-        tags: ["Tiếng Việt", "Tâm linh", "Triết học", "Nguyên Phong", "Chữa lành"],
-        category: "nhat-ky",
-        categoryName: "Nhật ký đọc",
-        quote: "Nhân quả đừng đợi đến kiếp sau, nhiều khi nó vận hành ngay trong từng ý nghĩ hiện tại.",
-        content: "Vừa hoàn thành tập 2. Có những đoạn phải dừng lại gấp sách thật lâu để thở và tự soi rọi lại cách mình đối đãi với những người xung quanh. Cuốn sách không giáo điều, mà như dòng suối nguồn nhắc nhở ta về sự khiêm nhường.",
-        image: IMG_3,
-        time: "2 ngày trước",
-        likes: 82,
-        userLiked: false,
-        userSaved: true,
-        comments: [
-          { author: "Minh Trang", text: "Tập 2 đoạn nói về nền văn minh Atlantis đọc mê thực sự bạn ạ.", time: "2 ngày trước" },
-          { author: "Văn Hùng", text: "Nguyên Phong dịch và viết cuốn nào cũng đầy triết lý nhân sinh.", time: "Hôm qua" }
-        ]
-      },
-      {
-        id: "post-4",
-        author: "Đăng Khoa",
-        authorAvatar: "DK",
-        authorVibe: "Thủ thư tập sự",
-        bookTitle: "Walden - Một Mình Sống Trong Rừng",
-        language: "Song ngữ",
-        authorTag: "Henry David Thoreau",
-        tags: ["Song ngữ", "English", "Triết học", "Thoreau", "Lối sống đẹp"],
-        category: "trich-dan",
-        categoryName: "Trích dẫn chạm",
-        quote: "Phần lớn những thứ xa xỉ không những không tất yếu, mà còn là chướng ngại đối với sự thăng hoa của con người.",
-        content: "Một buổi sáng chủ nhật ngập tràn ánh nắng thanh bình. Đọc Thoreau giữa nhịp sống đô thị hối hả cảm giác như được hít thở bầu không khí rừng phong mát rượi nguyên sơ.",
-        image: IMG_0,
-        time: "3 ngày trước",
-        likes: 46,
-        userLiked: false,
-        userSaved: false,
-        comments: [
-          { author: "Hà Lan", text: "Cuốn sách thức tỉnh lối sống tối giản tuyệt vời nhất!", time: "2 ngày trước" }
-        ]
-      }
-    ];
-
-    // Feature 2: Review Sách (MỖI TOPIC LÀ 1 QUYỂN SÁCH & COMMENTS LÀ REVIEWS)
-    const SEED_TOPICS = [
-      {
-        id: "topic-1",
-        title: "Rừng Na Uy",
-        originalTitle: "Norwegian Wood",
-        language: "Tiếng Việt",
-        authorTag: "Haruki Murakami",
-        tags: ["Tiếng Việt", "Văn học", "Haruki Murakami", "Trịnh Lữ", "Kinh điển"],
-        author: "Haruki Murakami",
-        translator: "Trịnh Lữ",
-        genre: "van-hoc",
-        genreName: "Văn học kinh điển",
-        cover: IMG_1,
-        synopsis: "Tác phẩm kinh điển viết về những xáo trộn tâm lý, tình yêu, sự cô đơn và nỗi mất mát của thế hệ thanh niên Nhật Bản thập niên 1960. Câu chuyện xoay quanh Toru Watanabe cùng mối liên hệ sâu kín với Naoko u buồn và Midori rực rỡ sức sống.",
-        reviews: [
-          {
-            id: "rev-1-1",
-            author: "Đặng Thái Sơn",
-            avatar: "TS",
-            badge: "Độc giả tinh tường",
-            rating: 5,
-            reviewTitle: "Một khúc ca u hoài tuyệt mỹ về tuổi trẻ và sự mất mát khôn nguôi",
-            readingStatus: "Đã đọc xong (3 lần)",
-            content: "Bản dịch của Trịnh Lữ đã chuyển tải trọn vẹn cái không khí bàng bạc, mơ hồ nhưng lại cứa sâu vào cảm xúc của Murakami. Mỗi nhân vật như một mảnh ghép của sự cô đơn đương đại. Đọc xong cuốn sách, giai điệu bài hát The Beatles cứ vương vấn mãi trong tâm trí, tựa như một làn khói sương mùa đông Tokyo.",
-            date: "3 ngày trước",
-            helpfulCount: 28,
-            userHelpful: false
-          },
-          {
-            id: "rev-1-2",
-            author: "Phương Uyên",
-            avatar: "PU",
-            badge: "Mọt sách Hà Thành",
-            rating: 5,
-            reviewTitle: "Midori hay Naoko — Hai biểu tượng của sự sống và bóng tối",
-            readingStatus: "Đã đọc xong",
-            content: "Điều mình yêu thích nhất ở cuốn sách này không chỉ là nỗi buồn của Naoko, mà là ngọn lửa hoang dại, chân thành của Midori. Cô ấy là thực tại kéo Watanabe trở về với cuộc đời giữa những bóng ma của quá khứ. Một tác phẩm đáng đọc nhất của tuổi đôi mươi.",
-            date: "1 tuần trước",
-            helpfulCount: 19,
-            userHelpful: true
-          },
-          {
-            id: "rev-1-3",
-            author: "Quang Minh",
-            avatar: "QM",
-            badge: "Kẻ đọc thong dong",
-            rating: 4,
-            reviewTitle: "Cuốn sách cần sự tĩnh tâm để không bị cuốn vào u uất",
-            readingStatus: "Đang đọc lại",
-            content: "Văn phong mượt mà lôi cuốn, nhưng với những ai đang có tâm trạng yếu đuối thì nên chuẩn bị tinh thần vì không khí truyện khá trĩu nặng. Tuy vậy, giá trị thẩm mỹ và chiều sâu tâm lý nhân vật là điều không thể chối từ.",
-            date: "2 tuần trước",
-            helpfulCount: 12,
-            userHelpful: false
-          }
-        ]
-      },
-      {
-        id: "topic-2",
-        title: "Walden - Một Mình Sống Trong Rừng",
-        originalTitle: "Walden; or, Life in the Woods",
-        language: "Song ngữ",
-        authorTag: "Henry David Thoreau",
-        tags: ["Song ngữ", "English", "Triết học", "Thoreau", "Kinh điển"],
-        author: "Henry David Thoreau",
-        translator: "Nguyễn Đức Tùng",
-        genre: "triet-hoc",
-        genreName: "Triết học & Trầm tư",
-        cover: IMG_0,
-        synopsis: "Tác phẩm ghi chép lại hai năm hai tháng hai ngày Thoreau tự tay dựng chòi và sống cô độc bên bờ hồ Walden ở Massachusetts. Cuốn sách là bản tuyên ngôn bất hủ về lối sống tự lực, tối giản và giao hòa tuyệt đối với tự nhiên.",
-        reviews: [
-          {
-            id: "rev-2-1",
-            author: "Hà Lan",
-            avatar: "HL",
-            badge: "Độc giả trầm tư",
-            rating: 5,
-            reviewTitle: "Liều thuốc thanh lọc tâm hồn giữa thời đại bội thực thông tin",
-            readingStatus: "Sách gối đầu giường",
-            content: "Không phải ai cũng có thể bỏ phố về rừng, nhưng ai cũng có thể xây dựng một 'hồ Walden' tĩnh lặng trong tâm hồn mình. Thoreau chỉ ra rằng con người chúng ta đang làm nô lệ cho chính những đồ vật xa xỉ mà ta nhọc nhằn tích cóp. Một tác phẩm thay đổi nhân sinh quan sâu sắc.",
-            date: "5 ngày trước",
-            helpfulCount: 35,
-            userHelpful: true
-          },
-          {
-            id: "rev-2-2",
-            author: "Trần Bách",
-            avatar: "TB",
-            badge: "Nhà nghiên cứu tự do",
-            rating: 5,
-            reviewTitle: "Văn phong uyên bác, giàu chất thơ và tính tiên tri",
-            readingStatus: "Đã đọc xong",
-            content: "Những quan sát tỉ mỉ của tác giả về các loài chim, mặt hồ đóng băng, tiếng rì rào của rừng thông được viết bằng thứ văn xuôi trác tuyệt. Rất khuyên các bạn đọc chậm từng chương vào mỗi buổi sớm mai.",
-            date: "10 ngày trước",
-            helpfulCount: 17,
-            userHelpful: false
-          }
-        ]
-      },
-      {
-        id: "topic-3",
-        title: "Muôn Kiếp Nhân Sinh",
-        originalTitle: "Many Lives, Many Times",
-        language: "Tiếng Việt",
-        authorTag: "Nguyên Phong",
-        tags: ["Tiếng Việt", "Tâm linh", "Triết học", "Nguyên Phong", "Chữa lành"],
-        author: "Nguyên Phong",
-        translator: "Nguyên Phong",
-        genre: "triet-hoc",
-        genreName: "Tâm linh & Nhân quả",
-        cover: IMG_3,
-        synopsis: "Ghi chép về những trải nghiệm tiền kiếp phi thường của Thomas - một doanh nhân tài chính Phố Wall qua ngòi bút của dịch giả Nguyên Phong. Tác phẩm phân tích sâu sắc về quy luật Luân hồi, Luật Nhân quả và tương lai của nhân loại.",
-        reviews: [
-          {
-            id: "rev-3-1",
-            author: "Ngọc Mai",
-            avatar: "NM",
-            badge: "Hành giả tìm về",
-            rating: 5,
-            reviewTitle: "Chiếc gương soi rọi lương tri và trách nhiệm với cuộc đời",
-            readingStatus: "Đã đọc xong (2 tập)",
-            content: "Cuốn sách mở ra một góc nhìn vũ trụ bao la về luật nhân quả. Điều đọng lại lớn nhất với mình là thông điệp về tình thương yêu không điều kiện và ý thức bảo vệ mẹ thiên nhiên. Rất đáng suy ngẫm trong thời đại đầy biến động này.",
-            date: "4 ngày trước",
-            helpfulCount: 29,
-            userHelpful: false
-          }
-        ]
-      },
-      {
-        id: "topic-4",
-        title: "Hoàng Tử Bé",
-        originalTitle: "Le Petit Prince",
-        language: "Tiếng Việt",
-        authorTag: "Antoine de Saint-Exupéry",
-        tags: ["Tiếng Việt", "Văn học", "Kinh điển", "Saint-Exupéry", "Chữa lành"],
-        author: "Antoine de Saint-Exupéry",
-        translator: "Vĩnh Lạc",
-        genre: "van-hoc",
-        genreName: "Văn học kinh điển",
-        cover: IMG_2,
-        synopsis: "Câu chuyện ngụ ngôn bất hủ về cậu hoàng tử nhỏ đến từ tiểu tinh cầu B-612. Tác phẩm gửi gắm những bài học vĩnh cửu về tình bạn, tình yêu đóa hồng duy nhất, sự trưởng thành và vẻ đẹp thuần khiết của tâm hồn.",
-        reviews: [
-          {
-            id: "rev-4-1",
-            author: "Bình An",
-            avatar: "BA",
-            badge: "Độc giả mộng mơ",
-            rating: 5,
-            reviewTitle: "Cuốn sách dành cho tất cả những người lớn từng là trẻ con",
-            readingStatus: "Sách gối đầu giường",
-            content: "Hoàng Tử Bé không đơn thuần là truyện thiếu nhi, đó là một cuốn triết học thi vị nhất mà nhân loại từng viết ra. Mỗi lần đọc lại là một lần được gột rửa khỏi những toan tính người lớn để giữ lại trái tim trong trẻo.",
-            date: "6 ngày trước",
-            helpfulCount: 42,
-            userHelpful: true
-          }
-        ]
-      }
-    ];
-
-    // Feature 3: Trao Đổi & Bán Lại Sách (Marketplace)
-    const SEED_EXCHANGES = [
-      {
-        id: "ex-1",
-        type: "swap", // SWAP: Đổi sách lấy sách
-        bookTitle: "Sapiens - Lược Sử Loài Người",
-        language: "Tiếng Việt",
-        tags: ["Tiếng Việt", "Lịch sử", "Triết học", "Harari", "Kinh điển"],
-        author: "Yuval Noah Harari",
-        condition: "Mới 98% — Giấy đẹp, đã bọc màng kiếng, không gạch xóa",
-        exchangeWish: "Muốn đổi lấy cuốn 'Homo Deus' hoặc 'Súng, Vi trùng và Thép'",
-        price: null,
-        originalPrice: 195000,
-        location: "Cầu Giấy, Hà Nội",
-        shippingNote: "Gặp trực tiếp tại Cầu Giấy hoặc ship Viettel Post",
-        ownerName: "Hải Yến",
-        ownerAvatar: "HY",
-        ownerPhone: "0982 112 334",
-        note: "Sách đọc một lần rất cẩn thận, muốn giao lưu tìm sách hay để đọc tiếp.",
-        image: IMG_0,
-        time: "Hôm nay",
-        isMyListing: false
-      },
-      {
-        id: "ex-2",
-        type: "sell", // SELL: Bán lại với giá mong muốn
-        bookTitle: "Chiến Binh Cầu Vồng",
-        language: "Tiếng Việt",
-        tags: ["Tiếng Việt", "Văn học", "Tuổi trẻ", "Cảm hứng"],
-        author: "Andrea Hirata",
-        condition: "Mới 95% — Bản in Nhã Nam, gáy thẳng tắp, tặng kèm bookmark tranh",
-        exchangeWish: null,
-        price: 65000,
-        originalPrice: 125000,
-        location: "Quận 1, TP. Hồ Chí Minh",
-        shippingNote: "Nhận ship COD toàn quốc (hỗ trợ 50% phí ship)",
-        ownerName: "Văn Hùng",
-        ownerAvatar: "VH",
-        ownerPhone: "0903 887 665",
-        note: "Đã đọc xong và muốn chia sẻ lại cho bạn đọc nào cần với giá hữu nghị. Sách giữ rất kỹ.",
-        image: IMG_2,
-        time: "Hôm qua",
-        isMyListing: false
-      },
-      {
-        id: "ex-3",
-        type: "swap", // SWAP: Đổi sách lấy sách
-        bookTitle: "Suối Nguồn (The Fountainhead)",
-        language: "Tiếng Việt",
-        tags: ["Tiếng Việt", "Triết học", "Ayn Rand", "Kinh điển"],
-        author: "Ayn Rand (2 tập)",
-        condition: "Mới 99% — Mới đọc 1 lần, gáy sách thẳng tắp như mới xuất xưởng",
-        exchangeWish: "Muốn đổi lấy bộ 'Anh Em Nhà Karamazov' hoặc 'Trăm Năm Cô Đơn'",
-        price: null,
-        originalPrice: 280000,
-        location: "Hải Châu, Đà Nẵng",
-        shippingNote: "Giao dịch trực tiếp tại Hải Châu hoặc chuyển phát",
-        ownerName: "Minh Tuấn",
-        ownerAvatar: "MT",
-        ownerPhone: "0915 223 344",
-        note: "Bộ sách đồ sộ về chủ nghĩa cá nhân. Muốn đổi lấy tác phẩm kinh điển tương đương.",
-        image: IMG_1,
-        time: "2 ngày trước",
-        isMyListing: false
-      },
-      {
-        id: "ex-4",
-        type: "sell", // SELL: Bán lại với giá mong muốn
-        bookTitle: "Hiểu Về Trái Tim",
-        language: "Tiếng Việt",
-        tags: ["Tiếng Việt", "Tâm lý", "Minh Niệm", "Chữa lành"],
-        author: "Thầy Minh Niệm",
-        condition: "Mới 99% — Như mới xuất xưởng, không một nếp gấp",
-        exchangeWish: null,
-        price: 85000,
-        originalPrice: 158000,
-        location: "Đống Đa, Hà Nội",
-        shippingNote: "Freeship nếu tiện đường khu vực Đống Đa / Ba Đình",
-        ownerName: "Thanh Thảo",
-        ownerAvatar: "TT",
-        ownerPhone: "0977 445 566",
-        note: "Được bạn tặng trùng 1 cuốn nên pass lại cho bạn đọc hữu duyên.",
-        image: IMG_3,
-        time: "3 ngày trước",
-        isMyListing: false
-      },
-      {
-        id: "ex-5",
-        type: "sell", // SELL: Bán lại với giá mong muốn
-        bookTitle: "Lối Sống Tối Giản Của Người Nhật",
-        language: "Tiếng Việt",
-        tags: ["Tiếng Việt", "Kỹ năng", "Tối giản", "Nhật Bản"],
-        author: "Sasaki Fumio",
-        condition: "Mới 92% — Giấy ngả vàng tự nhiên thơm mùi sách cũ, không rách",
-        exchangeWish: null,
-        price: 50000,
-        originalPrice: 99000,
-        location: "Bình Thạnh, TP. Hồ Chí Minh",
-        shippingNote: "Ship COD hoặc ghé lấy trực tiếp",
-        ownerName: "Quỳnh Anh",
-        ownerAvatar: "QA",
-        ownerPhone: "0934 667 889",
-        note: "Cuốn sách thay đổi căn phòng của mình. Pass lại giá hạt dẻ cho các bạn sinh viên.",
-        image: IMG_1,
-        time: "4 ngày trước",
-        isMyListing: false
-      },
-      {
-        id: "ex-6",
-        type: "swap", // SWAP: Đổi sách lấy sách
-        bookTitle: "Kafka Bên Bờ Biển",
-        language: "Tiếng Việt",
-        tags: ["Tiếng Việt", "Văn học", "Haruki Murakami", "Siêu thực"],
-        author: "Haruki Murakami",
-        condition: "Mới 95% — Bìa gập đẹp, mép sách sắc nét",
-        exchangeWish: "Muốn đổi lấy 'Biên Niên Ký Chim Vặn Dây Cót' hoặc 'Xứ Tuyết'",
-        price: null,
-        originalPrice: 160000,
-        location: "Ba Đình, Hà Nội",
-        shippingNote: "Hẹn cà phê trao đổi sách tại phố sách Đinh Lễ",
-        ownerName: "Đức Duy",
-        ownerAvatar: "DD",
-        ownerPhone: "0966 332 211",
-        note: "Rất thích không khí siêu thực của Murakami. Muốn tìm bạn cùng gu đổi sách.",
-        image: IMG_2,
-        time: "5 ngày trước",
-        isMyListing: false
-      }
-    ];
-
-    // Inbox Conversations
-    const SEED_INBOX = [
-      {
-        id: "msg-1",
-        sender: "Đăng Khoa",
-        avatar: "DK",
-        role: "Đề xuất đổi sách",
-        targetBook: "Walden - Một Mình Sống Trong Rừng",
-        summary: "Chào bạn, mình có cuốn 'Bàn Về Tự Do' của John Stuart Mill còn rất mới, bạn có nhã hứng đổi lấy cuốn Walden không?",
-        unread: true,
-        time: "10:30 Hôm nay"
-      },
-      {
-        id: "msg-2",
-        sender: "Thùy Dung",
-        avatar: "TD",
-        role: "Hỏi mua sách sang nhượng",
-        targetBook: "Chiến Binh Cầu Vồng",
-        summary: "Bạn ơi cuốn Chiến Binh Cầu Vồng 65k bạn còn không ạ? Mình ở Quận 3 muốn đặt ship COD.",
-        unread: true,
-        time: "Hôm qua"
-      }
-    ];
+    const SEED_USERS = [];
+    const SEED_POSTS = [];
+    const SEED_TOPICS = [];
+    const SEED_EXCHANGES = [];
+    const SEED_INBOX = [];
 
     // ================= MAIN APP CONTROLLER =================
     const app = {
@@ -2064,7 +1476,7 @@
 
       // User Accounts System
       users: [],
-      currentUserId: 'u-2', // Default to Nguyễn Lam for full continuity
+      currentUserId: null,
       userMenuOpen: false,
 
       // Data stores
@@ -2082,7 +1494,7 @@
 
       init() {
         this.users = getStoredData('users', SEED_USERS);
-        this.currentUserId = getStoredData('currentUserId', 'u-2');
+        this.currentUserId = null;
         this.posts = getStoredData('posts', SEED_POSTS);
         this.topics = getStoredData('topics', SEED_TOPICS);
         this.exchanges = getStoredData('exchanges', SEED_EXCHANGES);
@@ -2163,7 +1575,7 @@
           if (dropdownAvatar) dropdownAvatar.innerText = user.avatar;
           if (dropdownName) dropdownName.innerText = user.name;
           if (dropdownVibe) dropdownVibe.innerText = user.vibe;
-          if (dropdownLoc) dropdownLoc.innerText = user.location + ' • ' + user.contact;
+          if (dropdownLoc) dropdownLoc.innerText = user.location + (user.contact ? ' • ' + user.contact : '');
           if (mNavAvatar) mNavAvatar.innerText = user.avatar;
         } else {
           if (headerAvatar) headerAvatar.innerText = '👤';
@@ -2175,96 +1587,16 @@
           if (mNavAvatar) mNavAvatar.innerText = '👤';
         }
 
-        this.renderQuickSwitchList();
         if (this.currentTab === 'shelf') {
           this.renderShelf();
         }
       },
 
       // Render demo accounts list in login modal
-      renderQuickSwitchList() {
-        const container = document.getElementById('quick-switch-users-list');
-        if (!container) return;
-        const current = this.getCurrentUser();
-
-        container.innerHTML = this.users.map(u => {
-          const isAct = current && current.id === u.id;
-          return `
-            <div onclick="app.quickSwitchUser('${u.id}')" class="p-2.5 rounded-2xl border ${isAct ? 'border-amber-600 bg-amber-50/80 shadow-sm' : 'border-ink-200 bg-white hover:bg-parchment-100'} cursor-pointer flex items-center justify-between transition">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <div class="w-8 h-8 rounded-full ${u.avatarBg || 'bg-leather-600'} text-parchment-50 font-serif font-bold text-xs flex items-center justify-center shrink-0">
-                  ${u.avatar}
-                </div>
-                <div class="min-w-0">
-                  <p class="font-serif font-bold text-ink-900 text-xs truncate leading-tight">${u.name}</p>
-                  <p class="text-[10px] text-ink-500 truncate">${u.vibe} • ${u.location}</p>
-                </div>
-              </div>
-              <div class="shrink-0 text-right">
-                ${isAct ? '<span class="text-[10px] font-bold text-amber-700 bg-amber-100/90 px-2 py-0.5 rounded-full">Đang dùng</span>' : '<span class="text-[10px] font-medium text-ink-500 hover:text-ink-900">Chọn »</span>'}
-              </div>
-            </div>
-          `;
-        }).join('');
-      },
 
       // ================= GOOGLE / GMAIL AUTHENTICATION =================
-      openGoogleAuthModal() {
-        const modal = document.getElementById('google-auth-modal');
-        if (modal) modal.classList.remove('hidden');
-      },
 
-      loginWithGoogle(email, name, vibe, location) {
-        let user = this.users.find(u => (u.email && u.email.toLowerCase() === email.toLowerCase()) || (u.username && u.username.toLowerCase() === email.toLowerCase()));
-        
-        if (!user) {
-          // Create new user profile linked to Google
-          const parts = name.split(/\s+/).filter(Boolean);
-          let avatar = 'GG';
-          if (parts.length === 1) avatar = parts[0].slice(0, 2).toUpperCase();
-          else if (parts.length >= 2) avatar = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 
-          user = {
-            id: 'u-g-' + Date.now(),
-            username: email.split('@')[0].toLowerCase(),
-            email: email.toLowerCase(),
-            name: name,
-            avatar: avatar,
-            avatarBg: 'bg-ink-900',
-            vibe: vibe || 'Độc giả Thư Hiên',
-            bio: `Độc giả gia nhập qua Google (${email}). Yêu sách và trân quý tri thức.`,
-            location: location || 'Hà Nội',
-            contact: email,
-            joinedDate: 'Vừa xong',
-            provider: 'google'
-          };
-          this.users.push(user);
-        }
-
-        this.currentUserId = user.id;
-        this.saveUsers();
-        this.closeModal('google-auth-modal');
-        this.closeModal('login-modal');
-        this.closeModal('register-modal');
-        this.updateUserUI();
-        this.switchTab('shelf');
-        this.showToast(`Đăng nhập thành công với tài khoản Google: ${email}`);
-      },
-
-      submitCustomGoogleLogin(e) {
-        e.preventDefault();
-        const emailInput = document.getElementById('google-custom-email').value.trim().toLowerCase();
-        const nameInput = document.getElementById('google-custom-name').value.trim();
-        const locationInput = document.getElementById('google-custom-location').value;
-
-        if (!emailInput || !nameInput) {
-          this.showToast('Vui lòng nhập đầy đủ địa chỉ Gmail và bút danh!');
-          return;
-        }
-
-        const validEmail = emailInput.includes('@') ? emailInput : emailInput + '@gmail.com';
-        this.loginWithGoogle(validEmail, nameInput, 'Độc giả yêu sách', locationInput);
-      },
 
       // ================= CUSTOM IMAGE UPLOAD HANDLERS (FILEREADER) =================
       handleImageUpload(e, type) {
@@ -2352,15 +1684,71 @@
       },
 
       // Modal Openers
-      openRegisterModal() {
-        const modal = document.getElementById('register-modal');
-        if (modal) modal.classList.remove('hidden');
+
+
+      // ===== ĐĂNG NHẬP GOOGLE (Firebase Auth) =====
+      requireLogin() {
+        if (this.getCurrentUser()) return true;
+        this.showToast('Hãy đăng nhập bằng Gmail để tiếp tục.');
+        this.openLoginModal();
+        return false;
       },
 
       openLoginModal() {
-        this.renderQuickSwitchList();
         const modal = document.getElementById('login-modal');
         if (modal) modal.classList.remove('hidden');
+      },
+
+      async signInWithGoogle() {
+        const auth = window.thuhienAuth;
+        if (!auth || !auth.ready) {
+          this.showToast('Đăng nhập Google chưa được cấu hình. Vui lòng quay lại sau.');
+          return;
+        }
+        try {
+          await auth.signIn();
+        } catch (err) {
+          const code = (err && err.code) || '';
+          if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') return;
+          const msgs = {
+            'auth/popup-blocked': 'Trình duyệt đang chặn cửa sổ đăng nhập. Hãy cho phép popup rồi thử lại.',
+            'auth/unauthorized-domain': 'Tên miền này chưa được cho phép đăng nhập. Quản trị viên cần thêm vào Firebase.',
+            'auth/network-request-failed': 'Mất kết nối mạng. Vui lòng thử lại.'
+          };
+          this.showToast(msgs[code] || 'Đăng nhập chưa thành công. Hãy mở trang bằng Chrome hoặc Safari và thử lại.');
+        }
+      },
+
+      onAuthChanged(fbUser) {
+        if (!fbUser) {
+          this.currentUserId = null;
+          this.updateUserUI();
+          return;
+        }
+        let user = this.users.find(u => u.id === fbUser.uid);
+        let isNew = false;
+        const name = (fbUser.displayName || (fbUser.email || 'Độc giả').split('@')[0]).trim();
+        if (!user) {
+          isNew = true;
+          const parts = name.split(/\s+/).filter(Boolean);
+          const avatar = (parts.length === 1 ? parts[0].slice(0, 2) : parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+          const d = new Date();
+          user = {
+            id: fbUser.uid, email: fbUser.email || '', name: name, avatar: avatar, avatarBg: 'bg-leather-600',
+            vibe: 'Độc giả Thư Hiên', bio: 'Người yêu sách và thích tìm kiếm những trang văn đẹp.',
+            location: 'Toàn quốc (Ship bưu điện)', contact: '',
+            joinedDate: 'Tháng ' + (d.getMonth() + 1) + ', ' + d.getFullYear(), provider: 'google'
+          };
+          this.users.push(user);
+        }
+        this.currentUserId = user.id;
+        this.saveUsers();
+        this.closeModal('login-modal');
+        this.updateUserUI();
+        if (isNew) {
+          this.showToast('Chào mừng ' + name + ' đến với Thư Hiên! Hãy hoàn thiện hồ sơ của bạn.');
+          this.openEditProfileModal();
+        }
       },
 
       openEditProfileModal() {
@@ -2379,90 +1767,8 @@
       },
 
       // User Authentication Handlers
-      submitRegister(e) {
-        e.preventDefault();
-        const username = document.getElementById('reg-username').value.trim().toLowerCase();
-        const password = document.getElementById('reg-password').value;
-        const name = document.getElementById('reg-name').value.trim();
-        const vibe = document.getElementById('reg-vibe').value;
-        const location = document.getElementById('reg-location').value;
-        const contact = document.getElementById('reg-contact').value.trim();
-        const bio = document.getElementById('reg-bio').value.trim() || 'Người yêu sách và thích tìm kiếm những trang văn đẹp.';
 
-        if (!username || !password || !name) {
-          this.showToast('Vui lòng điền đầy đủ tên đăng nhập, mật khẩu và bút danh!');
-          return;
-        }
 
-        if (this.users.some(u => u.username === username)) {
-          this.showToast('Tên đăng nhập này đã có người sử dụng. Vui lòng chọn tên khác!');
-          return;
-        }
-
-        // Initials avatar
-        const parts = name.split(/\s+/).filter(Boolean);
-        let avatar = 'ĐG';
-        if (parts.length === 1) {
-          avatar = parts[0].slice(0, 2).toUpperCase();
-        } else if (parts.length >= 2) {
-          avatar = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-        }
-
-        const newUser = {
-          id: 'u-' + Date.now(),
-          username: username,
-          password: password,
-          name: name,
-          avatar: avatar,
-          avatarBg: 'bg-leather-600',
-          vibe: vibe,
-          bio: bio,
-          location: location,
-          contact: contact || 'Chưa cập nhật SĐT',
-          joinedDate: 'Vừa xong'
-        };
-
-        this.users.push(newUser);
-        this.currentUserId = newUser.id;
-        this.saveUsers();
-        this.closeModal('register-modal');
-        this.updateUserUI();
-        this.switchTab('shelf');
-        this.showToast(`Chào mừng độc giả ${name} đã gia nhập Thư Hiên!`);
-      },
-
-      submitLogin(e) {
-        e.preventDefault();
-        const loginId = document.getElementById('login-username').value.trim().toLowerCase();
-        const password = document.getElementById('login-password').value;
-
-        const found = this.users.find(u => 
-          (u.username === loginId || (u.email && u.email.toLowerCase() === loginId)) && 
-          (u.password === password || u.provider === 'google')
-        );
-        if (found) {
-          this.currentUserId = found.id;
-          this.saveUsers();
-          this.closeModal('login-modal');
-          this.updateUserUI();
-          this.switchTab('shelf');
-          this.showToast(`Chào mừng độc giả ${found.name} trở lại!`);
-        } else {
-          this.showToast('Tên đăng nhập hoặc mật khẩu không chính xác!');
-        }
-      },
-
-      quickSwitchUser(userId) {
-        const found = this.users.find(u => u.id === userId);
-        if (found) {
-          this.currentUserId = found.id;
-          this.saveUsers();
-          this.closeModal('login-modal');
-          this.updateUserUI();
-          this.switchTab('shelf');
-          this.showToast(`Đã chuyển sang tài khoản: ${found.name}`);
-        }
-      },
 
       submitEditProfile(e) {
         e.preventDefault();
@@ -2506,6 +1812,7 @@
       },
 
       logout() {
+        if (window.thuhienAuth && window.thuhienAuth.ready) window.thuhienAuth.signOut();
         this.currentUserId = null;
         this.saveUsers();
         this.updateUserUI();
@@ -2612,12 +1919,7 @@
           tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-ink-100 text-ink-800 border border-ink-300";
           title.innerText = "Chia Sẻ Sách (Bài Post Bạn Đọc)";
           desc.innerText = "Dòng thời gian cộng đồng: Trích dẫn hay, góc bàn trà và suy ngẫm chân thành từ những trang sách.";
-          actionBox.innerHTML = `
-            <button type="button" onclick="app.openNewPostModal()" class="bg-ink-900 hover:bg-leather-600 text-parchment-50 text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              <span>+ Viết Bài Chia Sẻ</span>
-            </button>
-          `;
+          actionBox.innerHTML = '';
         } else if (this.currentTab === 'reviews') {
           tag.innerText = "Thư Mục Review";
           tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300";
@@ -2663,9 +1965,9 @@
         if (dBadge) {
           if (unreadCount > 0) {
             dBadge.innerText = unreadCount;
-            dBadge.classList.remove('hidden');
+            dBadge.classList.remove('hidden'); dBadge.style.display = '';
           } else {
-            dBadge.classList.add('hidden');
+            dBadge.classList.add('hidden'); dBadge.style.display = 'none';
           }
         }
         if (mDot) {
@@ -2677,9 +1979,9 @@
         const pCount = document.getElementById('user-posts-count');
         const rCount = document.getElementById('user-reviews-count');
         const lCount = document.getElementById('user-listings-count');
-        if (pCount) pCount.innerText = this.posts.filter(p => p.author === 'Nguyễn Lam' || p.id === 'post-1').length;
-        if (rCount) rCount.innerText = 3;
-        if (lCount) lCount.innerText = this.exchanges.filter(e => e.isMyListing).length;
+        if (pCount) pCount.innerText = this.posts.filter(p => this.currentUserId && p.authorId === this.currentUserId).length;
+        if (rCount) rCount.innerText = this.topics.reduce((n, t) => n + (t.reviews || []).filter(r => this.currentUserId && r.authorId === this.currentUserId).length, 0);
+        if (lCount) lCount.innerText = this.exchanges.filter(e => this.currentUserId && e.userId === this.currentUserId).length;
       },
 
       // ================= FEATURE 1: CHIA SẺ SÁCH (POSTS FEED) =================
@@ -2926,6 +2228,7 @@
       },
 
       toggleLikePost(postId, inModal = false) {
+        if (!this.requireLogin()) return;
         const post = this.posts.find(p => p.id === postId);
         if (!post) return;
         post.userLiked = !post.userLiked;
@@ -2938,6 +2241,7 @@
       },
 
       toggleSavePost(postId, inModal = false) {
+        if (!this.requireLogin()) return;
         const post = this.posts.find(p => p.id === postId);
         if (!post) return;
         post.userSaved = !post.userSaved;
@@ -2951,10 +2255,11 @@
 
       submitPostComment(e) {
         e.preventDefault();
+        if (!this.requireLogin()) return;
         const input = document.getElementById('post-comment-input');
         if (!input || !input.value.trim() || !this.currentActivePost) return;
 
-        const user = this.getCurrentUser() || { name: "Nguyễn Lam", avatar: "NL", id: "u-2" };
+        const user = this.getCurrentUser() || { name: "", avatar: "", vibe: "", location: "", contact: "", id: "" };
         const newComment = {
           author: user.name,
           text: input.value.trim(),
@@ -2969,6 +2274,7 @@
       },
 
       openNewPostModal() {
+        if (!this.requireLogin()) return;
         document.getElementById('new-post-modal').classList.remove('hidden');
       },
 
@@ -2994,7 +2300,7 @@
           'nhat-ky': 'Nhật ký đọc'
         };
 
-        const user = this.getCurrentUser() || { name: "Nguyễn Lam", avatar: "NL", vibe: "Mọt Sách Thư Hiên", id: "u-2" };
+        const user = this.getCurrentUser() || { name: "", avatar: "", vibe: "", location: "", contact: "", id: "" };
         const newPost = {
           id: 'post-' + Date.now(),
           author: user.name,
@@ -3366,13 +2672,14 @@
 
       submitBookReview(e) {
         e.preventDefault();
+        if (!this.requireLogin()) return;
         if (!this.currentActiveTopic) return;
 
         const title = document.getElementById('rev-input-title').value.trim();
         const status = document.getElementById('rev-input-status').value;
         const content = document.getElementById('rev-input-content').value.trim();
 
-        const user = this.getCurrentUser() || { name: "Nguyễn Lam", avatar: "NL", vibe: "Mọt Sách Thư Hiên", id: "u-2" };
+        const user = this.getCurrentUser() || { name: "", avatar: "", vibe: "", location: "", contact: "", id: "" };
         const newReview = {
           id: 'rev-' + Date.now(),
           author: user.name,
@@ -3396,6 +2703,7 @@
       },
 
       voteHelpfulReview(topicId, reviewId) {
+        if (!this.requireLogin()) return;
         const topic = this.topics.find(t => t.id === topicId);
         if (!topic) return;
         const rev = topic.reviews.find(r => r.id === reviewId);
@@ -3409,6 +2717,7 @@
       },
 
       openNewTopicModal() {
+        if (!this.requireLogin()) return;
         document.getElementById('new-topic-modal').classList.remove('hidden');
       },
 
@@ -3637,6 +2946,7 @@
       },
 
       openNewExchangeModal() {
+        if (!this.requireLogin()) return;
         document.getElementById('new-exchange-modal').classList.remove('hidden');
         this.updateExchangeFormMode('swap');
       },
@@ -3701,7 +3011,7 @@
           }
         }
 
-        const user = this.getCurrentUser() || { name: "Nguyễn Lam", avatar: "NL", location: "TP. Hồ Chí Minh", contact: "0903 123 456", id: "u-2" };
+        const user = this.getCurrentUser() || { name: "", avatar: "", vibe: "", location: "", contact: "", id: "" };
         const newListing = {
           id: 'ex-' + Date.now(),
           type: mode,
@@ -3734,6 +3044,7 @@
       },
 
       openSwapProposalModal(listingId) {
+        if (!this.requireLogin()) return;
         const item = this.exchanges.find(e => e.id === listingId);
         if (!item) return;
         this.currentSwapTargetListing = item;
@@ -3761,7 +3072,7 @@
 
         if (!this.currentSwapTargetListing) return;
 
-        const user = this.getCurrentUser() || { name: "Nguyễn Lam", avatar: "NL", id: "u-2" };
+        const user = this.getCurrentUser() || { name: "", avatar: "", vibe: "", location: "", contact: "", id: "" };
         // Create new inbox message thread
         const newMsg = {
           id: 'msg-' + Date.now(),
@@ -3782,6 +3093,7 @@
       },
 
       openBuyContactModal(listingId) {
+        if (!this.requireLogin()) return;
         const item = this.exchanges.find(e => e.id === listingId);
         if (!item) return;
         this.currentBuyTargetListing = item;
@@ -3809,7 +3121,7 @@
 
         if (!this.currentBuyTargetListing) return;
 
-        const user = this.getCurrentUser() || { name: "Nguyễn Lam", avatar: "NL", contact: "0903 123 456", id: "u-2" };
+        const user = this.getCurrentUser() || { name: "", avatar: "", vibe: "", location: "", contact: "", id: "" };
         const newMsg = {
           id: 'msg-' + Date.now(),
           sender: user.name + " (Bạn)",
@@ -3922,18 +3234,18 @@
         if (!container) return;
 
         // Calculate dynamic items for current user
-        const myPosts = this.posts.filter(p => user && (p.author === user.name || p.authorId === user.id || (user.id === 'u-2' && (p.author === 'Nguyễn Lam' || p.id === 'post-1'))));
+        const myPosts = this.posts.filter(p => user && (p.authorId === user.id));
         
         let userReviews = [];
         this.topics.forEach(t => {
           t.reviews.forEach(r => {
-            if (user && (r.author === user.name || r.authorId === user.id || (user.id === 'u-2' && r.author === 'Nguyễn Lam'))) {
+            if (user && (r.authorId === user.id)) {
               userReviews.push({ topicTitle: t.title, topicId: t.id, review: r });
             }
           });
         });
 
-        const myListings = this.exchanges.filter(e => user && (e.ownerName === user.name || e.userId === user.id || (user.id === 'u-2' && e.isMyListing)));
+        const myListings = this.exchanges.filter(e => user && (e.userId === user.id));
         const savedPosts = this.posts.filter(p => p.userSaved);
 
         // Update counts in profile header
@@ -4087,6 +3399,7 @@
       },
 
       openQuickCreateSheet() {
+        if (!this.requireLogin()) return;
         document.getElementById('quick-create-modal').classList.remove('hidden');
       },
 
@@ -4122,6 +3435,35 @@
     document.addEventListener('DOMContentLoaded', () => {
       app.init();
     });
+  </script>
+
+  <!-- ================= FIREBASE: ĐĂNG NHẬP GOOGLE ================= -->
+  <script type="module">
+    // >>> DÁN CẤU HÌNH FIREBASE CỦA BẠN VÀO DƯỚI ĐÂY (xem hướng dẫn) <<<
+    const FIREBASE_CONFIG = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      appId: ""
+    };
+    // >>> HẾT PHẦN CẤU HÌNH <<<
+
+    if (FIREBASE_CONFIG.apiKey) {
+      try {
+        const V = "10.12.2";
+        const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+        const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } =
+          await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
+        const auth = getAuth(initializeApp(FIREBASE_CONFIG));
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        window.thuhienAuth = { ready: true, signIn: () => signInWithPopup(auth, provider), signOut: () => signOut(auth) };
+        const start = () => onAuthStateChanged(auth, (u) => app.onAuthChanged(u));
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+      } catch (err) {
+        console.error('Không tải được Firebase:', err);
+      }
+    }
   </script>
 </body>
 </html>
