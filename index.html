@@ -263,7 +263,8 @@
               <span>Đăng nhập bằng Gmail</span>
             </button>
 
-            <div class="border-t border-ink-200/80 my-1"></div>
+            <button type="button" id="menu-admin" onclick="app.closeUserMenu(); app.switchTab('admin');" class="hidden w-full text-left px-3 py-2 rounded-xl text-ink-800 hover:bg-parchment-100 flex items-center gap-2 font-medium transition"><span class="w-4 text-center">📊</span><span>Bảng quản trị</span></button>
+          <div class="border-t border-ink-200/80 my-1"></div>
 
             <button type="button" onclick="app.closeUserMenu(); app.logout();" class="w-full text-left px-3 py-2 rounded-xl text-terracotta-700 hover:bg-terracotta-50 flex items-center gap-2 font-medium transition">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
@@ -1477,6 +1478,7 @@
       // Uploaded Images Storage (FileReader Base64)
       GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
       pendingAvatar: undefined,
+      _admin: null, _adminLoading: false, _trackPending: false,
       checkinCoords: null, _pendingRoute: null, _lb: null, _lbKey: null, _shareId: null, _loadedOnce: { posts: false, topics: false, exchanges: false },
       messages: [], follows: [], remote: false, activeThread: null, viewUserId: null, myPrivate: null, unwatchMsgs: null,
       _synced: { posts: {}, topics: {}, exchanges: {} },
@@ -1559,6 +1561,8 @@
       // Update All User-related UI components
       updateUserUI() {
         const user = this.getCurrentUser();
+        const admBtn = document.getElementById('menu-admin');
+        if (admBtn) admBtn.classList.toggle('hidden', !this.isAdmin());
         const headerAvatar = document.getElementById('header-avatar');
         const headerName = document.getElementById('header-user-name');
         const dropdownAvatar = document.getElementById('dropdown-avatar');
@@ -1931,6 +1935,9 @@
           if (this.currentTab === 'shelf') this.renderShelf();
           this.refreshProfileModal();
           this.tryPendingRoute();
+          if (this.currentTab === 'admin') {
+            if (this._admin && this._admin.nUsers === this.users.length) this.renderAdminHtml(); else if (!this._adminLoading) { this._admin = null; this.renderAdmin(); }
+          }
         } catch (err) { console.error(err); }
       },
 
@@ -1938,6 +1945,7 @@
         const db = window.thuhienDB;
         if (!db || !db.ready || this.remote) return;
         this.remote = true;
+        if (this._trackPending) { this._trackPending = false; this.trackPage(); }
         ['posts', 'topics', 'exchanges'].forEach(col => db.watch(col, docs => this.onRemote(col, docs)));
         db.watch('users', docs => this.onUsers(docs));
         db.watch('follows', docs => { this.follows = docs.filter(f => f && f.followerId && f.followeeId); this.refreshViews(); });
@@ -2046,8 +2054,11 @@
         this.myPrivate = { contact: profile.contact || '', email: profile.email };
         const idx = this.users.findIndex(u => u.id === uid);
         if (idx >= 0) this.users[idx] = profile; else this.users.push(profile);
+        profile.lastLoginAt = Date.now();
+        if (isNew) profile.createdAt = Date.now();
         this.currentUserId = uid;
-        if (isNew) this.saveUsers();
+        this.saveUsers();
+        if (this.isAdmin()) { try { localStorage.setItem('thuhien_notrack', '1'); } catch (e) {} }
         this.closeModal('login-modal');
         this.watchMessages(); this.redecorate(); this.updateUserUI(); this.refreshViews();
         if (isNew) {
@@ -2284,7 +2295,8 @@
 
 
       // ===== ĐIỀU HƯỚNG TỪNG TRANG (F5 không quay về trang chủ) =====
-      TAB_SLUGS: { posts: 'chia-se', reviews: 'review', exchange: 'mua-ban', inbox: 'hop-thu', shelf: 'ke-sach' },
+      TAB_SLUGS: { posts: 'chia-se', reviews: 'review', exchange: 'mua-ban', inbox: 'hop-thu', shelf: 'ke-sach', admin: 'quan-tri' },
+      ADMIN_EMAILS: ['thuhien.admin@gmail.com'],
       setHash(h) { if (location.hash !== h) location.hash = h; },
       routeFromHash() {
         const parts = (location.hash || '').replace(/^#\/?/, '').split('/');
@@ -2292,6 +2304,7 @@
         const closeDetails = () => ['post-detail-modal', 'topic-detail-modal'].forEach(id => { const m = document.getElementById(id); if (m) m.classList.add('hidden'); });
         const first = !this.__routed;
         this.__routed = true;
+        if (slug !== 'quan-tri') this.trackPage();
         if (!slug) { history.replaceState(null, '', '#/chia-se'); if (first || this.currentTab !== 'posts') this.switchTab('posts', true); return; }
         if (slug === 'bai-viet' && /^[\w-]+$/.test(parts[1] || '')) {
           if (this.currentTab !== 'posts') this.switchTab('posts', true);
@@ -2450,6 +2463,188 @@
       },
 
 
+      // ===== QUẢN TRỊ: LƯU LƯỢNG, TÀI KHOẢN, NỘI DUNG =====
+      isAdmin() {
+        const u = this.getCurrentUser();
+        return !!u && this.ADMIN_EMAILS.includes(String(u.email || '').toLowerCase());
+      },
+      trackPage() {
+        try { if (localStorage.getItem('thuhien_notrack')) return; } catch (e) {}
+        if (!this.remote) { this._trackPending = true; return; }
+        try { if (window.thuhienTrack) window.thuhienTrack(location.pathname + (location.hash || '').replace('#', ''), document.title); } catch (e) {}
+        let vid;
+        try {
+          vid = localStorage.getItem('thuhien_vid');
+          if (!vid) { vid = Math.random().toString(36).slice(2, 12) + Date.now().toString(36); localStorage.setItem('thuhien_vid', vid); }
+        } catch (e) { vid = 'anon' + Math.random().toString(36).slice(2, 10); }
+        const day = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
+        window.thuhienDB.incr('visits/' + day + '_' + vid, { day: day, vid: vid, lastSeen: Date.now() }).catch(() => {});
+      },
+      ensureAdminView() {
+        if (document.getElementById('view-admin')) return;
+        const ref = document.getElementById('view-shelf');
+        const s = document.createElement('div');
+        s.id = 'view-admin';
+        s.className = 'view-content hidden max-w-6xl mx-auto space-y-6';
+        s.innerHTML = '<div id="admin-root"></div>';
+        ref.parentElement.appendChild(s);
+      },
+      async renderAdmin() {
+        this.ensureAdminView();
+        const root = document.getElementById('admin-root');
+        if (!root) return;
+        const note = t => { root.innerHTML = `<div class="py-16 text-center text-ink-500"><p class="font-serif text-base">${t}</p></div>`; };
+        if (!this.currentUserId) { root.innerHTML = '<div class="py-16 text-center text-ink-500"><p class="font-serif text-base">Hãy đăng nhập bằng tài khoản quản trị</p><button type="button" onclick="app.openLoginModal()" class="mt-3 px-4 py-2 rounded-full bg-ink-900 text-parchment-50 text-xs font-semibold">Đăng nhập bằng Gmail</button></div>'; return; }
+        if (!this.isAdmin()) { note('Tài khoản này không có quyền quản trị.'); return; }
+        if (!this.remote) { note('Chưa kết nối máy chủ nên chưa có số liệu.'); return; }
+        if (this._adminLoading) return;
+        this._adminLoading = true;
+        root.innerHTML = '<p class="text-xs text-ink-500 py-10 text-center">Đang tải số liệu...</p>';
+        const db = window.thuhienDB;
+        try {
+          const cutoff = new Date(Date.now() + 7 * 3600e3 - 29 * 86400e3).toISOString().slice(0, 10);
+          const users = this.users.slice();
+          const [visits, privs] = await Promise.all([
+            db.list('visits', { where: ['day', '>=', cutoff] }),
+            Promise.all(users.map(u => db.get('users/' + u.id + '/private/info').catch(() => null)))
+          ]);
+          const priv = {};
+          users.forEach((u, i) => { priv[u.id] = privs[i] || {}; });
+          this._admin = { visits: visits, priv: priv, nUsers: users.length, q: '' };
+          this.renderAdminHtml();
+        } catch (err) {
+          console.error(err);
+          note('Không tải được số liệu quản trị. Hãy kiểm tra quy tắc Firestore đã được cập nhật bản mới (có quyền quản trị) và bấm Publish.');
+        } finally { this._adminLoading = false; }
+      },
+      adminRefresh() { this._admin = null; this.renderAdmin(); },
+      adminCounts() {
+        const cnt = (arr, f) => { const m = {}; arr.forEach(x => { const k = f(x); if (k) m[k] = (m[k] || 0) + 1; }); return m; };
+        const posts = cnt(this.posts, p => p.authorId);
+        const exch = cnt(this.exchanges, e => e.userId);
+        const revs = {};
+        this.topics.forEach(t => (t.reviews || []).forEach(r => { if (r.authorId) revs[r.authorId] = (revs[r.authorId] || 0) + 1; }));
+        const fol = cnt(this.follows, f => f.followeeId);
+        return { posts, exch, revs, fol };
+      },
+      renderAdminHtml() {
+        const root = document.getElementById('admin-root');
+        const A = this._admin;
+        if (!root || !A) return;
+        const esc = s => this.esc(s);
+        const now = Date.now(), DAY = 86400000;
+        const dayOf = i => new Date(now + 7 * 3600e3 - i * DAY).toISOString().slice(0, 10);
+        const today = dayOf(0);
+        const byDay = {};
+        A.visits.forEach(v => { const d = byDay[v.day] = byDay[v.day] || { vis: 0, pv: 0 }; d.vis++; d.pv += (v.pageViews || 0); });
+        const range = n => {
+          const from = dayOf(n - 1);
+          const rows = A.visits.filter(v => v.day >= from);
+          return { vis: new Set(rows.map(v => v.vid)).size, pv: rows.reduce((s, v) => s + (v.pageViews || 0), 0) };
+        };
+        const t1 = range(1), t7 = range(7), t30 = range(30);
+        const users = this.users;
+        const newU7 = users.filter(u => u.createdAt && now - u.createdAt < 7 * DAY).length;
+        const act7 = users.filter(u => u.lastLoginAt && now - u.lastLoginAt < 7 * DAY).length;
+        const reviews = this.topics.reduce((n, t) => n + (t.reviews || []).length, 0);
+        const comments = this.posts.reduce((n, p) => n + (p.comments || []).length, 0);
+        const likes = this.posts.reduce((n, p) => n + (p.likedBy || []).length, 0);
+        const card = (label, val, sub) => `<div class="rounded-2xl bg-parchment-100 border border-ink-200 p-4"><div class="text-[11px] text-ink-500">${label}</div><div class="font-serif font-bold text-2xl text-ink-900 mt-0.5">${val}</div>${sub ? `<div class="text-[10px] text-ink-400 mt-0.5">${sub}</div>` : ''}</div>`;
+        let maxPv = 1;
+        for (let i = 0; i < 14; i++) { const d = byDay[dayOf(i)]; if (d && d.pv > maxPv) maxPv = d.pv; }
+        let bars = '';
+        for (let i = 13; i >= 0; i--) {
+          const k = dayOf(i), d = byDay[k] || { vis: 0, pv: 0 };
+          const hv = Math.max(2, Math.round(d.vis / maxPv * 110)), hp = Math.max(2, Math.round(d.pv / maxPv * 110));
+          bars += `<div class="flex-1 flex flex-col items-center justify-end gap-1" title="${k.slice(8)}/${k.slice(5, 7)}: ${d.vis} người truy cập, ${d.pv} lượt xem"><div class="flex items-end gap-px w-full justify-center h-[110px]"><div class="w-1/2 max-w-[10px] bg-leather-600 rounded-t" style="height:${hv}px"></div><div class="w-1/2 max-w-[10px] bg-leather-400 rounded-t" style="height:${hp}px"></div></div><span class="text-[9px] text-ink-400">${k.slice(8)}/${k.slice(5, 7)}</span></div>`;
+        }
+        const P = 'https://console.firebase.google.com/project/thu-hien-ea961';
+        const links = [['Danh sách tài khoản (Authentication)', P + '/authentication/users'], ['Phân tích truy cập chi tiết (Analytics)', P + '/analytics'], ['Dữ liệu (Firestore)', P + '/firestore'], ['Mức sử dụng & chi phí', P + '/usage']]
+          .map(l => `<a href="${l[1]}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-full border border-ink-300 bg-white text-[11px] font-semibold text-ink-800 hover:bg-parchment-100">${l[0]}</a>`).join('');
+        const recent = (arr, f, col) => arr.slice(0, 15).map(x => `<div class="flex items-center justify-between gap-2 py-1.5 border-b border-ink-200/60 text-[11px]"><span class="min-w-0 truncate text-ink-800">${f(x)}</span><button type="button" onclick="app.adminDelete('${col}', '${x.id}')" class="shrink-0 px-2 py-0.5 rounded-full border border-terracotta-300 text-terracotta-700 hover:bg-terracotta-50">Xóa</button></div>`).join('') || '<p class="text-[11px] text-ink-400 py-2">Chưa có nội dung.</p>';
+        root.innerHTML = `
+          <div class="flex flex-wrap items-center gap-2 justify-between">
+            <div class="flex flex-wrap gap-2">${links}</div>
+            <button type="button" onclick="app.adminRefresh()" class="px-3 py-1.5 rounded-full bg-leather-600 text-white text-[11px] font-semibold">Làm mới số liệu</button>
+          </div>
+          <section><h3 class="font-serif font-bold text-base text-ink-900 mb-2">Lưu lượng truy cập</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              ${card('Người truy cập hôm nay', t1.vis, t1.pv + ' lượt xem')}
+              ${card('7 ngày qua', t7.vis, t7.pv + ' lượt xem')}
+              ${card('30 ngày qua', t30.vis, t30.pv + ' lượt xem')}
+              ${card('Hôm nay (' + today.slice(8) + '/' + today.slice(5, 7) + ')', t1.pv, 'lượt xem trang')}
+            </div>
+            <div class="rounded-2xl bg-parchment-100 border border-ink-200 p-4 mt-3">
+              <div class="flex items-center justify-between mb-2 text-[11px] text-ink-500"><span>14 ngày gần nhất</span><span class="flex items-center gap-3"><span class="flex items-center gap-1"><i class="w-2 h-2 bg-leather-600 inline-block rounded-sm"></i>Người truy cập</span><span class="flex items-center gap-1"><i class="w-2 h-2 bg-leather-400 inline-block rounded-sm"></i>Lượt xem</span></span></div>
+              <div class="flex items-end gap-1">${bars}</div>
+            </div>
+            <p class="text-[11px] text-ink-400 mt-2">Số đếm nội bộ: mỗi trình duyệt tính là một người truy cập mỗi ngày, không tính lượt của quản trị viên. Quốc gia, thiết bị và nguồn truy cập xem trong Analytics (nút ở trên).</p>
+          </section>
+          <section><h3 class="font-serif font-bold text-base text-ink-900 mb-2">Tổng quan website</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              ${card('Tài khoản đăng ký', users.length, '+' + newU7 + ' mới trong 7 ngày')}
+              ${card('Đăng nhập 7 ngày qua', act7, 'tài khoản hoạt động')}
+              ${card('Bài chia sẻ', this.posts.length, likes + ' lượt thích • ' + comments + ' bình luận')}
+              ${card('Đầu sách', this.topics.length, reviews + ' bài review')}
+              ${card('Tin bán/đổi sách', this.exchanges.length)}
+              ${card('Lượt theo dõi', this.follows.length)}
+            </div>
+          </section>
+          <section><div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <h3 class="font-serif font-bold text-base text-ink-900">Tài khoản đăng ký <span id="admin-users-count" class="text-xs font-sans text-ink-400"></span></h3>
+              <div class="flex gap-2"><input type="text" oninput="app.adminSearch(this.value)" placeholder="Tìm tên hoặc email..." class="bg-white border border-ink-200 rounded-full px-3 py-1.5 text-xs focus:outline-none focus:border-ink-900"><button type="button" onclick="app.adminExportCsv()" class="px-3 py-1.5 rounded-full border border-ink-300 bg-white text-[11px] font-semibold text-ink-800 hover:bg-parchment-100">Tải CSV</button></div>
+            </div>
+            <div class="rounded-2xl border border-ink-200 bg-parchment-100 overflow-x-auto"><table class="w-full text-[11px] text-left min-w-[720px]"><thead class="text-ink-500 border-b border-ink-200"><tr><th class="p-2.5">Tên</th><th class="p-2.5">Email</th><th class="p-2.5">SĐT</th><th class="p-2.5">Tham gia</th><th class="p-2.5">Đăng nhập gần nhất</th><th class="p-2.5 text-center">Bài</th><th class="p-2.5 text-center">Review</th><th class="p-2.5 text-center">Tin đăng</th><th class="p-2.5 text-center">Theo dõi</th></tr></thead><tbody id="admin-users-body"></tbody></table></div>
+          </section>
+          <section><h3 class="font-serif font-bold text-base text-ink-900 mb-2">Kiểm duyệt nội dung</h3>
+            <div class="grid md:grid-cols-3 gap-3">
+              <div class="rounded-2xl bg-parchment-100 border border-ink-200 p-3"><div class="text-xs font-bold text-ink-800 mb-1">Bài chia sẻ mới nhất</div>${recent(this.posts, p => esc(this.unesc(p.bookTitle)) + ' — ' + esc(this.unesc(p.author)), 'posts')}</div>
+              <div class="rounded-2xl bg-parchment-100 border border-ink-200 p-3"><div class="text-xs font-bold text-ink-800 mb-1">Đầu sách mới nhất</div>${recent(this.topics, t => esc(this.unesc(t.title)), 'topics')}</div>
+              <div class="rounded-2xl bg-parchment-100 border border-ink-200 p-3"><div class="text-xs font-bold text-ink-800 mb-1">Tin bán/đổi mới nhất</div>${recent(this.exchanges, e => esc(this.unesc(e.bookTitle)) + ' — ' + esc(this.unesc(e.ownerName)), 'exchanges')}</div>
+            </div>
+          </section>`;
+        this.renderAdminTable();
+      },
+      adminRows() {
+        const A = this._admin, C = this.adminCounts(), q = (A.q || '').trim().toLowerCase();
+        const fmt = ts => { if (!ts) return ''; const d = new Date(ts); return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+        return this.users.slice().sort((a, b) => (b.lastLoginAt || 0) - (a.lastLoginAt || 0)).map(u => {
+          const pv = A.priv[u.id] || {};
+          return { id: u.id, name: u.name || '', email: pv.email || '', phone: pv.contact || '', joined: u.createdAt ? fmt(u.createdAt).split(' ')[0] : (u.joinedDate || ''), last: fmt(u.lastLoginAt), posts: C.posts[u.id] || 0, revs: C.revs[u.id] || 0, exch: C.exch[u.id] || 0, fol: C.fol[u.id] || 0, loc: u.location || '' };
+        }).filter(r => !q || (r.name + ' ' + r.email).toLowerCase().includes(q));
+      },
+      renderAdminTable() {
+        const body = document.getElementById('admin-users-body');
+        if (!body || !this._admin) return;
+        const esc = s => this.esc(s);
+        const rows = this.adminRows();
+        const c = document.getElementById('admin-users-count'); if (c) c.innerText = '(' + rows.length + ')';
+        body.innerHTML = rows.slice(0, 300).map(r => `<tr class="border-b border-ink-200/60"><td class="p-2.5 font-semibold text-ink-900"><span class="cursor-pointer hover:underline" onclick="app.openUserProfile('${r.id}')">${esc(r.name)}</span></td><td class="p-2.5">${esc(r.email)}</td><td class="p-2.5">${esc(r.phone)}</td><td class="p-2.5">${esc(r.joined)}</td><td class="p-2.5">${esc(r.last)}</td><td class="p-2.5 text-center">${r.posts}</td><td class="p-2.5 text-center">${r.revs}</td><td class="p-2.5 text-center">${r.exch}</td><td class="p-2.5 text-center">${r.fol}</td></tr>`).join('') || '<tr><td colspan="9" class="p-4 text-center text-ink-400">Không có tài khoản phù hợp.</td></tr>';
+      },
+      adminSearch(q) { if (this._admin) { this._admin.q = q; this.renderAdminTable(); } },
+      adminExportCsv() {
+        if (!this._admin) return;
+        const cell = v => { let s = String(v == null ? '' : v); if (/^[=+\-@]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
+        const head = ['Tên', 'Email', 'SĐT', 'Khu vực', 'Tham gia', 'Đăng nhập gần nhất', 'Bài chia sẻ', 'Review', 'Tin đăng', 'Người theo dõi'];
+        const lines = [head.map(cell).join(',')].concat(this.adminRows().map(r => [r.name, r.email, r.phone, r.loc, r.joined, r.last, r.posts, r.revs, r.exch, r.fol].map(cell).join(',')));
+        const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = 'thuhien-tai-khoan.csv';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      },
+      adminDelete(col, id) {
+        if (!this.isAdmin() || !/^[\w-]+$/.test(id)) return;
+        if (!confirm('Xóa vĩnh viễn nội dung này? Không thể khôi phục.')) return;
+        window.thuhienDB.del(col + '/' + id).then(() => {
+          this[col] = this[col].filter(x => x.id !== id);
+          if (this._synced[col]) delete this._synced[col][id];
+          this.refreshViews();
+          this.renderAdminHtml();
+          this.showToast('Đã xóa nội dung.');
+        }).catch(err => this.onWriteError(col, id, err));
+      },
+
       openEditProfileModal() {
         const user = this.getCurrentUser();
         if (!user) {
@@ -2550,6 +2745,7 @@
 
       // Navigation & Tab Switching
       switchTab(tab, fromRoute) {
+        if (tab === 'admin') this.ensureAdminView();
         this.currentTab = tab;
 
         // Hide all views
@@ -2604,6 +2800,8 @@
           this.renderInbox();
         } else if (tab === 'shelf') {
           this.renderShelf();
+        } else if (tab === 'admin') {
+          this.renderAdmin();
         }
 
         if (!fromRoute) this.setHash('#/' + this.TAB_SLUGS[tab]);
@@ -2647,6 +2845,12 @@
           tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-parchment-200 text-ink-800 border border-ink-300";
           title.innerText = "Hộp Thư Độc Giả";
           desc.innerText = "Không gian trò chuyện, trao đổi chi tiết về đề xuất đổi sách hoặc mua bán sách cũ.";
+          actionBox.innerHTML = '';
+        } else if (this.currentTab === 'admin') {
+          tag.innerText = "Quản Trị";
+          tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-parchment-200 text-ink-800 border border-ink-300";
+          title.innerText = "Bảng Quản Trị";
+          desc.innerText = "Số liệu truy cập, tài khoản và nội dung của Thư Hiên. Chỉ quản trị viên xem được.";
           actionBox.innerHTML = '';
         } else if (this.currentTab === 'shelf') {
           tag.innerText = "Cá Nhân";
@@ -4101,7 +4305,8 @@
       apiKey: "AIzaSyDD4e4yrmgbqChsYmsfplahKjbK79UdOZA",
       authDomain: "thu-hien-ea961.firebaseapp.com",
       projectId: "thu-hien-ea961",
-      appId: "1:823535706258:web:13cd5c287eae0a374a864b"
+      appId: "1:823535706258:web:13cd5c287eae0a374a864b",
+      measurementId: "G-4E7LZSHK9W"
     };
     // >>> HẾT PHẦN CẤU HÌNH <<<
 
@@ -4128,10 +4333,25 @@
             },
             set(path, data, merge) { return fb.setDoc(fb.doc(fsdb, path), data, { merge: !!merge }); },
             del(path) { return fb.deleteDoc(fb.doc(fsdb, path)); },
+            incr(path, extra) { return fb.setDoc(fb.doc(fsdb, path), Object.assign({}, extra, { pageViews: fb.increment(1) }), { merge: true }); },
+            list(name, opts) {
+              let ref = fb.collection(fsdb, name);
+              if (opts && opts.where) ref = fb.query(ref, fb.where(opts.where[0], opts.where[1], opts.where[2]));
+              return fb.getDocs(ref).then((snap) => snap.docs.map((d) => Object.assign({}, d.data(), { id: d.id })));
+            },
             get(path) { return fb.getDoc(fb.doc(fsdb, path)).then((s) => (s.exists() ? Object.assign({}, s.data(), { id: s.id }) : null)); }
           };
         } catch (err) {
           console.error('Không tải được Firestore:', err);
+        }
+        try {
+          if (FIREBASE_CONFIG.measurementId) {
+            const an = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-analytics.js`);
+            const analytics = an.initializeAnalytics(fbApp, { config: { send_page_view: false } });
+            window.thuhienTrack = (path, title) => { try { an.logEvent(analytics, 'page_view', { page_path: path, page_title: title, page_location: location.href }); } catch (e) {} };
+          }
+        } catch (err) {
+          console.warn('Analytics không khả dụng:', err);
         }
         const go = () => {
           try { app.connectRemote(); } catch (err) { console.error(err); }
