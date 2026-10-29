@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thư Hiên — Đọc sách bên hiên nhà</title>
+  <link rel="canonical" id="canonical-link" href="">
+  <meta property="og:url" id="og-url" content="">
   <meta name="description" content="Thư Hiên: nơi chia sẻ trích dẫn, viết review, trao đổi và sang nhượng sách cũ giữa những người yêu sách.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Thư Hiên — Đọc sách bên hiên nhà">
@@ -132,6 +134,7 @@
   /* iOS tự phóng to khi chạm vào ô nhập nhỏ hơn 16px: chỉ áp dụng trên iOS để giữ giao diện gọn */
     @supports (-webkit-touch-callout: none) { input, select, textarea { font-size: 16px !important; } }
   </style>
+<script>(function(){var u=location.origin+'/';var c=document.getElementById('canonical-link');if(c)c.href=u;var o=document.getElementById('og-url');if(o)o.content=u;})();</script>
 </head>
 <body class="bg-paper text-ink-900 font-sans antialiased min-h-full flex flex-col selection:bg-leather-100 selection:text-leather-600 pb-20 md:pb-8">
 
@@ -140,7 +143,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
       
       <!-- Brand Logo -->
-      <div class="flex items-center gap-3 cursor-pointer shrink-0" onclick="app.switchTab('posts')">
+      <div onclick="app.goHome()" role="link" tabindex="0" aria-label="Về trang chủ Thư Hiên" onkeydown="if (event.key === 'Enter') app.goHome()" class="flex items-center gap-3 cursor-pointer shrink-0">
 <img src="data:image/png;base64,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" alt="Thư Hiên" class="w-10 h-10 object-contain shrink-0">
 
 
@@ -235,7 +238,7 @@
 
           <!-- Dropdown menu -->
           <div id="user-dropdown-menu" class="hidden absolute right-0 mt-2 w-72 bg-[#FAF6EE] border border-ink-200 rounded-2xl shadow-xl z-50 p-2 text-xs transition-all">
-            <div class="p-3 bg-parchment-200/70 rounded-xl mb-1.5 border border-ink-200/50">
+            <div onclick="app.openMyProfile()" role="link" tabindex="0" title="Xem trang cá nhân" onkeydown="if (event.key === 'Enter') app.openMyProfile()" class="p-3 bg-parchment-200/70 hover:bg-parchment-200 cursor-pointer rounded-xl mb-1.5 border border-ink-200/50 transition">
               <div class="flex items-center gap-2.5">
                 <div id="dropdown-avatar" class="overflow-hidden w-9 h-9 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-sm flex items-center justify-center shrink-0 shadow-sm">
                   ?
@@ -819,9 +822,10 @@
 <div id="checkin-chip" class="hidden inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-parchment-200 border border-ink-200 text-xs text-ink-800"><span>📍 <span id="checkin-chip-text"></span></span><button type="button" onclick="app.clearCheckin()" class="text-ink-400 hover:text-ink-900" aria-label="Bỏ check-in">✕</button></div>
 <div id="checkin-box" class="hidden mt-2">
 <div class="flex items-center gap-2">
-<input type="text" id="post-input-checkin" maxlength="80" placeholder="Bạn đang ở đâu?" onkeydown="if (event.key === 'Enter') { event.preventDefault(); app.confirmCheckin(); }" class="flex-1 min-w-0 bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs">
+<input type="text" id="post-input-checkin" maxlength="80" oninput="app.onCheckinInput(this.value)" autocomplete="off" placeholder="Bạn đang ở đâu?" onkeydown="if (event.key === 'Enter') { event.preventDefault(); app.confirmCheckin(); }" class="flex-1 min-w-0 bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs">
 <button type="button" onclick="app.confirmCheckin()" class="px-3 py-2 rounded-xl bg-leather-600 text-white text-xs font-semibold">Xong</button>
 </div>
+<div id="checkin-suggest" class="hidden mt-1.5 rounded-xl border border-ink-200 bg-white overflow-hidden text-xs"></div>
 <button type="button" onclick="app.useMyLocation()" class="mt-1 text-[11px] text-leather-600 underline">Dùng vị trí hiện tại</button>
 </div>
 </div>
@@ -1320,17 +1324,20 @@
     </div>
   </div>
 
-  <!-- ================= MODAL XEM ẢNH ================= -->
-<div id="lightbox-modal" class="fixed inset-0 z-[80] hidden bg-black/90 flex items-center justify-center" onclick="app.closeLightbox()">
-<button type="button" onclick="event.stopPropagation(); app.closeLightbox()" class="absolute top-4 right-4 text-white text-2xl px-3 py-1" aria-label="Đóng">✕</button>
-<button id="lb-prev" type="button" onclick="event.stopPropagation(); app.lightboxStep(-1)" class="absolute left-2 text-white text-4xl px-3 py-6" aria-label="Ảnh trước">‹</button>
-<img id="lb-img" src="" alt="" class="max-w-[96vw] max-h-[88vh] object-contain select-none" onclick="event.stopPropagation()">
-<button id="lb-next" type="button" onclick="event.stopPropagation(); app.lightboxStep(1)" class="absolute right-2 text-white text-4xl px-3 py-6" aria-label="Ảnh sau">›</button>
-<div id="lb-count" class="absolute bottom-4 text-white text-xs"></div>
+  <!-- ================= MODAL XEM ẢNH (ảnh + cột tương tác) ================= -->
+<div id="lightbox-modal" class="fixed inset-0 z-[80] hidden bg-black/95 flex flex-col md:flex-row">
+<div id="lb-stage" class="relative flex-1 min-h-0 flex items-center justify-center" onclick="if (event.target === this) app.closeLightbox()">
+<button type="button" onclick="app.closeLightbox()" class="absolute top-3 left-3 z-10 w-9 h-9 rounded-full bg-black/60 text-white text-lg leading-none flex items-center justify-center hover:bg-black/80" aria-label="Đóng">✕</button>
+<button id="lb-prev" type="button" onclick="app.lightboxStep(-1)" class="absolute left-2 z-10 w-10 h-10 rounded-full bg-black/50 text-white text-2xl leading-none flex items-center justify-center hover:bg-black/80" aria-label="Ảnh trước">‹</button>
+<img id="lb-img" src="" alt="" class="max-w-full max-h-full object-contain select-none p-2 md:p-6">
+<button id="lb-next" type="button" onclick="app.lightboxStep(1)" class="absolute right-2 z-10 w-10 h-10 rounded-full bg-black/50 text-white text-2xl leading-none flex items-center justify-center hover:bg-black/80" aria-label="Ảnh sau">›</button>
+<div id="lb-count" class="absolute bottom-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[11px]"></div>
+</div>
+<aside id="lb-panel" class="w-full md:w-[24rem] h-[48vh] md:h-auto shrink-0 bg-[#FAF6EE] flex flex-col min-h-0 md:border-l border-ink-200"></aside>
 </div>
 
 <!-- ================= MODAL CHIA SẺ ================= -->
-<div id="share-modal" class="fixed inset-0 z-[70] hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="if (event.target === this) app.closeModal('share-modal')">
+<div id="share-modal" class="fixed inset-0 z-[95] hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="if (event.target === this) app.closeModal('share-modal')">
 <div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-ink-200">
 <div class="flex items-center justify-between"><h3 class="font-serif font-bold text-base text-ink-900">Chia sẻ bài viết</h3><button type="button" onclick="app.closeModal('share-modal')" class="p-1 text-ink-400 hover:text-ink-900" aria-label="Đóng">✕</button></div>
 <p id="share-url" class="text-[11px] text-ink-500 break-all bg-parchment-200 rounded-xl p-2 mt-3"></p>
@@ -1345,7 +1352,7 @@
 </div>
 
 <!-- ================= MODAL HỒ SƠ ĐỘC GIẢ ================= -->
-<div id="user-profile-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="user-profile-modal" class="fixed inset-0 z-[95] hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4">
 <div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-ink-200 relative">
 <button type="button" onclick="app.closeModal('user-profile-modal')" class="absolute top-4 right-4 p-1 rounded-full text-ink-400 hover:text-ink-900" aria-label="Đóng">✕</button>
 <div id="user-profile-body"></div>
@@ -1353,7 +1360,7 @@
 </div>
 
 <!-- ================= MODAL ĐĂNG NHẬP GOOGLE ================= -->
-<div id="login-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+<div id="login-modal" class="fixed inset-0 z-[95] hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
 <div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-ink-200 text-center">
 <h3 class="font-serif font-bold text-lg text-ink-900">Đăng nhập Thư Hiên</h3>
 <p class="text-xs text-ink-500 mt-1.5 leading-relaxed">Dùng tài khoản Gmail của bạn. Thư Hiên chỉ nhận tên và địa chỉ email để tạo hồ sơ độc giả.</p>
@@ -1421,7 +1428,7 @@
   </div>
 
   <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed bottom-20 md:bottom-8 right-4 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 bg-ink-900 text-parchment-50 text-xs font-medium px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 border border-ink-700">
+  <div id="toast" class="fixed bottom-20 md:bottom-8 right-4 z-[100] transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 bg-ink-900 text-parchment-50 text-xs font-medium px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 border border-ink-700">
     <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
     <span id="toast-message">Đã lưu thành công!</span>
   </div>
@@ -1478,6 +1485,7 @@
       // Uploaded Images Storage (FileReader Base64)
       GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
       pendingAvatar: undefined,
+      _placeT: null, _placeSeq: 0, _places: [], checkinAddr: '',
       _admin: null, _adminLoading: false, _trackPending: false,
       checkinCoords: null, _pendingRoute: null, _lb: null, _lbKey: null, _shareId: null, _loadedOnce: { posts: false, topics: false, exchanges: false },
       messages: [], follows: [], remote: false, activeThread: null, viewUserId: null, myPrivate: null, unwatchMsgs: null,
@@ -1935,6 +1943,7 @@
           if (this.currentTab === 'shelf') this.renderShelf();
           this.refreshProfileModal();
           this.tryPendingRoute();
+          if (this._lb) this.renderLightboxPanel();
           if (this.currentTab === 'admin') {
             if (this._admin && this._admin.nUsers === this.users.length) this.renderAdminHtml(); else if (!this._adminLoading) { this._admin = null; this.renderAdmin(); }
           }
@@ -2366,11 +2375,6 @@
         pop.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left)) + 'px';
         pop.style.top = (r.top - h - 8 > 8 ? r.top - h - 8 : r.bottom + 8) + 'px';
       },
-      mapsUrl(post) {
-        const lat = post.checkinLat, lng = post.checkinLng;
-        const q = (typeof lat === 'number' && typeof lng === 'number' && isFinite(lat) && isFinite(lng)) ? (lat + ',' + lng) : encodeURIComponent(this.unesc(post.checkinName || ''));
-        return 'https://www.google.com/maps/search/?api=1&query=' + q;
-      },
       toggleCheckin() {
         document.getElementById('checkin-open').classList.add('hidden');
         document.getElementById('checkin-box').classList.remove('hidden');
@@ -2381,56 +2385,21 @@
         const name = (el && el.value || '').trim() || (this.checkinCoords ? 'Vị trí hiện tại' : '');
         if (!name) { this.clearCheckin(); return; }
         document.getElementById('checkin-chip-text').innerText = name;
+        const sb = document.getElementById('checkin-suggest'); if (sb) sb.classList.add('hidden');
         document.getElementById('checkin-box').classList.add('hidden');
         document.getElementById('checkin-open').classList.add('hidden');
         document.getElementById('checkin-chip').classList.remove('hidden');
       },
       clearCheckin() {
-        this.checkinCoords = null;
+        this.checkinCoords = null; this.checkinAddr = '';
+        const sb = document.getElementById('checkin-suggest'); if (sb) sb.classList.add('hidden');
         const el = document.getElementById('post-input-checkin'); if (el) el.value = '';
         document.getElementById('checkin-chip').classList.add('hidden');
         document.getElementById('checkin-box').classList.add('hidden');
         document.getElementById('checkin-open').classList.remove('hidden');
       },
-      useMyLocation() {
-        if (!navigator.geolocation) { this.showToast('Trình duyệt không hỗ trợ lấy vị trí.'); return; }
-        this.showToast('Đang lấy vị trí của bạn...');
-        navigator.geolocation.getCurrentPosition(pos => {
-          this.checkinCoords = { lat: Math.round(pos.coords.latitude * 1e5) / 1e5, lng: Math.round(pos.coords.longitude * 1e5) / 1e5 };
-          const el = document.getElementById('post-input-checkin');
-          if (el && !el.value.trim()) el.value = 'Vị trí hiện tại';
-          this.confirmCheckin();
-        }, () => this.showToast('Không lấy được vị trí. Hãy cho phép truy cập vị trí hoặc gõ tên địa điểm.'), { timeout: 10000 });
-      },
 
       // ===== XEM ẢNH FULL SIZE =====
-      openLightbox(col, id, idx) {
-        const it = (this[col] || []).find(x => x.id === id);
-        if (!it) return;
-        const list = (it.images && it.images.length ? it.images : (it.covers && it.covers.length ? it.covers : [it.image || it.cover])).filter(Boolean);
-        if (!list.length) return;
-        this._lb = { list: list, i: Math.min(Math.max(idx || 0, 0), list.length - 1) };
-        this.renderLightbox();
-        document.getElementById('lightbox-modal').classList.remove('hidden');
-        if (!this._lbKey) {
-          this._lbKey = e => { if (e.key === 'Escape') this.closeLightbox(); else if (e.key === 'ArrowLeft') this.lightboxStep(-1); else if (e.key === 'ArrowRight') this.lightboxStep(1); };
-          document.addEventListener('keydown', this._lbKey);
-          const box = document.getElementById('lightbox-modal'); let x0 = null;
-          box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
-          box.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) this.lightboxStep(dx < 0 ? 1 : -1); x0 = null; }, { passive: true });
-        }
-      },
-      renderLightbox() {
-        const lb = this._lb; if (!lb) return;
-        document.getElementById('lb-img').src = lb.list[lb.i];
-        document.getElementById('lb-count').innerText = lb.list.length > 1 ? (lb.i + 1) + ' / ' + lb.list.length : '';
-        ['lb-prev', 'lb-next'].forEach(id => { document.getElementById(id).classList.toggle('hidden', lb.list.length < 2); });
-      },
-      lightboxStep(d) {
-        const lb = this._lb; if (!lb || lb.list.length < 2) return;
-        lb.i = (lb.i + d + lb.list.length) % lb.list.length; this.renderLightbox();
-      },
-      closeLightbox() { document.getElementById('lightbox-modal').classList.add('hidden'); },
 
       // ===== CHIA SẺ BÀI VIẾT =====
       shareUrl(id) { return location.origin + location.pathname + '#/bai-viet/' + id; },
@@ -2644,6 +2613,242 @@
           this.showToast('Đã xóa nội dung.');
         }).catch(err => this.onWriteError(col, id, err));
       },
+
+      goHome() {
+        ['post-detail-modal', 'topic-detail-modal'].forEach(id => { const m = document.getElementById(id); if (m) m.classList.add('hidden'); });
+        this.switchTab('posts');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      },
+      openMyProfile() {
+        this.closeUserMenu();
+        if (!this.getCurrentUser()) { this.openLoginModal(); return; }
+        this.switchTab('shelf');
+      },
+
+      // ===== CHECK-IN: TÌM ĐỊA ĐIỂM THẬT (dữ liệu OpenStreetMap) & MỞ GOOGLE MAPS =====
+      mapsUrl(post) {
+        const lat = post.checkinLat, lng = post.checkinLng;
+        const name = this.unesc(post.checkinName || ''), addr = this.unesc(post.checkinAddr || '');
+        const hasCoords = typeof lat === 'number' && typeof lng === 'number' && isFinite(lat) && isFinite(lng);
+        let q;
+        if (hasCoords && !addr) q = lat + ',' + lng;
+        else q = encodeURIComponent(addr ? name + ', ' + addr : name);
+        return 'https://www.google.com/maps/search/?api=1&query=' + q;
+      },
+      placeFromFeature(f) {
+        const p = f.properties || {}, c = f.geometry && f.geometry.coordinates;
+        if (!c || typeof c[0] !== 'number' || typeof c[1] !== 'number') return null;
+        const road = p.street ? ((p.housenumber ? p.housenumber + ' ' : '') + p.street) : '';
+        const name = p.name || road;
+        if (!name) return null;
+        const addr = [road, p.district || p.locality, p.city || p.county, p.state].filter(Boolean).filter((x, i, a) => a.indexOf(x) === i && x !== name).join(', ');
+        return { name: String(name).slice(0, 80), addr: addr.slice(0, 120), lat: Math.round(c[1] * 1e5) / 1e5, lng: Math.round(c[0] * 1e5) / 1e5 };
+      },
+      onCheckinInput(v) {
+        clearTimeout(this._placeT);
+        this.checkinCoords = null; this.checkinAddr = '';
+        const q = (v || '').trim();
+        const box = document.getElementById('checkin-suggest');
+        if (q.length < 2) { this._placeSeq++; if (box) box.classList.add('hidden'); return; }
+        this._placeT = setTimeout(() => this.searchPlaces(q), 450);
+      },
+      async searchPlaces(q) {
+        const box = document.getElementById('checkin-suggest');
+        if (!box) return;
+        const seq = ++this._placeSeq;
+        box.classList.remove('hidden');
+        box.innerHTML = '<div class="p-2.5 text-ink-400">Đang tìm địa điểm...</div>';
+        try {
+          const res = await fetch('https://photon.komoot.io/api/?limit=6&bbox=102.1,8.4,109.6,23.4&q=' + encodeURIComponent(q));
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (seq !== this._placeSeq) return;
+          this._places = (data.features || []).map(f => this.placeFromFeature(f)).filter(Boolean);
+          this.renderPlaces('Không thấy địa điểm phù hợp. Bạn có thể giữ tên vừa gõ và bấm Xong.');
+        } catch (err) {
+          if (seq !== this._placeSeq) return;
+          this._places = [];
+          this.renderPlaces('Chưa tìm được gợi ý lúc này. Bạn vẫn có thể gõ tên địa điểm rồi bấm Xong.');
+        }
+      },
+      renderPlaces(emptyText) {
+        const box = document.getElementById('checkin-suggest');
+        if (!box) return;
+        const list = this._places || [];
+        box.classList.remove('hidden');
+        box.innerHTML = (list.length ? list.map((pl, i) => `<button type="button" onclick="app.pickPlace(${i})" class="w-full text-left px-3 py-2 hover:bg-parchment-100 border-b border-ink-200/60"><div class="font-semibold text-ink-900">📍 ${this.esc(pl.name)}</div>${pl.addr ? `<div class="text-[11px] text-ink-500">${this.esc(pl.addr)}</div>` : ''}</button>`).join('') : `<div class="p-2.5 text-ink-500">${emptyText}</div>`) + '<div class="px-3 py-1 text-[10px] text-ink-400 bg-parchment-100">Dữ liệu địa điểm © OpenStreetMap • bản đồ mở bằng Google Maps</div>';
+      },
+      pickPlace(i) {
+        const pl = (this._places || [])[i];
+        if (!pl) return;
+        const el = document.getElementById('post-input-checkin');
+        if (el) el.value = pl.name;
+        this.checkinCoords = { lat: pl.lat, lng: pl.lng };
+        this.checkinAddr = pl.addr || '';
+        this.confirmCheckin();
+      },
+      useMyLocation() {
+        if (!navigator.geolocation) { this.showToast('Trình duyệt không hỗ trợ lấy vị trí.'); return; }
+        this.showToast('Đang lấy vị trí của bạn...');
+        navigator.geolocation.getCurrentPosition(async pos => {
+          const lat = Math.round(pos.coords.latitude * 1e5) / 1e5, lng = Math.round(pos.coords.longitude * 1e5) / 1e5;
+          const here = { name: 'Vị trí hiện tại', addr: '', lat: lat, lng: lng };
+          const seq = ++this._placeSeq;
+          this._places = [here];
+          this.renderPlaces('');
+          try {
+            const res = await fetch('https://photon.komoot.io/reverse?limit=6&radius=1&lon=' + lng + '&lat=' + lat);
+            const data = await res.json();
+            if (seq !== this._placeSeq) return;
+            const near = (data.features || []).map(f => this.placeFromFeature(f)).filter(Boolean);
+            this._places = [here].concat(near);
+            this.renderPlaces('');
+          } catch (err) { /* vẫn dùng được "Vị trí hiện tại" */ }
+        }, () => this.showToast('Không lấy được vị trí. Hãy cho phép truy cập vị trí hoặc gõ tên địa điểm.'), { timeout: 10000 });
+      },
+
+
+      openLightbox(col, id, idx) {
+        const it = (this[col] || []).find(x => x.id === id);
+        if (!it) return;
+        const list = (it.images && it.images.length ? it.images : (it.covers && it.covers.length ? it.covers : [it.image || it.cover])).filter(Boolean);
+        if (!list.length) return;
+        this._lb = { list: list, i: Math.min(Math.max(idx || 0, 0), list.length - 1), col: col, id: id };
+        this.renderLightbox();
+        this.renderLightboxPanel();
+        document.getElementById('lightbox-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        if (!this._lbKey) {
+          this._lbKey = e => {
+            const m = document.getElementById('lightbox-modal');
+            if (!m || m.classList.contains('hidden')) return;
+            const typing = /^(INPUT|TEXTAREA)$/.test((e.target && e.target.tagName) || '');
+            if (e.key === 'Escape') this.closeLightbox();
+            else if (!typing && e.key === 'ArrowLeft') this.lightboxStep(-1);
+            else if (!typing && e.key === 'ArrowRight') this.lightboxStep(1);
+          };
+          document.addEventListener('keydown', this._lbKey);
+          const box = document.getElementById('lb-stage'); let x0 = null;
+          box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+          box.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) this.lightboxStep(dx < 0 ? 1 : -1); x0 = null; }, { passive: true });
+        }
+      },
+      renderLightbox() {
+        const lb = this._lb; if (!lb) return;
+        document.getElementById('lb-img').src = lb.list[lb.i];
+        document.getElementById('lb-count').innerText = lb.list.length > 1 ? (lb.i + 1) + ' / ' + lb.list.length : '';
+        document.getElementById('lb-count').classList.toggle('hidden', lb.list.length < 2);
+        ['lb-prev', 'lb-next'].forEach(id => { document.getElementById(id).classList.toggle('hidden', lb.list.length < 2); });
+      },
+      lightboxStep(d) {
+        const lb = this._lb; if (!lb || lb.list.length < 2) return;
+        lb.i = (lb.i + d + lb.list.length) % lb.list.length; this.renderLightbox();
+      },
+      closeLightbox() {
+        document.getElementById('lightbox-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+        this._lb = null;
+      },
+      renderLightboxPanel() {
+        const lb = this._lb, panel = document.getElementById('lb-panel');
+        if (!lb || !panel) return;
+        const it = (this[lb.col] || []).find(x => x.id === lb.id);
+        const prev = document.getElementById('lb-comment-input');
+        const draft = prev ? prev.value : '', focused = !!prev && document.activeElement === prev;
+        const sc0 = document.getElementById('lb-scroll'); const st = sc0 ? sc0.scrollTop : 0;
+        let html;
+        if (!it) html = '<div class="p-6 text-center text-xs text-ink-500">Nội dung này không còn tồn tại.</div>';
+        else if (lb.col === 'posts') html = this.lbPostHtml(it);
+        else if (lb.col === 'topics') html = this.lbTopicHtml(it);
+        else html = this.lbExchangeHtml(it);
+        panel.innerHTML = html;
+        const inp = document.getElementById('lb-comment-input');
+        if (inp) { inp.value = draft; if (focused) inp.focus(); }
+        const sc = document.getElementById('lb-scroll'); if (sc) sc.scrollTop = st;
+      },
+      lbPostHtml(p) {
+        const me = this.getCurrentUser();
+        const comments = (p.comments || []).map(c => `<div class="flex gap-2.5">${this.avatarCircle(c.authorId, c.author, 'w-8 h-8')}<div class="min-w-0 flex-1"><div class="bg-parchment-200/70 rounded-2xl px-3 py-2"><button type="button" onclick="app.openUserProfile('${c.authorId || ''}')" class="font-bold text-[11px] text-ink-900 hover:underline">${c.author}</button><p class="text-xs text-ink-700 leading-relaxed whitespace-pre-line break-words">${c.text}</p></div><div class="text-[10px] text-ink-400 mt-0.5 ml-2">${c.time || ''}</div></div></div>`).join('') || '<p class="text-center text-[11px] text-ink-400 py-4">Chưa có bình luận. Hãy là người đầu tiên!</p>';
+        const checkin = p.checkinName ? ` <span class="text-[11px] text-ink-500">đang ở <a href="${this.mapsUrl(p)}" target="_blank" rel="noopener" class="font-semibold text-ink-800 hover:underline">📍 ${p.checkinName}</a></span>` : '';
+        const tags = (p.tags && p.tags.length) ? `<div class="flex flex-wrap gap-1 mt-2">${p.tags.map(t => `<span class="px-2 py-0.5 rounded-full text-[10px] bg-parchment-200 text-ink-600 border border-ink-200/60">#${t}</span>`).join('')}</div>` : '';
+        const quote = p.quote ? `<blockquote class="mt-2 border-l-2 border-leather-400 pl-3 italic text-xs text-ink-700 font-serif">${p.quote}</blockquote>` : '';
+        const act = (cls, onclick, label) => `<button type="button" onclick="${onclick}" class="py-2.5 hover:bg-parchment-200 transition ${cls}">${label}</button>`;
+        const input = me
+          ? `<form onsubmit="app.submitLbComment(event)" class="p-3 border-t border-ink-200 flex items-center gap-2">${this.avatarCircle(me.id, me.name, 'w-8 h-8')}<input id="lb-comment-input" type="text" maxlength="500" autocomplete="off" placeholder="Viết bình luận..." class="flex-1 min-w-0 bg-white border border-ink-200 rounded-full px-3 py-2 text-xs focus:outline-none focus:border-ink-900"><button type="button" onclick="app.openEmoji(this, 'lb-comment-input')" class="shrink-0 text-lg px-1" aria-label="Chèn emoji">😊</button><button type="submit" class="shrink-0 px-3 py-2 rounded-full bg-leather-600 text-white text-xs font-semibold">Gửi</button></form>`
+          : `<div class="p-3 border-t border-ink-200"><button type="button" onclick="app.openLoginModal()" class="w-full py-2 rounded-full bg-leather-600 text-white text-xs font-semibold">Đăng nhập để thích và bình luận</button></div>`;
+        return `<div id="lb-scroll" class="flex-1 min-h-0 overflow-y-auto">
+          <div class="p-4">
+            <div class="flex items-center gap-3">${this.avatarCircle(p.authorId, p.author, 'w-10 h-10')}<div class="min-w-0"><div class="flex flex-wrap items-baseline gap-x-1.5"><button type="button" onclick="app.openUserProfile('${p.authorId || ''}')" class="font-bold text-sm text-ink-900 hover:underline">${p.author}</button>${checkin}</div><div class="text-[11px] text-ink-400">${p.time || ''}</div></div></div>
+            <p class="mt-3 text-sm text-ink-800 leading-relaxed whitespace-pre-line break-words">${p.content || ''}</p>${quote}${tags}
+            <div class="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-parchment-200 border border-ink-200/60 text-[11px] text-ink-700">📖 ${p.bookTitle || ''}</div>
+          </div>
+          <div class="px-4 py-2 text-[11px] text-ink-500 flex items-center justify-between"><span>${p.userLiked ? '❤️' : '🤍'} ${p.likes || 0} lượt thích</span><span>${(p.comments || []).length} bình luận</span></div>
+          <div class="grid grid-cols-4 border-y border-ink-200 text-[11px] font-semibold text-ink-700">
+            ${act(p.userLiked ? 'text-terracotta-600' : '', 'app.lbLike()', (p.userLiked ? '❤️' : '🤍') + ' Thích')}
+            ${act('', 'app.lbFocusComment()', '💬 Bình luận')}
+            ${act(p.userSaved ? 'text-leather-600' : '', 'app.lbSave()', '🔖 ' + (p.userSaved ? 'Đã lưu' : 'Lưu'))}
+            ${act('', 'app.lbShare()', '↗ Chia sẻ')}
+          </div>
+          <div class="p-4 space-y-3">${comments}</div>
+        </div>${input}`;
+      },
+      lbTopicHtml(t) {
+        const revs = t.reviews || [];
+        const avg = revs.length ? (revs.reduce((s, r) => s + (Number(r.rating) || 0), 0) / revs.length).toFixed(1) : '';
+        return `<div id="lb-scroll" class="flex-1 min-h-0 overflow-y-auto p-4">
+          <h3 class="font-serif font-bold text-lg text-ink-900 leading-snug">${t.title || ''}</h3>
+          <p class="text-xs text-ink-600 mt-0.5">${t.author || ''}${t.genreName ? ' • ' + t.genreName : ''}</p>
+          <p class="text-xs text-ink-500 mt-2">${avg ? '★ ' + avg + '/5 • ' : ''}${revs.length} bài review</p>
+          ${t.synopsis ? `<p class="mt-3 text-sm text-ink-700 leading-relaxed whitespace-pre-line break-words">${t.synopsis}</p>` : ''}
+          <button type="button" onclick="app.lbOpenTopic()" class="mt-4 w-full py-2.5 rounded-full bg-leather-600 text-white text-xs font-semibold">Xem chi tiết và đọc review</button>
+        </div>`;
+      },
+      lbExchangeHtml(e) {
+        const own = !!this.currentUserId && e.userId === this.currentUserId;
+        const price = Number(e.price) > 0 ? Number(e.price).toLocaleString('vi-VN') + ' đ' : '';
+        return `<div id="lb-scroll" class="flex-1 min-h-0 overflow-y-auto p-4">
+          <h3 class="font-serif font-bold text-lg text-ink-900 leading-snug">${e.bookTitle || ''}</h3>
+          <p class="text-xs text-ink-600 mt-0.5">${e.author || ''}</p>
+          <div class="mt-3 flex flex-wrap gap-1.5 text-[11px]">
+            ${price ? `<span class="px-2.5 py-1 rounded-full bg-leather-100 text-leather-600 font-bold">${price}</span>` : ''}
+            ${e.exchangeWish ? `<span class="px-2.5 py-1 rounded-full bg-parchment-200 text-ink-700">Muốn đổi lấy: ${e.exchangeWish}</span>` : ''}
+            ${e.condition ? `<span class="px-2.5 py-1 rounded-full bg-parchment-200 text-ink-700">${e.condition}</span>` : ''}
+            ${e.location ? `<span class="px-2.5 py-1 rounded-full bg-parchment-200 text-ink-700">📍 ${e.location}</span>` : ''}
+          </div>
+          ${e.note ? `<p class="mt-3 text-sm text-ink-700 leading-relaxed whitespace-pre-line break-words">${e.note}</p>` : ''}
+          <div class="mt-4 flex items-center gap-2.5">${this.avatarCircle(e.userId, e.ownerName, 'w-9 h-9')}<button type="button" onclick="app.openUserProfile('${e.userId || ''}')" class="font-semibold text-sm text-ink-900 hover:underline">${e.ownerName || ''}</button></div>
+          ${own ? '<p class="mt-4 text-[11px] text-ink-400">Đây là tin của bạn.</p>' : '<button type="button" onclick="app.lbChatOwner()" class="mt-4 w-full py-2.5 rounded-full bg-leather-600 text-white text-xs font-semibold">Nhắn người đăng</button>'}
+        </div>`;
+      },
+      lbLike() { if (!this._lb) return; this.toggleLikePost(this._lb.id); this.renderLightboxPanel(); },
+      lbSave() { if (!this._lb) return; this.toggleSavePost(this._lb.id); this.renderLightboxPanel(); },
+      lbShare() { if (this._lb) this.sharePost(this._lb.id); },
+      lbFocusComment() { const i = document.getElementById('lb-comment-input'); if (i) i.focus(); else this.requireLogin(); },
+      lbOpenTopic() { if (!this._lb) return; const id = this._lb.id; this.closeLightbox(); this.openTopicDetail(id); },
+      lbChatOwner() {
+        if (!this._lb) return;
+        const e = this.exchanges.find(x => x.id === this._lb.id);
+        if (!e || !e.userId) return;
+        if (!this.requireLogin()) return;
+        this.closeLightbox(); this.openChat(e.userId);
+      },
+      submitLbComment(e) {
+        e.preventDefault();
+        if (!this.requireLogin() || !this._lb) return;
+        const input = document.getElementById('lb-comment-input');
+        const post = this.posts.find(p => p.id === this._lb.id);
+        if (!input || !input.value.trim() || !post) return;
+        const user = this.getCurrentUser();
+        post.comments = post.comments || [];
+        post.comments.push({ author: user.name, text: input.value.trim(), authorId: user.id, createdAt: Date.now(), time: 'Vừa xong' });
+        this.saveAll();
+        input.value = '';
+        this.renderPosts();
+        this.renderLightboxPanel();
+        const sc = document.getElementById('lb-scroll'); if (sc) sc.scrollTop = sc.scrollHeight;
+        this.showToast('Đã gửi bình luận!');
+      },
+
 
       openEditProfileModal() {
         const user = this.getCurrentUser();
@@ -3229,6 +3434,7 @@
           content: content,
           image: this.uploadedImages.post[0] || APP_IMAGES[selectedImgIndex] || IMG_0,
         images: this.uploadedImages.post.slice(),
+        checkinAddr: this.checkinCoords ? (this.checkinAddr || '') : '',
         checkinName: ((document.getElementById('post-input-checkin')?.value || '').trim() || (this.checkinCoords ? 'Vị trí hiện tại' : '')).slice(0, 80),
         checkinLat: this.checkinCoords ? this.checkinCoords.lat : null,
         checkinLng: this.checkinCoords ? this.checkinCoords.lng : null,
