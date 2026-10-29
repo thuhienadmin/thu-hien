@@ -1311,7 +1311,15 @@
     </div>
   </div>
 
-  <!-- ================= MODAL ĐĂNG NHẬP GOOGLE ================= -->
+  <!-- ================= MODAL HỒ SƠ ĐỘC GIẢ ================= -->
+<div id="user-profile-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+<div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-ink-200 relative">
+<button type="button" onclick="app.closeModal('user-profile-modal')" class="absolute top-4 right-4 p-1 rounded-full text-ink-400 hover:text-ink-900" aria-label="Đóng">✕</button>
+<div id="user-profile-body"></div>
+</div>
+</div>
+
+<!-- ================= MODAL ĐĂNG NHẬP GOOGLE ================= -->
 <div id="login-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
 <div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-ink-200 text-center">
 <h3 class="font-serif font-bold text-lg text-ink-900">Đăng nhập Thư Hiên</h3>
@@ -1437,6 +1445,8 @@
       // Uploaded Images Storage (FileReader Base64)
       GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
       pendingAvatar: undefined,
+      messages: [], follows: [], remote: false, activeThread: null, viewUserId: null, myPrivate: null, unwatchMsgs: null,
+      _synced: { posts: {}, topics: {}, exchanges: {} },
       uploadedImages: { post: [], exchange: [], topic: [] },
 
       // User Accounts System
@@ -1458,6 +1468,7 @@
       selectedFormRating: 5,
 
       init() {
+        this.__inited = true;
         this.users = getStoredData('users', SEED_USERS);
         this.currentUserId = null;
         this.posts = getStoredData('posts', SEED_POSTS);
@@ -1489,19 +1500,7 @@
         this.updateBadges();
       },
 
-      saveAll() {
-        setStoredData('posts', this.posts);
-        setStoredData('topics', this.topics);
-        setStoredData('exchanges', this.exchanges);
-        setStoredData('inbox', this.inbox);
-        setStoredData('users', this.users);
-        setStoredData('currentUserId', this.currentUserId);
-      },
 
-      saveUsers() {
-        setStoredData('users', this.users);
-        setStoredData('currentUserId', this.currentUserId);
-      },
 
       getCurrentUser() {
         if (!this.currentUserId) return null;
@@ -1568,7 +1567,7 @@
         return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'khac';
       },
 
-      compressImage(file, maxDim = 900, quality = 0.72) {
+      compressImage(file, maxDim = 800, quality = 0.7) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.onerror = reject;
@@ -1714,6 +1713,7 @@
 
       // ================= BOOK TAGS FILTERING =================
       filterByTag(tag) {
+        try { tag = decodeURIComponent(tag); } catch (err) {}
         this.activeTag = tag;
         
         // Update tag pill active UI
@@ -1783,37 +1783,468 @@
         }
       },
 
-      onAuthChanged(fbUser) {
-        if (!fbUser) {
-          this.currentUserId = null;
-          this.updateUserUI();
+
+      // ===== ĐỒNG BỘ FIRESTORE (diễn đàn dùng chung) =====
+      esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); },
+      unesc(s) { return String(s == null ? '' : s).replace(/&(amp|lt|gt|quot|#39|#92);/g, (m, k) => ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'", '#92': '\\' }[k])); },
+      attrSafe(s) { return encodeURIComponent(s == null ? '' : s).replace(/'/g, '%27'); },
+      escDeep(v) {
+        if (typeof v === 'string') return v.replace(/[&<>"'\\]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '\\': '&#92;' }[c]));
+        if (Array.isArray(v)) return v.map(x => this.escDeep(x));
+        if (v && typeof v === 'object') { const o = {}; Object.keys(v).forEach(k => { o[k] = this.escDeep(v[k]); }); return o; }
+        return v;
+      },
+      unescDeep(v) {
+        if (typeof v === 'string') return this.unesc(v);
+        if (Array.isArray(v)) return v.map(x => this.unescDeep(x));
+        if (v && typeof v === 'object') { const o = {}; Object.keys(v).forEach(k => { o[k] = this.unescDeep(v[k]); }); return o; }
+        return v;
+      },
+      avatarOf(uid) { const u = this.users.find(x => x.id === uid); return (u && u.avatarImg) || ''; },
+
+      timeAgo(ts) {
+        if (!ts) return '';
+        const s = Math.floor((Date.now() - ts) / 1000);
+        if (s < 60) return 'Vừa xong';
+        const m = Math.floor(s / 60); if (m < 60) return m + ' phút trước';
+        const h = Math.floor(m / 60); if (h < 24) return h + ' giờ trước';
+        const d = Math.floor(h / 24); if (d < 7) return d + ' ngày trước';
+        const dt = new Date(ts); return dt.getDate() + '/' + (dt.getMonth() + 1) + '/' + dt.getFullYear();
+      },
+
+      serialize(item) {
+        const o = this.unescDeep(JSON.parse(JSON.stringify(item)));
+        ['userLiked', 'userSaved', 'authorAvatarImg', 'isMyListing'].forEach(k => delete o[k]);
+        if (o.createdAt) delete o.time;
+        (o.comments || []).forEach(c => { if (c.createdAt) delete c.time; });
+        (o.reviews || []).forEach(r => { delete r.userHelpful; if (r.createdAt) delete r.date; });
+        return o;
+      },
+
+      cleanDoc(d) {
+        const okId = s => typeof s === 'string' && /^[\w-]{1,120}$/.test(s);
+        if (!d || !okId(d.id)) return null;
+        ['authorId', 'userId', 'topicId'].forEach(k => { if (d[k] != null && !okId(d[k])) d[k] = ''; });
+        if (Array.isArray(d.reviews)) d.reviews = d.reviews.filter(r => r && okId(r.id)).map(r => { if (r.authorId && !okId(r.authorId)) r.authorId = ''; return r; });
+        if (Array.isArray(d.comments)) d.comments = d.comments.filter(c => c && typeof c === 'object').map(c => { if (c.authorId && !okId(c.authorId)) c.authorId = ''; return c; });
+        return d;
+      },
+
+      decorate(col, d) {
+        const me = this.currentUserId;
+        if (col === 'posts') {
+          d.likedBy = d.likedBy || []; d.savedBy = d.savedBy || []; d.comments = d.comments || [];
+          d.userLiked = !!me && d.likedBy.includes(me); d.userSaved = !!me && d.savedBy.includes(me);
+          d.likes = d.likedBy.length;
+          if (d.createdAt) d.time = this.timeAgo(d.createdAt);
+          d.comments.forEach(c => { if (c.createdAt) c.time = this.timeAgo(c.createdAt); });
+        } else if (col === 'topics') {
+          d.reviews = d.reviews || [];
+          d.reviews.forEach(r => {
+            r.helpfulBy = r.helpfulBy || [];
+            r.userHelpful = !!me && r.helpfulBy.includes(me);
+            r.helpfulCount = r.helpfulBy.length;
+            if (r.createdAt) r.date = this.timeAgo(r.createdAt);
+          });
+        } else if (col === 'exchanges') {
+          if (d.createdAt) d.time = this.timeAgo(d.createdAt);
+          d.isMyListing = !!me && d.userId === me;
+        }
+      },
+
+      redecorate() { ['posts', 'topics', 'exchanges'].forEach(c => this[c].forEach(d => this.decorate(c, d))); },
+
+      onRemote(col, docs) {
+        const list = [];
+        docs.forEach(raw => {
+          const d = this.cleanDoc(raw);
+          if (!d) return;
+          const e = this.escDeep(d);
+          this.decorate(col, e);
+          list.push(e);
+        });
+        const map = {};
+        list.forEach(d => { map[d.id] = JSON.stringify(this.serialize(d)); });
+        this._synced[col] = map;
+        list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        this[col] = list;
+        this.refreshViews();
+      },
+
+      onUsers(docs) {
+        const me = this.currentUserId;
+        const mine = me ? this.users.find(u => u.id === me) : null;
+        const okImg = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/;
+        const list = docs.filter(u => u && /^[\w-]{1,120}$/.test(u.id)).map(u => {
+          if (u.avatarImg && !okImg.test(u.avatarImg)) u.avatarImg = '';
+          if (u.id === me && this.myPrivate) { u.contact = this.myPrivate.contact || ''; u.email = this.myPrivate.email || ''; }
+          return u;
+        });
+        if (mine && !list.some(u => u.id === me)) list.push(mine);
+        this.users = list;
+        this.updateUserUI();
+        this.refreshViews();
+      },
+
+      refreshViews() {
+        [['currentActivePost', 'posts'], ['currentActiveTopic', 'topics'], ['currentSwapTargetListing', 'exchanges'], ['currentBuyTargetListing', 'exchanges']].forEach(([k, c]) => {
+          if (this[k]) { const f = this[c].find(x => x.id === this[k].id); if (f) this[k] = f; }
+        });
+        try {
+          this.renderPosts(); this.renderTopics(); this.renderExchanges(); this.renderInbox(); this.updateBadges();
+          if (this.currentTab === 'shelf') this.renderShelf();
+          this.refreshProfileModal();
+        } catch (err) { console.error(err); }
+      },
+
+      connectRemote() {
+        const db = window.thuhienDB;
+        if (!db || !db.ready || this.remote) return;
+        this.remote = true;
+        ['posts', 'topics', 'exchanges'].forEach(col => db.watch(col, docs => this.onRemote(col, docs)));
+        db.watch('users', docs => this.onUsers(docs));
+        db.watch('follows', docs => { this.follows = docs.filter(f => f && f.followerId && f.followeeId); this.refreshViews(); });
+      },
+
+      watchMessages() {
+        const db = window.thuhienDB;
+        if (this.unwatchMsgs) { this.unwatchMsgs(); this.unwatchMsgs = null; }
+        this.messages = [];
+        if (!this.remote || !this.currentUserId) { this.renderInbox(); this.updateBadges(); return; }
+        this.unwatchMsgs = db.watch('messages', docs => {
+          this.messages = docs.filter(m => m && m.fromId && m.toId).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+          if (this.currentTab === 'inbox' && this.activeThread) this.markThreadRead(this.activeThread);
+          this.renderInbox(); this.updateBadges();
+        }, { where: ['participants', 'array-contains', this.currentUserId] });
+      },
+
+      onWriteError(col, id, err) {
+        console.error('Lỗi ghi Firestore', col, id, err);
+        if (col && this._synced[col]) delete this._synced[col][id];
+        const code = (err && err.code) || '';
+        this.showToast(code === 'permission-denied'
+          ? 'Không lưu được: bạn chưa có quyền hoặc quy tắc Firestore chưa được cập nhật.'
+          : 'Không lưu được lên máy chủ. Hãy kiểm tra mạng và thử lại.');
+      },
+
+      saveAll() {
+        if (!this.remote) {
+          setStoredData('posts', this.posts); setStoredData('topics', this.topics);
+          setStoredData('exchanges', this.exchanges); setStoredData('users', this.users);
           return;
         }
-        let user = this.users.find(u => u.id === fbUser.uid);
-        let isNew = false;
+        const db = window.thuhienDB;
+        if (!this.currentUserId) return;
+        let tooBig = false;
+        ['posts', 'topics', 'exchanges'].forEach(col => {
+          const seen = {};
+          const keep = [];
+          this[col].forEach(item => {
+            const data = this.serialize(item);
+            const json = JSON.stringify(data);
+            if (json.length > 850000) { tooBig = true; return; }
+            keep.push(item); seen[item.id] = true;
+            if (this._synced[col][item.id] === json) return;
+            this._synced[col][item.id] = json;
+            db.set(col + '/' + item.id, data).catch(err => this.onWriteError(col, item.id, err));
+          });
+          if (keep.length !== this[col].length) this[col] = keep;
+          Object.keys(this._synced[col]).forEach(id => {
+            if (!seen[id]) { delete this._synced[col][id]; db.del(col + '/' + id).catch(err => this.onWriteError(col, id, err)); }
+          });
+        });
+        if (tooBig) { this.showToast('Nội dung quá nặng (nhiều ảnh lớn). Hãy bớt ảnh rồi đăng lại.'); this.refreshViews(); }
+      },
+
+      saveUsers() {
+        const me = this.getCurrentUser();
+        if (!this.remote) { setStoredData('users', this.users); setStoredData('currentUserId', this.currentUserId); return; }
+        if (!me) return;
+        const db = window.thuhienDB;
+        const pub = JSON.parse(JSON.stringify(me));
+        delete pub.email; delete pub.id;
+        pub.contact = me.showPhone ? (me.contact || '') : '';
+        const priv = { contact: me.contact || '', email: me.email || '' };
+        this.myPrivate = priv;
+        db.set('users/' + me.id, pub).catch(err => this.onWriteError('users', me.id, err));
+        db.set('users/' + me.id + '/private/info', priv).catch(err => this.onWriteError('users', me.id, err));
+      },
+
+      async onAuthChanged(fbUser) {
+        if (!fbUser) {
+          this.currentUserId = null; this.myPrivate = null; this.activeThread = null;
+          this.watchMessages(); this.redecorate(); this.updateUserUI(); this.refreshViews();
+          return;
+        }
+        const uid = fbUser.uid;
+        let profile = null, priv = null, isNew = false;
+        if (this.remote) {
+          const db = window.thuhienDB;
+          try {
+            profile = await db.get('users/' + uid);
+            priv = await db.get('users/' + uid + '/private/info');
+          } catch (err) {
+            console.error('Không tải được hồ sơ', err);
+            this.showToast('Chưa kết nối được cơ sở dữ liệu. Hãy kiểm tra quy tắc Firestore rồi tải lại trang.');
+            return;
+          }
+        } else {
+          profile = this.users.find(u => u.id === uid) || null;
+        }
         const name = (fbUser.displayName || (fbUser.email || 'Độc giả').split('@')[0]).trim();
-        if (!user) {
+        if (!profile) {
           isNew = true;
           const parts = name.split(/\s+/).filter(Boolean);
           const avatar = (parts.length === 1 ? parts[0].slice(0, 2) : parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
           const d = new Date();
-          user = {
-            id: fbUser.uid, email: fbUser.email || '', name: name, avatar: avatar, avatarBg: 'bg-leather-600',
-            vibe: 'Độc giả Thư Hiên', bio: 'Người yêu sách và thích tìm kiếm những trang văn đẹp.',
-            location: 'Toàn quốc (Ship bưu điện)', contact: '',
+          profile = {
+            name: name, avatar: avatar, avatarBg: 'bg-leather-600', vibe: 'Độc giả Thư Hiên',
+            bio: 'Người yêu sách và thích tìm kiếm những trang văn đẹp.', location: 'Toàn quốc (Ship bưu điện)', contact: '',
             joinedDate: 'Tháng ' + (d.getMonth() + 1) + ', ' + d.getFullYear(), provider: 'google'
           };
-          this.users.push(user);
         }
-        this.currentUserId = user.id;
-        this.saveUsers();
+        profile.id = uid;
+        profile.email = fbUser.email || '';
+        if (priv) profile.contact = priv.contact || '';
+        this.myPrivate = { contact: profile.contact || '', email: profile.email };
+        const idx = this.users.findIndex(u => u.id === uid);
+        if (idx >= 0) this.users[idx] = profile; else this.users.push(profile);
+        this.currentUserId = uid;
+        if (isNew) this.saveUsers();
         this.closeModal('login-modal');
-        this.updateUserUI();
+        this.watchMessages(); this.redecorate(); this.updateUserUI(); this.refreshViews();
         if (isNew) {
           this.showToast('Chào mừng ' + name + ' đến với Thư Hiên! Hãy hoàn thiện hồ sơ của bạn.');
           this.openEditProfileModal();
         }
       },
+
+      // ===== THEO DÕI & HỒ SƠ NGƯỜI KHÁC =====
+      openUserProfile(uid) {
+        if (!uid || !/^[\w-]+$/.test(uid)) return;
+        this.viewUserId = uid;
+        this.renderProfileModal();
+        const m = document.getElementById('user-profile-modal');
+        if (m) m.classList.remove('hidden');
+      },
+      refreshProfileModal() {
+        const m = document.getElementById('user-profile-modal');
+        if (m && !m.classList.contains('hidden')) this.renderProfileModal();
+      },
+      renderProfileModal() {
+        const body = document.getElementById('user-profile-body');
+        if (!body) return;
+        const uid = this.viewUserId;
+        const u = this.users.find(x => x.id === uid);
+        if (!u) { body.innerHTML = '<p class="text-xs text-ink-500 py-8 text-center">Không tìm thấy hồ sơ độc giả này.</p>'; return; }
+        const me = this.currentUserId;
+        const followers = this.follows.filter(f => f.followeeId === uid).length;
+        const following = this.follows.filter(f => f.followerId === uid).length;
+        const isF = !!me && this.follows.some(f => f.followerId === me && f.followeeId === uid);
+        const posts = this.posts.filter(p => p.authorId === uid).length;
+        const av = u.avatarImg ? `<img src="${u.avatarImg}" alt="" class="w-full h-full object-cover">` : this.esc(u.avatar || '');
+        const actions = me === uid
+          ? '<p class="text-[11px] text-ink-500 text-center">Đây là hồ sơ của bạn.</p>'
+          : `<div class="flex gap-2"><button type="button" onclick="app.toggleFollow('${uid}')" class="flex-1 py-2 rounded-full text-xs font-semibold ${isF ? 'border border-ink-300 bg-white text-ink-800' : 'bg-ink-900 text-parchment-50'}">${isF ? 'Đang theo dõi' : 'Theo dõi'}</button><button type="button" onclick="app.openChat('${uid}')" class="flex-1 py-2 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-800">Nhắn tin</button></div>`;
+        body.innerHTML = `
+          <div class="flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-2xl flex items-center justify-center overflow-hidden">${av}</div>
+            <h3 class="font-serif font-bold text-lg text-ink-900 mt-3">${this.esc(u.name)}</h3>
+            <p class="text-[11px] text-ink-500">${this.esc(u.location || '')}${u.joinedDate ? ' • Tham gia ' + this.esc(u.joinedDate) : ''}</p>
+            ${u.contact ? `<p class="text-[11px] text-ink-600 mt-1">Số điện thoại: ${this.esc(u.contact)}</p>` : ''}
+            <p class="text-xs text-ink-600 italic mt-3 leading-relaxed">${this.esc(u.bio || '')}</p>
+            <div class="grid grid-cols-3 gap-2 w-full mt-4 text-center">
+              <div class="rounded-xl bg-parchment-200 py-2"><div class="font-bold text-sm text-ink-900">${posts}</div><div class="text-[10px] text-ink-500">Bài chia sẻ</div></div>
+              <div class="rounded-xl bg-parchment-200 py-2"><div class="font-bold text-sm text-ink-900">${followers}</div><div class="text-[10px] text-ink-500">Người theo dõi</div></div>
+              <div class="rounded-xl bg-parchment-200 py-2"><div class="font-bold text-sm text-ink-900">${following}</div><div class="text-[10px] text-ink-500">Đang theo dõi</div></div>
+            </div>
+            <div class="w-full mt-4">${actions}</div>
+          </div>`;
+      },
+      toggleFollow(uid) {
+        if (!this.requireLogin()) return;
+        const me = this.currentUserId;
+        if (!uid || uid === me) return;
+        if (!this.remote) { this.showToast('Chưa kết nối máy chủ nên chưa theo dõi được.'); return; }
+        const db = window.thuhienDB;
+        const id = me + '_' + uid;
+        if (this.follows.some(f => f.id === id)) {
+          this.follows = this.follows.filter(f => f.id !== id);
+          db.del('follows/' + id).catch(err => this.onWriteError('follows', id, err));
+        } else {
+          const f = { id: id, followerId: me, followeeId: uid, createdAt: Date.now() };
+          this.follows.push(f);
+          const { id: _omit, ...data } = f;
+          db.set('follows/' + id, data).catch(err => this.onWriteError('follows', id, err));
+        }
+        this.renderProfileModal();
+        if (this.currentTab === 'shelf') this.renderShelf();
+      },
+
+      // ===== HỘP THƯ: CHAT GIỮA CÁC USER =====
+      threadId(a, b) { return [a, b].sort().join('__'); },
+      unreadCount() {
+        const me = this.currentUserId;
+        return me ? this.messages.filter(m => m.toId === me && !(m.readBy || []).includes(me)).length : 0;
+      },
+      conversations() {
+        const me = this.currentUserId;
+        const map = new Map();
+        this.messages.forEach(m => { map.set(m.fromId === me ? m.toId : m.fromId, m); });
+        if (this.activeThread && !map.has(this.activeThread)) map.set(this.activeThread, null);
+        return [...map.entries()].sort((a, b) => ((b[1] && b[1].createdAt) || 9e15) - ((a[1] && a[1].createdAt) || 9e15));
+      },
+      sendMessage(toId, text, extra) {
+        const me = this.getCurrentUser();
+        if (!me) { this.requireLogin(); return false; }
+        if (!text || !String(text).trim()) return false;
+        if (!toId || !/^[\w-]+$/.test(toId)) return false;
+        if (toId === me.id) { this.showToast('Bạn không thể nhắn tin cho chính mình.'); return false; }
+        if (!this.remote) { this.showToast('Chưa kết nối máy chủ nên chưa gửi được tin nhắn.'); return false; }
+        const other = this.users.find(u => u.id === toId);
+        const msg = Object.assign({
+          threadId: this.threadId(me.id, toId), participants: [me.id, toId], fromId: me.id, toId: toId,
+          fromName: me.name, toName: other ? other.name : '', kind: 'chat',
+          text: String(text).trim().slice(0, 2000), createdAt: Date.now(), readBy: [me.id]
+        }, extra || {});
+        const id = 'm' + Date.now() + Math.random().toString(36).slice(2, 6);
+        this.messages.push(Object.assign({ id: id }, msg));
+        window.thuhienDB.set('messages/' + id, msg).catch(err => this.onWriteError('messages', id, err));
+        this.renderInbox(); this.updateBadges();
+        return true;
+      },
+      markThreadRead(otherId) {
+        const me = this.currentUserId;
+        if (!me || !this.remote) return;
+        this.messages.filter(m => m.fromId === otherId && m.toId === me && !(m.readBy || []).includes(me)).forEach(m => {
+          m.readBy = (m.readBy || []).concat(me);
+          window.thuhienDB.set('messages/' + m.id, { readBy: m.readBy }, true).catch(() => {});
+        });
+        this.updateBadges();
+      },
+      openChat(uid) {
+        if (!this.requireLogin()) return;
+        if (!uid || uid === this.currentUserId) return;
+        this.activeThread = uid;
+        this.closeModal('user-profile-modal');
+        this.switchTab('inbox');
+        this.markThreadRead(uid);
+        this.renderInbox();
+      },
+      closeChat() { this.activeThread = null; this.renderInbox(); },
+      sendChat(e) {
+        e.preventDefault();
+        const input = document.getElementById('chat-input');
+        if (!input || !this.activeThread) return;
+        if (this.sendMessage(this.activeThread, input.value)) {
+          const again = document.getElementById('chat-input');
+          if (again) { again.value = ''; again.focus(); }
+        }
+      },
+      markAllInboxRead() {
+        const me = this.currentUserId;
+        if (!me) return;
+        this.messages.filter(m => m.toId === me && !(m.readBy || []).includes(me)).forEach(m => {
+          m.readBy = (m.readBy || []).concat(me);
+          if (this.remote) window.thuhienDB.set('messages/' + m.id, { readBy: m.readBy }, true).catch(() => {});
+        });
+        this.renderInbox(); this.updateBadges();
+        this.showToast('Đã đánh dấu tất cả thư là đã đọc!');
+      },
+      renderInbox() {
+        const listEl = document.getElementById('inbox-list');
+        if (!listEl) return;
+        const esc = s => this.esc(s);
+        const me = this.getCurrentUser();
+        if (!me) {
+          listEl.innerHTML = `<div class="py-16 text-center text-ink-400"><p class="font-serif text-base">Hãy đăng nhập để xem hộp thư</p><button type="button" onclick="app.openLoginModal()" class="mt-3 px-4 py-2 rounded-full bg-ink-900 text-parchment-50 text-xs font-semibold">Đăng nhập bằng Gmail</button></div>`;
+          return;
+        }
+        const prev = document.getElementById('chat-input');
+        const draft = prev ? prev.value : '';
+        const focused = !!prev && document.activeElement === prev;
+        const convs = this.conversations();
+        if (!convs.length) {
+          listEl.innerHTML = `<div class="py-16 text-center text-ink-400"><p class="font-serif text-base">Hộp thư hiện đang trống</p><p class="text-xs mt-1">Bấm vào tên một độc giả để nhắn tin, hoặc nhắn người đăng khi bạn muốn đổi/mua sách. Cuộc trò chuyện sẽ hiện ở đây.</p></div>`;
+          return;
+        }
+        if (!this.activeThread && window.innerWidth >= 768) this.activeThread = convs[0][0];
+        const cur = this.activeThread;
+        const nameOf = (uid, last) => { const u = this.users.find(x => x.id === uid); if (u) return u.name; if (last) return last.fromId === uid ? last.fromName : last.toName; return 'Độc giả'; };
+        const avOf = (uid, nm) => { const u = this.users.find(x => x.id === uid); if (u && u.avatarImg) return `<img src="${u.avatarImg}" alt="" class="w-full h-full object-cover">`; return esc((u && u.avatar) || (nm || '?').slice(0, 2).toUpperCase()); };
+        const list = convs.map(([uid, last]) => {
+          const nm = nameOf(uid, last);
+          const unread = this.messages.some(m => m.fromId === uid && m.toId === me.id && !(m.readBy || []).includes(me.id));
+          const sel = uid === cur;
+          return `<button type="button" onclick="app.openChat('${uid}')" class="w-full text-left flex items-center gap-3 p-3 rounded-2xl border ${sel ? 'border-leather-400 bg-leather-50/50' : 'border-ink-200 bg-parchment-100'} transition">
+            <div class="w-10 h-10 rounded-full bg-leather-100 text-leather-600 font-bold flex items-center justify-center shrink-0 border border-leather-300 overflow-hidden">${avOf(uid, nm)}</div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center justify-between gap-2"><span class="font-bold text-xs text-ink-900 truncate">${esc(nm)}</span><span class="text-[10px] text-ink-400 shrink-0">${last ? this.timeAgo(last.createdAt) : ''}</span></div>
+              <p class="text-[11px] ${unread ? 'text-ink-900 font-semibold' : 'text-ink-500'} truncate">${last ? esc(last.text) : 'Cuộc trò chuyện mới'}</p>
+            </div>
+            ${unread ? '<span class="w-2 h-2 rounded-full bg-terracotta-500 shrink-0"></span>' : ''}
+          </button>`;
+        }).join('');
+        let panel = '';
+        if (cur) {
+          const lastC = (convs.find(c => c[0] === cur) || [])[1];
+          const nm = nameOf(cur, lastC);
+          const kindLabel = { swap: 'Đề xuất đổi sách', buy: 'Hỏi mua sách' };
+          const msgs = this.messages.filter(m => (m.fromId === cur && m.toId === me.id) || (m.fromId === me.id && m.toId === cur)).map(m => {
+            const mine = m.fromId === me.id;
+            const tag = (m.kind && m.kind !== 'chat' && m.bookTitle) ? `<div class="text-[10px] font-semibold opacity-70 mb-0.5">${esc(kindLabel[m.kind] || 'Liên quan')} • ${esc(m.bookTitle)}</div>` : '';
+            return `<div class="flex ${mine ? 'justify-end' : 'justify-start'}"><div class="max-w-[80%] rounded-2xl px-3 py-2 text-xs leading-relaxed ${mine ? 'bg-ink-900 text-parchment-50' : 'bg-white border border-ink-200 text-ink-800'}">${tag}<div class="whitespace-pre-wrap break-words">${esc(m.text)}</div><div class="text-[9px] mt-1 opacity-60">${this.timeAgo(m.createdAt)}</div></div></div>`;
+          }).join('') || '<p class="text-center text-[11px] text-ink-400 py-8">Hãy gửi lời chào đầu tiên!</p>';
+          panel = `<div class="flex flex-col rounded-2xl border border-ink-200 bg-parchment-100 min-h-[420px]">
+            <div class="flex items-center gap-3 p-3 border-b border-ink-200">
+              <button type="button" onclick="app.closeChat()" class="md:hidden px-2 text-ink-600" aria-label="Quay lại">←</button>
+              <div class="w-9 h-9 rounded-full bg-leather-100 text-leather-600 font-bold flex items-center justify-center border border-leather-300 overflow-hidden">${avOf(cur, nm)}</div>
+              <button type="button" onclick="app.openUserProfile('${cur}')" class="font-bold text-sm text-ink-900 hover:underline truncate">${esc(nm)}</button>
+            </div>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-3 space-y-2 max-h-[55vh]">${msgs}</div>
+            <form onsubmit="app.sendChat(event)" class="p-3 border-t border-ink-200 flex gap-2">
+              <input id="chat-input" type="text" maxlength="2000" autocomplete="off" placeholder="Nhập tin nhắn..." class="flex-1 bg-white border border-ink-200 rounded-full px-4 py-2 text-xs focus:outline-none focus:border-ink-900">
+              <button type="submit" class="px-4 rounded-full bg-ink-900 text-parchment-50 text-xs font-semibold">Gửi</button>
+            </form>
+          </div>`;
+        }
+        listEl.innerHTML = `<div class="grid md:grid-cols-[280px_1fr] gap-3 items-start"><div class="space-y-2 ${cur ? 'hidden md:block' : ''}">${list}</div><div class="${cur ? '' : 'hidden md:block'}">${panel}</div></div>`;
+        const input = document.getElementById('chat-input');
+        if (input) { input.value = draft; if (focused) input.focus(); }
+        const box = document.getElementById('chat-messages');
+        if (box) box.scrollTop = box.scrollHeight;
+      },
+      submitSwapProposal(e) {
+        e.preventDefault();
+        const myBook = document.getElementById('swap-my-book-title').value.trim();
+        const myCondition = document.getElementById('swap-my-book-condition').value.trim();
+        const msg = document.getElementById('swap-message').value.trim();
+        const target = this.currentSwapTargetListing;
+        if (!target) return;
+        if (!target.userId) { this.showToast('Tin này chưa có thông tin người đăng nên chưa nhắn được.'); return; }
+        const title = this.unesc(target.bookTitle);
+        const text = `Mình muốn đổi lấy cuốn "${title}" bằng cuốn "${myBook}" (${myCondition}). ${msg || 'Mong bạn hồi âm!'}`;
+        if (!this.sendMessage(target.userId, text, { kind: 'swap', bookTitle: title, toName: this.unesc(target.ownerName) })) return;
+        this.activeThread = target.userId;
+        this.closeModal('swap-proposal-modal');
+        this.showToast('Đã gửi đề xuất đổi sách tới ' + this.unesc(target.ownerName) + '! Xem tại mục Hộp Thư.');
+      },
+      submitBuyMessage(e) {
+        e.preventDefault();
+        const ship = document.getElementById('buy-shipping-choice').value;
+        const phone = document.getElementById('buy-contact-phone').value.trim();
+        const msg = document.getElementById('buy-message').value.trim();
+        const target = this.currentBuyTargetListing;
+        if (!target) return;
+        if (!target.userId) { this.showToast('Tin này chưa có thông tin người đăng nên chưa nhắn được.'); return; }
+        const title = this.unesc(target.bookTitle);
+        const text = `Mình muốn mua cuốn "${title}" giá ${Number(target.price || 0).toLocaleString('vi-VN')} đ. Nhận sách: ${ship}.${phone ? ' SĐT: ' + phone + '.' : ''}${msg ? ' Ghi chú: ' + msg : ''}`;
+        if (!this.sendMessage(target.userId, text, { kind: 'buy', bookTitle: title, toName: this.unesc(target.ownerName) })) return;
+        this.activeThread = target.userId;
+        this.closeModal('buy-contact-modal');
+        this.showToast('Đã gửi tin nhắn đặt mua tới người bán! Xem tại mục Hộp Thư.');
+      },
+
 
       openEditProfileModal() {
         const user = this.getCurrentUser();
@@ -2022,7 +2453,7 @@
       },
 
       updateBadges() {
-        const unreadCount = this.inbox.filter(m => m.unread).length;
+        const unreadCount = this.unreadCount();
         const dBadge = document.getElementById('desktop-inbox-badge');
         const mDot = document.getElementById('mobile-inbox-dot');
 
@@ -2121,10 +2552,10 @@
             <div class="flex items-center justify-between gap-3 mb-3">
               <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-full bg-leather-100 border border-leather-400/40 text-leather-600 font-bold text-xs flex items-center justify-center shrink-0">
-                  ${post.authorAvatarImg ? `<img src="${post.authorAvatarImg}" alt="" class="w-full h-full object-cover rounded-full">` : (post.authorAvatar || post.author.substring(0, 2).toUpperCase())}
+                  ${this.avatarOf(post.authorId) ? `<img src="${this.avatarOf(post.authorId)}" alt="" class="w-full h-full object-cover rounded-full">` : (post.authorAvatar || post.author.substring(0, 2).toUpperCase())}
                 </div>
                 <div>
-                  <h4 class="font-bold text-xs text-ink-900 leading-tight">${post.author}</h4>
+                  <h4 class="font-bold text-xs text-ink-900 leading-tight cursor-pointer hover:underline" onclick="event.stopPropagation(); app.openUserProfile('${post.authorId || ''}')">${post.author}</h4>
                   <p class="text-[10px] text-ink-500">${post.authorVibe || 'Độc giả'} • ${post.time}</p>
                 </div>
               </div>
@@ -2139,13 +2570,13 @@
                 <svg class="w-3.5 h-3.5 text-leather-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
                 <span>Đang đọc: <strong class="text-ink-900">${post.bookTitle}</strong></span>
               </div>
-              ${post.language ? `<span onclick="event.stopPropagation(); app.filterByTag('${post.language}')" class="cursor-pointer hover:bg-leather-100 px-2 py-0.5 rounded-lg text-[10px] font-medium bg-parchment-200 text-ink-600 border border-ink-200/60 transition">🌐 ${post.language}</span>` : ''}
+              ${post.language ? `<span onclick="event.stopPropagation(); app.filterByTag('${this.attrSafe(post.language)}')" class="cursor-pointer hover:bg-leather-100 px-2 py-0.5 rounded-lg text-[10px] font-medium bg-parchment-200 text-ink-600 border border-ink-200/60 transition">🌐 ${post.language}</span>` : ''}
             </div>
 
             <!-- Clickable Tags Row -->
             ${post.tags && post.tags.length ? `
               <div class="mb-3 flex flex-wrap gap-1">
-                ${post.tags.map(t => `<span onclick="event.stopPropagation(); app.filterByTag('${t}')" class="cursor-pointer hover:bg-ink-900 hover:text-white px-2 py-0.5 rounded-full text-[10px] bg-parchment-200/80 text-ink-600 border border-ink-200/50 transition">#${t}</span>`).join('')}
+                ${post.tags.map(t => `<span onclick="event.stopPropagation(); app.filterByTag('${this.attrSafe(t)}')" class="cursor-pointer hover:bg-ink-900 hover:text-white px-2 py-0.5 rounded-full text-[10px] bg-parchment-200/80 text-ink-600 border border-ink-200/50 transition">#${t}</span>`).join('')}
               </div>
             ` : ''}
 
@@ -2207,10 +2638,10 @@
             <div class="flex items-center justify-between pb-3 border-b border-ink-200">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-leather-100 text-leather-600 font-bold flex items-center justify-center border border-leather-300">
-                  ${post.authorAvatarImg ? `<img src="${post.authorAvatarImg}" alt="" class="w-full h-full object-cover rounded-full">` : (post.authorAvatar || post.author.substring(0, 2).toUpperCase())}
+                  ${this.avatarOf(post.authorId) ? `<img src="${this.avatarOf(post.authorId)}" alt="" class="w-full h-full object-cover rounded-full">` : (post.authorAvatar || post.author.substring(0, 2).toUpperCase())}
                 </div>
                 <div>
-                  <h3 class="font-bold text-sm text-ink-900">${post.author}</h3>
+                  <h3 class="font-bold text-sm text-ink-900 cursor-pointer hover:underline" onclick="app.openUserProfile('${post.authorId || ''}')">${post.author}</h3>
                   <p class="text-xs text-ink-500">${post.authorVibe || 'Độc giả'} • ${post.time}</p>
                 </div>
               </div>
@@ -2272,7 +2703,7 @@
                 ${post.comments.map(c => `
                   <div class="bg-parchment-200/60 rounded-2xl p-3 text-xs">
                     <div class="flex items-center justify-between font-bold text-ink-900 mb-0.5">
-                      <span>${c.author}</span>
+                      <span class="cursor-pointer hover:underline" onclick="app.openUserProfile('${c.authorId || ''}')">${c.author}</span>
                       <span class="text-[10px] text-ink-400 font-normal">${c.time}</span>
                     </div>
                     <p class="text-ink-700 leading-relaxed font-light">${c.text}</p>
@@ -2296,8 +2727,11 @@
         if (!this.requireLogin()) return;
         const post = this.posts.find(p => p.id === postId);
         if (!post) return;
-        post.userLiked = !post.userLiked;
-        post.likes += post.userLiked ? 1 : -1;
+        post.likedBy = post.likedBy || [];
+        const li = post.likedBy.indexOf(this.currentUserId);
+        if (li >= 0) post.likedBy.splice(li, 1); else post.likedBy.push(this.currentUserId);
+        post.userLiked = li < 0;
+        post.likes = post.likedBy.length;
         this.saveAll();
         this.renderPosts();
         if (inModal && this.currentActivePost && this.currentActivePost.id === postId) {
@@ -2309,7 +2743,10 @@
         if (!this.requireLogin()) return;
         const post = this.posts.find(p => p.id === postId);
         if (!post) return;
-        post.userSaved = !post.userSaved;
+        post.savedBy = post.savedBy || [];
+        const si = post.savedBy.indexOf(this.currentUserId);
+        if (si >= 0) post.savedBy.splice(si, 1); else post.savedBy.push(this.currentUserId);
+        post.userSaved = si < 0;
         this.saveAll();
         this.renderPosts();
         this.showToast(post.userSaved ? "Đã lưu bài viết vào kệ cá nhân!" : "Đã hủy lưu bài viết!");
@@ -2328,6 +2765,8 @@
         const newComment = {
           author: user.name,
           text: input.value.trim(),
+          authorId: user.id,
+          createdAt: Date.now(),
           time: "Vừa xong"
         };
         this.currentActivePost.comments.push(newComment);
@@ -2371,7 +2810,6 @@
           id: 'post-' + Date.now(),
           author: user.name,
           authorAvatar: user.avatar,
-        authorAvatarImg: user.avatarImg || '',
           authorVibe: user.vibe,
           authorId: user.id,
           bookTitle: book,
@@ -2384,10 +2822,13 @@
           language: document.getElementById('post-input-language')?.value || 'Tiếng Việt',
           authorTag: document.getElementById('post-input-author')?.value.trim() || '',
           tags: (document.getElementById('post-input-tags')?.value.trim() ? document.getElementById('post-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat([document.getElementById('post-input-language')?.value || 'Tiếng Việt']).filter((v, i, a) => a.indexOf(v) === i),
-          time: "Vừa xong",
-          likes: 1,
-          userLiked: true,
-          userSaved: false,
+          createdAt: Date.now(),
+        time: "Vừa xong",
+        likedBy: [user.id],
+        savedBy: [],
+        likes: 1,
+        userLiked: true,
+        userSaved: false,
           comments: []
         };
 
@@ -2670,7 +3111,7 @@
                         </div>
                         <div>
                           <div class="flex items-center gap-2">
-                            <h4 class="font-bold text-xs text-ink-900">${rev.author}</h4>
+                            <h4 class="font-bold text-xs text-ink-900 cursor-pointer hover:underline" onclick="app.openUserProfile('${rev.authorId || ''}')">${rev.author}</h4>
                             <span class="text-[10px] px-2 py-0.2 rounded-full bg-parchment-200 text-ink-600">${rev.badge || 'Độc giả'}</span>
                           </div>
                           <p class="text-[10px] text-ink-400 font-light">${rev.date} • <span class="italic text-ink-600">${rev.readingStatus || 'Đã đọc xong'}</span></p>
@@ -2759,9 +3200,11 @@
           reviewTitle: title,
           readingStatus: status,
           content: content,
-          date: "Vừa xong",
-          helpfulCount: 1,
-          userHelpful: false
+          createdAt: Date.now(),
+        date: "Vừa xong",
+        helpfulBy: [],
+        helpfulCount: 0,
+        userHelpful: false
         };
 
         this.currentActiveTopic.reviews.unshift(newReview);
@@ -2778,8 +3221,11 @@
         const rev = topic.reviews.find(r => r.id === reviewId);
         if (!rev) return;
 
-        rev.userHelpful = !rev.userHelpful;
-        rev.helpfulCount = (rev.helpfulCount || 0) + (rev.userHelpful ? 1 : -1);
+        rev.helpfulBy = rev.helpfulBy || [];
+        const hi = rev.helpfulBy.indexOf(this.currentUserId);
+        if (hi >= 0) rev.helpfulBy.splice(hi, 1); else rev.helpfulBy.push(this.currentUserId);
+        rev.userHelpful = hi < 0;
+        rev.helpfulCount = rev.helpfulBy.length;
         this.saveAll();
         this.openTopicDetail(topicId);
         this.showToast(rev.userHelpful ? "Đã cảm ơn bài review hữu ích!" : "Đã hủy bình chọn!");
@@ -2821,6 +3267,8 @@
 
         const newTopic = {
           id: 'topic-' + Date.now(),
+        createdAt: Date.now(),
+        authorId: this.currentUserId,
           title: title,
           originalTitle: '',
           author: author,
@@ -2842,7 +3290,7 @@
           newTopic.reviews.push({
             id: 'rev-' + Date.now(), author: initUser.name, avatar: initUser.avatar, badge: initUser.vibe, authorId: initUser.id,
             rating: initRating, reviewTitle: 'Điểm đánh giá khi thêm sách', readingStatus: 'Đã đọc xong',
-            content: note || 'Chấm điểm cuốn sách khi thêm vào Thư Hiên.', date: 'Vừa xong', helpfulCount: 0, userHelpful: false
+            content: note || 'Chấm điểm cuốn sách khi thêm vào Thư Hiên.', createdAt: Date.now(), date: 'Vừa xong', helpfulBy: [], helpfulCount: 0, userHelpful: false
           });
         }
         this.topics.unshift(newTopic);
@@ -3012,7 +3460,7 @@
                   <div class="w-6 h-6 rounded-full bg-leather-100 text-leather-600 font-bold text-[10px] flex items-center justify-center">
                     ${item.ownerAvatar || item.ownerName.substring(0, 2).toUpperCase()}
                   </div>
-                  <span class="text-xs font-medium text-ink-800">${item.ownerName}</span>
+                  <span class="text-xs font-medium text-ink-800 cursor-pointer hover:underline" onclick="app.openUserProfile('${item.userId || ''}')">${item.ownerName}</span>
                 </div>
 
                 ${isSwap ? `
@@ -3111,15 +3559,16 @@
           shippingNote: "Nhận giao dịch trực tiếp hoặc ship bưu điện",
           ownerName: user.name,
           ownerAvatar: user.avatar,
-          ownerPhone: user.contact || "0912 345 678",
+          ownerPhone: (user.showPhone && user.contact) ? user.contact : "",
           userId: user.id,
           note: note,
           image: this.uploadedImages.exchange[0] || APP_IMAGES[selectedImgIndex] || IMG_1,
         images: this.uploadedImages.exchange.slice(),
           language: document.getElementById('ex-input-language')?.value || 'Tiếng Việt',
           tags: (document.getElementById('ex-input-tags')?.value.trim() ? document.getElementById('ex-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat([document.getElementById('ex-input-language')?.value || 'Tiếng Việt']).filter((v, i, a) => a.indexOf(v) === i),
-          time: "Vừa xong",
-          isMyListing: true,
+          createdAt: Date.now(),
+        time: "Vừa xong",
+        isMyListing: true,
           isCompleted: false
         };
 
@@ -3151,33 +3600,6 @@
         document.getElementById('swap-proposal-modal').classList.remove('hidden');
       },
 
-      submitSwapProposal(e) {
-        e.preventDefault();
-        const myBook = document.getElementById('swap-my-book-title').value.trim();
-        const myCondition = document.getElementById('swap-my-book-condition').value.trim();
-        const msg = document.getElementById('swap-message').value.trim();
-
-        if (!this.currentSwapTargetListing) return;
-
-        const user = this.getCurrentUser() || { name: "", avatar: "", vibe: "", location: "", contact: "", id: "" };
-        // Create new inbox message thread
-        const newMsg = {
-          id: 'msg-' + Date.now(),
-          sender: user.name + " (Bạn)",
-          avatar: user.avatar,
-          role: "Đề xuất đổi sách",
-          targetBook: this.currentSwapTargetListing.bookTitle,
-          summary: `Đề xuất đổi lấy cuốn "${myBook}" (${myCondition}). Lời nhắn: "${msg || 'Mong bạn hồi âm!'}"`,
-          unread: false,
-          time: "Vừa xong"
-        };
-
-        this.inbox.unshift(newMsg);
-        this.saveAll();
-        this.closeModal('swap-proposal-modal');
-        this.updateBadges();
-        this.showToast("Đã gửi lời đề xuất đổi sách tới " + this.currentSwapTargetListing.ownerName + "!");
-      },
 
       openBuyContactModal(listingId) {
         if (!this.requireLogin()) return;
@@ -3200,78 +3622,9 @@
         document.getElementById('buy-contact-modal').classList.remove('hidden');
       },
 
-      submitBuyMessage(e) {
-        e.preventDefault();
-        const ship = document.getElementById('buy-shipping-choice').value;
-        const phone = document.getElementById('buy-contact-phone').value.trim();
-        const msg = document.getElementById('buy-message').value.trim();
-
-        if (!this.currentBuyTargetListing) return;
-
-        const user = this.getCurrentUser() || { name: "", avatar: "", vibe: "", location: "", contact: "", id: "" };
-        const newMsg = {
-          id: 'msg-' + Date.now(),
-          sender: user.name + " (Bạn)",
-          avatar: user.avatar,
-          role: "Đặt mua sách",
-          targetBook: this.currentBuyTargetListing.bookTitle,
-          summary: `Hỏi mua sách với giá ${this.currentBuyTargetListing.price.toLocaleString('vi-VN')} đ. Nhận sách: ${ship}. SĐT: ${phone || user.contact}. Ghi chú: "${msg}"`,
-          unread: false,
-          time: "Vừa xong"
-        };
-
-        this.inbox.unshift(newMsg);
-        this.saveAll();
-        this.closeModal('buy-contact-modal');
-        this.updateBadges();
-        this.showToast("Đã gửi tin nhắn đặt mua tới người bán!");
-      },
 
       // ================= INBOX VIEW =================
-      renderInbox() {
-        const listEl = document.getElementById('inbox-list');
-        if (!listEl) return;
 
-        if (this.inbox.length === 0) {
-          listEl.innerHTML = `
-            <div class="py-16 text-center text-ink-400">
-              <p class="font-serif text-base">Hộp thư hiện đang trống</p>
-              <p class="text-xs mt-1">Khi có người đề xuất đổi sách hoặc hỏi mua sách của bạn, thư sẽ xuất hiện ở đây.</p>
-            </div>
-          `;
-          return;
-        }
-
-        listEl.innerHTML = this.inbox.map(m => `
-          <div class="bg-parchment-100 rounded-2xl p-4 border ${m.unread ? 'border-leather-400 bg-leather-50/40 shadow-sm' : 'border-ink-200'} flex items-start gap-3.5 transition">
-            <div class="w-10 h-10 rounded-full bg-leather-100 text-leather-600 font-bold flex items-center justify-center shrink-0 border border-leather-300">
-              ${m.avatar}
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between mb-1">
-                <div class="flex items-center gap-2">
-                  <h4 class="font-bold text-xs text-ink-900">${m.sender}</h4>
-                  <span class="text-[10px] px-2 py-0.5 rounded-full ${m.role.includes('mua') ? 'bg-terracotta-100 text-terracotta-800' : 'bg-sage-100 text-sage-800'} font-medium">
-                    ${m.role}
-                  </span>
-                  ${m.unread ? `<span class="w-2 h-2 rounded-full bg-terracotta-500"></span>` : ''}
-                </div>
-                <span class="text-[10px] text-ink-400">${m.time}</span>
-              </div>
-              <p class="text-[11px] font-semibold text-ink-700 mb-1">Liên quan tới cuốn: <strong class="text-ink-900">${m.targetBook}</strong></p>
-              <p class="text-xs text-ink-700 leading-relaxed font-light">${m.summary}</p>
-            </div>
-          </div>
-        `).join('');
-      },
-
-      markAllInboxRead() {
-        this.inbox.forEach(m => m.unread = false);
-        this.saveAll();
-        this.renderInbox();
-        this.updateBadges();
-        this.showToast("Đã đánh dấu tất cả thư là đã đọc!");
-      },
 
       // ================= SHELF / PROFILE VIEW =================
       setShelfTab(tab) {
@@ -3315,6 +3668,11 @@
           if (elLoc) elLoc.innerText = user.location;
           if (elContact) elContact.innerText = user.contact ? (user.showPhone ? user.contact : 'Số điện thoại đang ẩn') : 'Chưa cập nhật SĐT';
           if (elJoined) elJoined.innerText = user.joinedDate || 'Mới gia nhập';
+        if (elJoined && elJoined.parentElement) {
+          let fl = document.getElementById('profile-follow');
+          if (!fl) { fl = document.createElement('p'); fl.id = 'profile-follow'; fl.className = 'text-[11px] text-ink-500 mt-1'; elJoined.parentElement.insertAdjacentElement('afterend', fl); }
+          fl.innerText = this.follows.filter(f => f.followeeId === user.id).length + ' người theo dõi • ' + this.follows.filter(f => f.followerId === user.id).length + ' đang theo dõi';
+        }
         }
 
         const container = document.getElementById('shelf-content-grid');
@@ -3541,12 +3899,33 @@
         const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
         const { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } =
           await import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`);
-        const auth = getAuth(initializeApp(FIREBASE_CONFIG));
+        const fbApp = initializeApp(FIREBASE_CONFIG);
+        const auth = getAuth(fbApp);
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
         window.thuhienAuth = { ready: true, signIn: () => signInWithPopup(auth, provider), signOut: () => signOut(auth) };
-        const start = () => onAuthStateChanged(auth, (u) => app.onAuthChanged(u));
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+        try {
+          const fb = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
+          const fsdb = fb.getFirestore(fbApp);
+          window.thuhienDB = {
+            ready: true,
+            watch(name, cb, opts) {
+              let ref = fb.collection(fsdb, name);
+              if (opts && opts.where) ref = fb.query(ref, fb.where(opts.where[0], opts.where[1], opts.where[2]));
+              return fb.onSnapshot(ref, (snap) => cb(snap.docs.map((d) => Object.assign({}, d.data(), { id: d.id }))), (err) => console.error('Firestore watch lỗi:', name, err));
+            },
+            set(path, data, merge) { return fb.setDoc(fb.doc(fsdb, path), data, { merge: !!merge }); },
+            del(path) { return fb.deleteDoc(fb.doc(fsdb, path)); },
+            get(path) { return fb.getDoc(fb.doc(fsdb, path)).then((s) => (s.exists() ? Object.assign({}, s.data(), { id: s.id }) : null)); }
+          };
+        } catch (err) {
+          console.error('Không tải được Firestore:', err);
+        }
+        const go = () => {
+          try { app.connectRemote(); } catch (err) { console.error(err); }
+          onAuthStateChanged(auth, (u) => app.onAuthChanged(u));
+        };
+        if (app.__inited) go(); else document.addEventListener('DOMContentLoaded', go);
       } catch (err) {
         console.error('Không tải được Firebase:', err);
       }
