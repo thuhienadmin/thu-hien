@@ -129,6 +129,8 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+  /* iOS tự phóng to khi chạm vào ô nhập nhỏ hơn 16px: chỉ áp dụng trên iOS để giữ giao diện gọn */
+    @supports (-webkit-touch-callout: none) { input, select, textarea { font-size: 16px !important; } }
   </style>
 </head>
 <body class="bg-paper text-ink-900 font-sans antialiased min-h-full flex flex-col selection:bg-leather-100 selection:text-leather-600 pb-20 md:pb-8">
@@ -168,12 +170,12 @@
           <span>Góc Review</span>
         </button>
 
-        <!-- Tab 3: Bán & Trao Đổi Sách -->
+        <!-- Tab 3: Mua Bán & Trao Đổi Sách -->
         <button type="button" id="nav-tab-exchange" onclick="app.switchTab('exchange')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-ink-700 hover:text-ink-900 hover:bg-parchment-100 transition flex items-center gap-1.5">
           <svg class="w-4 h-4 text-terracotta-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
           </svg>
-          <span>Bán & Trao Đổi Sách</span>
+          <span>Mua Bán & Trao Đổi Sách</span>
           <span class="w-2 h-2 rounded-full bg-terracotta-500 animate-pulse"></span>
         </button>
 
@@ -213,7 +215,7 @@
         </button>
 
         <!-- Primary Action: + Ký Gửi / Đăng Bài -->
-        <button type="button" onclick="app.openQuickCreateSheet()" class="bg-ink-900 hover:bg-leather-600 text-parchment-50 text-xs font-semibold px-3.5 py-2 rounded-full shadow-sm flex items-center gap-1.5 whitespace-nowrap shrink-0 transition active:scale-95">
+        <button type="button" onclick="app.openQuickCreateSheet()" class="bg-leather-600 hover:bg-leather-600 text-parchment-50 text-xs font-semibold px-3.5 py-2 rounded-full shadow-sm flex items-center gap-1.5 whitespace-nowrap shrink-0 transition active:scale-95">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
@@ -312,7 +314,7 @@
       <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-ink-200/60">
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-xs">
           <span class="text-ink-400 font-medium mr-1 text-[11px] uppercase tracking-wider">Chủ đề:</span>
-          <button type="button" onclick="app.setPostFilter('all')" id="post-filter-all" class="post-pill px-3 py-1 rounded-full text-xs font-semibold bg-ink-900 text-parchment-50 transition">Tất cả bài viết</button>
+          <button type="button" onclick="app.setPostFilter('all')" id="post-filter-all" class="post-pill px-3 py-1 rounded-full text-xs font-semibold bg-leather-600 text-parchment-50 transition">Tất cả bài viết</button>
           </div>
 
         <!-- Thanh Lọc Thẻ Sách (Interactive Tag Cloud Bar) -->
@@ -321,7 +323,7 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
             Thẻ:
           </span>
-          <button type="button" onclick="app.filterByTag('')" id="tag-pill-all" class="tag-pill px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-ink-900 text-parchment-50 transition shrink-0">Tất cả thẻ</button>
+          <button type="button" onclick="app.filterByTag('')" id="tag-pill-all" class="tag-pill px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-leather-600 text-parchment-50 transition shrink-0">Tất cả thẻ</button>
           <button type="button" onclick="app.filterByTag('Tiếng Việt')" class="tag-pill px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-parchment-200/90 text-ink-700 hover:bg-leather-100 border border-ink-200/70 transition shrink-0">🌐 Tiếng Việt</button>
           <button type="button" onclick="app.filterByTag('Song ngữ')" class="tag-pill px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-parchment-200/90 text-ink-700 hover:bg-leather-100 border border-ink-200/70 transition shrink-0">📖 Song ngữ</button>
           <button type="button" onclick="app.filterByTag('English')" class="tag-pill px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-parchment-200/90 text-ink-700 hover:bg-leather-100 border border-ink-200/70 transition shrink-0">🇬🇧 English</button>
@@ -362,16 +364,13 @@
           </div>
         </div>
 
-        <button type="button" onclick="app.openNewTopicModal()" class="shrink-0 bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
-          <span>Đề Xuất Đầu Sách Mới</span>
-        </button>
-      </div>
+        </div>
 
       <!-- Filters for Book Topics -->
       <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-ink-200/60">
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-xs">
           <span class="text-ink-400 font-medium mr-1 text-[11px] uppercase tracking-wider">Thể loại:</span>
-          <button type="button" onclick="app.setTopicGenre('all')" id="topic-genre-all" class="topic-pill px-3 py-1 rounded-full text-xs font-semibold bg-ink-900 text-parchment-50 transition">Tất cả đầu sách</button>
+          <button type="button" onclick="app.setTopicGenre('all')" id="topic-genre-all" class="topic-pill px-3 py-1 rounded-full text-xs font-semibold bg-leather-600 text-parchment-50 transition">Tất cả đầu sách</button>
           </div>
 
         <div class="flex items-center gap-2 text-xs text-ink-600">
@@ -407,10 +406,7 @@
           </div>
         </div>
 
-        <button type="button" onclick="app.openNewExchangeModal()" class="shrink-0 bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
-          <span>Đăng Tin Đổi / Bán Sách</span>
-        </button>
-      </div>
+        </div>
 
       <!-- Segmented Mode Filter: Tất cả vs. Đổi sách vs. Bán lại -->
       <div class="flex items-center justify-between flex-wrap gap-3 pb-2 border-b border-ink-200/60">
@@ -607,16 +603,16 @@
           </h4>
           <p class="text-[11px] text-ink-500">Bấm vào thẻ để lọc danh mục tác phẩm tương ứng:</p>
           <div class="flex flex-wrap gap-1.5 pt-1">
-            <button type="button" onclick="app.filterByTag('Tiếng Việt')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#Tiếng Việt</button>
-            <button type="button" onclick="app.filterByTag('Song ngữ')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#Song ngữ</button>
-            <button type="button" onclick="app.filterByTag('English')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#English</button>
-            <button type="button" onclick="app.filterByTag('Văn học')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#Văn học</button>
-            <button type="button" onclick="app.filterByTag('Triết học')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#Triết học</button>
-            <button type="button" onclick="app.filterByTag('Tâm lý')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#Tâm lý</button>
-            <button type="button" onclick="app.filterByTag('Kinh điển')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#Kinh điển</button>
-            <button type="button" onclick="app.filterByTag('Haruki Murakami')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#Haruki Murakami</button>
-            <button type="button" onclick="app.filterByTag('Franz Kafka')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#Franz Kafka</button>
-            <button type="button" onclick="app.filterByTag('Chữa lành')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-ink-900 hover:text-white text-ink-700 border border-ink-200 transition">#Chữa lành</button>
+            <button type="button" onclick="app.filterByTag('Tiếng Việt')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#Tiếng Việt</button>
+            <button type="button" onclick="app.filterByTag('Song ngữ')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#Song ngữ</button>
+            <button type="button" onclick="app.filterByTag('English')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#English</button>
+            <button type="button" onclick="app.filterByTag('Văn học')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#Văn học</button>
+            <button type="button" onclick="app.filterByTag('Triết học')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#Triết học</button>
+            <button type="button" onclick="app.filterByTag('Tâm lý')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#Tâm lý</button>
+            <button type="button" onclick="app.filterByTag('Kinh điển')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#Kinh điển</button>
+            <button type="button" onclick="app.filterByTag('Haruki Murakami')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#Haruki Murakami</button>
+            <button type="button" onclick="app.filterByTag('Franz Kafka')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#Franz Kafka</button>
+            <button type="button" onclick="app.filterByTag('Chữa lành')" class="px-2.5 py-1 rounded-full text-[11px] bg-parchment-200/80 hover:bg-leather-500 hover:text-white text-ink-700 border border-ink-200 transition">#Chữa lành</button>
           </div>
         </div>
 
@@ -671,7 +667,7 @@
     </button>
 
     <!-- Center Floating Action Button -->
-    <button type="button" onclick="app.openQuickCreateSheet()" class="-mt-4 w-11 h-11 rounded-full bg-ink-900 text-parchment-50 flex items-center justify-center shadow-lg border-2 border-parchment-100 active:scale-95 transition">
+    <button type="button" onclick="app.openQuickCreateSheet()" class="-mt-4 w-11 h-11 rounded-full bg-leather-600 text-parchment-50 flex items-center justify-center shadow-lg border-2 border-parchment-100 active:scale-95 transition">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4" />
       </svg>
@@ -724,7 +720,7 @@
       <div class="space-y-3 pt-1">
         <!-- Option 1: Đăng bài chia sẻ -->
         <button type="button" onclick="app.closeQuickCreateSheet(); app.openNewPostModal();" class="w-full text-left p-3.5 rounded-2xl bg-parchment-100 hover:bg-parchment-200 border border-ink-200/80 transition flex items-center gap-3.5 group">
-          <div class="w-10 h-10 rounded-xl bg-ink-900 text-parchment-50 flex items-center justify-center shrink-0 group-hover:scale-105 transition">
+          <div class="w-10 h-10 rounded-xl bg-leather-600 text-parchment-50 flex items-center justify-center shrink-0 group-hover:scale-105 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
           </div>
           <div>
@@ -816,7 +812,17 @@
 
         <div>
           <label class="block font-semibold text-ink-800 mb-1">Nội dung chia sẻ / Cảm nghĩ của bạn</label>
-          <textarea id="post-input-content" required rows="4" placeholder="Viết đôi dòng chia sẻ về trải nghiệm đọc, bối cảnh hay suy ngẫm của bạn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500"></textarea>
+          <textarea id="post-input-content" required rows="4" placeholder="Viết đôi dòng chia sẻ về trải nghiệm đọc, bối cảnh hay suy ngẫm của bạn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500"></textarea><div class="mt-1 flex justify-end"><button type="button" onclick="app.openEmoji(this, 'post-input-content')" class="text-xs text-ink-500 hover:text-ink-900">😊 Chèn emoji</button></div>
+<div>
+<label class="block font-semibold text-ink-800 mb-1">Check-in địa điểm (Tùy chọn)</label>
+<div class="flex flex-wrap gap-2">
+<input type="text" id="post-input-checkin" maxlength="80" placeholder="Ví dụ: Phố sách Hà Nội, quán cà phê sách..." class="flex-1 min-w-[10rem] bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs">
+<button type="button" onclick="app.useMyLocation()" class="px-3 py-2 rounded-xl border border-ink-300 bg-white text-xs font-semibold hover:bg-parchment-100">📍 Vị trí của tôi</button>
+<button type="button" onclick="app.previewCheckin()" class="px-3 py-2 rounded-xl border border-ink-300 bg-white text-xs font-semibold hover:bg-parchment-100">Xem Google Maps</button>
+</div>
+<p class="text-[11px] text-ink-400 mt-1">Nếu dùng "Vị trí của tôi", tọa độ sẽ hiện công khai trên bài. Bạn có thể chỉ gõ tên địa điểm.</p>
+</div>
+
         </div>
 
         <!-- Thẻ Sách & Phân Loại -->
@@ -907,7 +913,7 @@
 
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" onclick="app.closeModal('new-post-modal')" class="px-4 py-2 rounded-full border border-ink-300 text-ink-700 hover:bg-parchment-200">Hủy</button>
-          <button type="submit" class="px-5 py-2 rounded-full bg-ink-900 hover:bg-leather-600 text-parchment-50 font-semibold shadow-sm transition">Đăng Bài Chia Sẻ</button>
+          <button type="submit" class="px-5 py-2 rounded-full bg-leather-600 hover:bg-leather-600 text-parchment-50 font-semibold shadow-sm transition">Đăng Bài Chia Sẻ</button>
         </div>
       </form>
     </div>
@@ -995,7 +1001,7 @@
           </div>
           <div>
             <label class="block font-semibold text-ink-800 mb-1">Khu vực</label>
-            <select id="ex-input-location" required class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none"><option value="">Chọn tỉnh / thành phố</option><option value="Hà Nội">Hà Nội</option><option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option><option value="Hải Phòng">Hải Phòng</option><option value="Đà Nẵng">Đà Nẵng</option><option value="Cần Thơ">Cần Thơ</option><option value="Huế">Huế</option><option value="Tuyên Quang">Tuyên Quang</option><option value="Lào Cai">Lào Cai</option><option value="Thái Nguyên">Thái Nguyên</option><option value="Phú Thọ">Phú Thọ</option><option value="Bắc Ninh">Bắc Ninh</option><option value="Hưng Yên">Hưng Yên</option><option value="Ninh Bình">Ninh Bình</option><option value="Quảng Trị">Quảng Trị</option><option value="Quảng Ngãi">Quảng Ngãi</option><option value="Gia Lai">Gia Lai</option><option value="Khánh Hòa">Khánh Hòa</option><option value="Lâm Đồng">Lâm Đồng</option><option value="Đắk Lắk">Đắk Lắk</option><option value="Đồng Nai">Đồng Nai</option><option value="Tây Ninh">Tây Ninh</option><option value="Vĩnh Long">Vĩnh Long</option><option value="Đồng Tháp">Đồng Tháp</option><option value="Cà Mau">Cà Mau</option><option value="An Giang">An Giang</option><option value="Lạng Sơn">Lạng Sơn</option><option value="Cao Bằng">Cao Bằng</option><option value="Lai Châu">Lai Châu</option><option value="Điện Biên">Điện Biên</option><option value="Sơn La">Sơn La</option><option value="Quảng Ninh">Quảng Ninh</option><option value="Thanh Hóa">Thanh Hóa</option><option value="Nghệ An">Nghệ An</option><option value="Hà Tĩnh">Hà Tĩnh</option></select>
+            <select id="ex-input-location" required class="min-w-0 max-w-full truncate w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none"><option value="">Chọn tỉnh / thành phố</option><option value="Hà Nội">Hà Nội</option><option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option><option value="Hải Phòng">Hải Phòng</option><option value="Đà Nẵng">Đà Nẵng</option><option value="Cần Thơ">Cần Thơ</option><option value="Huế">Huế</option><option value="Tuyên Quang">Tuyên Quang</option><option value="Lào Cai">Lào Cai</option><option value="Thái Nguyên">Thái Nguyên</option><option value="Phú Thọ">Phú Thọ</option><option value="Bắc Ninh">Bắc Ninh</option><option value="Hưng Yên">Hưng Yên</option><option value="Ninh Bình">Ninh Bình</option><option value="Quảng Trị">Quảng Trị</option><option value="Quảng Ngãi">Quảng Ngãi</option><option value="Gia Lai">Gia Lai</option><option value="Khánh Hòa">Khánh Hòa</option><option value="Lâm Đồng">Lâm Đồng</option><option value="Đắk Lắk">Đắk Lắk</option><option value="Đồng Nai">Đồng Nai</option><option value="Tây Ninh">Tây Ninh</option><option value="Vĩnh Long">Vĩnh Long</option><option value="Đồng Tháp">Đồng Tháp</option><option value="Cà Mau">Cà Mau</option><option value="An Giang">An Giang</option><option value="Lạng Sơn">Lạng Sơn</option><option value="Cao Bằng">Cao Bằng</option><option value="Lai Châu">Lai Châu</option><option value="Điện Biên">Điện Biên</option><option value="Sơn La">Sơn La</option><option value="Quảng Ninh">Quảng Ninh</option><option value="Thanh Hóa">Thanh Hóa</option><option value="Nghệ An">Nghệ An</option><option value="Hà Tĩnh">Hà Tĩnh</option></select>
           </div>
         </div>
 
@@ -1311,7 +1317,31 @@
     </div>
   </div>
 
-  <!-- ================= MODAL HỒ SƠ ĐỘC GIẢ ================= -->
+  <!-- ================= MODAL XEM ẢNH ================= -->
+<div id="lightbox-modal" class="fixed inset-0 z-[80] hidden bg-black/90 flex items-center justify-center" onclick="app.closeLightbox()">
+<button type="button" onclick="event.stopPropagation(); app.closeLightbox()" class="absolute top-4 right-4 text-white text-2xl px-3 py-1" aria-label="Đóng">✕</button>
+<button id="lb-prev" type="button" onclick="event.stopPropagation(); app.lightboxStep(-1)" class="absolute left-2 text-white text-4xl px-3 py-6" aria-label="Ảnh trước">‹</button>
+<img id="lb-img" src="" alt="" class="max-w-[96vw] max-h-[88vh] object-contain select-none" onclick="event.stopPropagation()">
+<button id="lb-next" type="button" onclick="event.stopPropagation(); app.lightboxStep(1)" class="absolute right-2 text-white text-4xl px-3 py-6" aria-label="Ảnh sau">›</button>
+<div id="lb-count" class="absolute bottom-4 text-white text-xs"></div>
+</div>
+
+<!-- ================= MODAL CHIA SẺ ================= -->
+<div id="share-modal" class="fixed inset-0 z-[70] hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="if (event.target === this) app.closeModal('share-modal')">
+<div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-ink-200">
+<div class="flex items-center justify-between"><h3 class="font-serif font-bold text-base text-ink-900">Chia sẻ bài viết</h3><button type="button" onclick="app.closeModal('share-modal')" class="p-1 text-ink-400 hover:text-ink-900" aria-label="Đóng">✕</button></div>
+<p id="share-url" class="text-[11px] text-ink-500 break-all bg-parchment-200 rounded-xl p-2 mt-3"></p>
+<div class="grid grid-cols-2 gap-2 mt-3 text-xs font-semibold text-ink-800">
+<button type="button" onclick="app.shareCopy()" class="py-2.5 rounded-xl border border-ink-300 bg-white hover:bg-parchment-100">🔗 Sao chép liên kết</button>
+<button id="share-native" type="button" onclick="app.shareNative()" class="py-2.5 rounded-xl border border-ink-300 bg-white hover:bg-parchment-100">📤 Chia sẻ qua ứng dụng</button>
+<button type="button" onclick="app.shareTo('facebook')" class="py-2.5 rounded-xl border border-ink-300 bg-white hover:bg-parchment-100">Facebook</button>
+<button type="button" onclick="app.shareTo('sms')" class="py-2.5 rounded-xl border border-ink-300 bg-white hover:bg-parchment-100">💬 Tin nhắn SMS</button>
+<button type="button" onclick="app.shareTo('email')" class="py-2.5 rounded-xl border border-ink-300 bg-white hover:bg-parchment-100 col-span-2">✉️ Gửi qua email</button>
+</div>
+</div>
+</div>
+
+<!-- ================= MODAL HỒ SƠ ĐỘC GIẢ ================= -->
 <div id="user-profile-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4">
 <div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-ink-200 relative">
 <button type="button" onclick="app.closeModal('user-profile-modal')" class="absolute top-4 right-4 p-1 rounded-full text-ink-400 hover:text-ink-900" aria-label="Đóng">✕</button>
@@ -1365,7 +1395,7 @@
           
           <div>
             <label class="block font-semibold text-ink-800 mb-1">Tỉnh thành / Khu vực</label>
-            <select id="edit-location" class="w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs"><option value="Hà Nội">Hà Nội</option><option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option><option value="Hải Phòng">Hải Phòng</option><option value="Đà Nẵng">Đà Nẵng</option><option value="Cần Thơ">Cần Thơ</option><option value="Huế">Huế</option><option value="Tuyên Quang">Tuyên Quang</option><option value="Lào Cai">Lào Cai</option><option value="Thái Nguyên">Thái Nguyên</option><option value="Phú Thọ">Phú Thọ</option><option value="Bắc Ninh">Bắc Ninh</option><option value="Hưng Yên">Hưng Yên</option><option value="Ninh Bình">Ninh Bình</option><option value="Quảng Trị">Quảng Trị</option><option value="Quảng Ngãi">Quảng Ngãi</option><option value="Gia Lai">Gia Lai</option><option value="Khánh Hòa">Khánh Hòa</option><option value="Lâm Đồng">Lâm Đồng</option><option value="Đắk Lắk">Đắk Lắk</option><option value="Đồng Nai">Đồng Nai</option><option value="Tây Ninh">Tây Ninh</option><option value="Vĩnh Long">Vĩnh Long</option><option value="Đồng Tháp">Đồng Tháp</option><option value="Cà Mau">Cà Mau</option><option value="An Giang">An Giang</option><option value="Lạng Sơn">Lạng Sơn</option><option value="Cao Bằng">Cao Bằng</option><option value="Lai Châu">Lai Châu</option><option value="Điện Biên">Điện Biên</option><option value="Sơn La">Sơn La</option><option value="Quảng Ninh">Quảng Ninh</option><option value="Thanh Hóa">Thanh Hóa</option><option value="Nghệ An">Nghệ An</option><option value="Hà Tĩnh">Hà Tĩnh</option><option value="Toàn quốc (Ship bưu điện)">Toàn quốc (Ship bưu điện)</option></select>
+            <select id="edit-location" class="min-w-0 max-w-full truncate w-full bg-white rounded-xl px-3 py-2 border border-ink-200 focus:outline-none focus:ring-1 focus:ring-leather-500 text-xs"><option value="Hà Nội">Hà Nội</option><option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option><option value="Hải Phòng">Hải Phòng</option><option value="Đà Nẵng">Đà Nẵng</option><option value="Cần Thơ">Cần Thơ</option><option value="Huế">Huế</option><option value="Tuyên Quang">Tuyên Quang</option><option value="Lào Cai">Lào Cai</option><option value="Thái Nguyên">Thái Nguyên</option><option value="Phú Thọ">Phú Thọ</option><option value="Bắc Ninh">Bắc Ninh</option><option value="Hưng Yên">Hưng Yên</option><option value="Ninh Bình">Ninh Bình</option><option value="Quảng Trị">Quảng Trị</option><option value="Quảng Ngãi">Quảng Ngãi</option><option value="Gia Lai">Gia Lai</option><option value="Khánh Hòa">Khánh Hòa</option><option value="Lâm Đồng">Lâm Đồng</option><option value="Đắk Lắk">Đắk Lắk</option><option value="Đồng Nai">Đồng Nai</option><option value="Tây Ninh">Tây Ninh</option><option value="Vĩnh Long">Vĩnh Long</option><option value="Đồng Tháp">Đồng Tháp</option><option value="Cà Mau">Cà Mau</option><option value="An Giang">An Giang</option><option value="Lạng Sơn">Lạng Sơn</option><option value="Cao Bằng">Cao Bằng</option><option value="Lai Châu">Lai Châu</option><option value="Điện Biên">Điện Biên</option><option value="Sơn La">Sơn La</option><option value="Quảng Ninh">Quảng Ninh</option><option value="Thanh Hóa">Thanh Hóa</option><option value="Nghệ An">Nghệ An</option><option value="Hà Tĩnh">Hà Tĩnh</option><option value="Toàn quốc (Ship bưu điện)">Toàn quốc (Ship bưu điện)</option></select>
           </div>
         </div>
 
@@ -1445,6 +1475,7 @@
       // Uploaded Images Storage (FileReader Base64)
       GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
       pendingAvatar: undefined,
+      checkinCoords: null, _pendingRoute: null, _lb: null, _lbKey: null, _shareId: null, _loadedOnce: { posts: false, topics: false, exchanges: false },
       messages: [], follows: [], remote: false, activeThread: null, viewUserId: null, myPrivate: null, unwatchMsgs: null,
       _synced: { posts: {}, topics: {}, exchanges: {} },
       uploadedImages: { post: [], exchange: [], topic: [] },
@@ -1496,7 +1527,8 @@
 
         // Render Initial Views & User Profile UI
         this.updateUserUI();
-        this.switchTab('posts');
+        this.routeFromHash();
+        window.addEventListener('hashchange', () => this.routeFromHash());
         this.updateBadges();
       },
 
@@ -1628,11 +1660,12 @@
         this.renderUploadStrip(type);
       },
 
-      galleryHtml(images, fallback, alt, cls) {
+      galleryHtml(images, fallback, alt, cls, ref) {
         const list = (images && images.length) ? images : [fallback];
         const a = (alt || '').replace(/"/g, '&quot;');
-        if (list.length === 1) return `<img src="${list[0]}" alt="${a}" class="${cls}" />`;
-        return `<div class="relative w-full h-full"><div class="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar">${list.map(s => `<img src="${s}" alt="${a}" class="shrink-0 w-full h-full object-cover snap-center" loading="lazy" />`).join('')}</div><span class="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-ink-900/70 text-white text-[10px] font-semibold pointer-events-none">${list.length} ảnh • vuốt ngang</span></div>`;
+        const zoom = i => ref ? ` onclick="event.stopPropagation(); app.openLightbox('${ref[0]}', '${ref[1]}', ${i})"` : '';
+        if (list.length === 1) return `<img src="${list[0]}" alt="${a}" class="${cls}${ref ? ' cursor-zoom-in' : ''}"${zoom(0)} />`;
+        return `<div class="relative w-full h-full"><div class="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar">${list.map((s, i) => `<img src="${s}" alt="${a}" class="shrink-0 w-full h-full object-cover snap-center${ref ? ' cursor-zoom-in' : ''}" loading="lazy"${zoom(i)} />`).join('')}</div><span class="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-ink-900/70 text-white text-[10px] font-semibold pointer-events-none">${list.length} ảnh • vuốt ngang</span></div>`;
       },
 
       countBadge(n) {
@@ -1685,7 +1718,7 @@
         });
         document.querySelectorAll('.post-pill').forEach(btn => {
           const on = btn.id === 'post-filter-' + this.postFilter;
-          btn.classList.toggle('bg-ink-900', on); btn.classList.toggle('text-parchment-50', on); btn.classList.toggle('font-semibold', on);
+          btn.classList.toggle('bg-leather-600', on); btn.classList.toggle('text-parchment-50', on); btn.classList.toggle('font-semibold', on);
           btn.classList.toggle('text-ink-700', !on); btn.classList.toggle('bg-parchment-200', !on); btn.classList.toggle('font-medium', !on);
         });
       },
@@ -1706,7 +1739,7 @@
         });
         document.querySelectorAll('.topic-pill').forEach(btn => {
           const on = btn.id === 'topic-genre-' + this.topicGenre;
-          btn.classList.toggle('bg-ink-900', on); btn.classList.toggle('text-parchment-50', on); btn.classList.toggle('font-semibold', on);
+          btn.classList.toggle('bg-leather-600', on); btn.classList.toggle('text-parchment-50', on); btn.classList.toggle('font-semibold', on);
           btn.classList.toggle('text-ink-700', !on); btn.classList.toggle('bg-parchment-200', !on); btn.classList.toggle('font-medium', !on);
         });
       },
@@ -1719,7 +1752,7 @@
         // Update tag pill active UI
         const tagPills = document.querySelectorAll('.tag-pill');
         tagPills.forEach(pill => {
-          pill.classList.remove('bg-ink-900', 'text-parchment-50');
+          pill.classList.remove('bg-leather-600', 'text-parchment-50');
           pill.classList.add('bg-parchment-200/90', 'text-ink-700');
         });
 
@@ -1729,7 +1762,7 @@
           const matchPill = Array.from(tagPills).find(p => p.innerText.toLowerCase().includes(tag.toLowerCase()));
           if (matchPill) {
             matchPill.classList.remove('bg-parchment-200/90', 'text-ink-700');
-            matchPill.classList.add('bg-ink-900', 'text-parchment-50');
+            matchPill.classList.add('bg-leather-600', 'text-parchment-50');
           }
           this.showToast(`Đang lọc theo thẻ: #${tag}`);
         } else {
@@ -1737,7 +1770,7 @@
           const allPill = document.getElementById('tag-pill-all');
           if (allPill) {
             allPill.classList.remove('bg-parchment-200/90', 'text-ink-700');
-            allPill.classList.add('bg-ink-900', 'text-parchment-50');
+            allPill.classList.add('bg-leather-600', 'text-parchment-50');
           }
         }
 
@@ -1866,6 +1899,7 @@
         const map = {};
         list.forEach(d => { map[d.id] = JSON.stringify(this.serialize(d)); });
         this._synced[col] = map;
+        this._loadedOnce[col] = true;
         list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         this[col] = list;
         this.refreshViews();
@@ -1894,6 +1928,7 @@
           this.renderPosts(); this.renderTopics(); this.renderExchanges(); this.renderInbox(); this.updateBadges();
           if (this.currentTab === 'shelf') this.renderShelf();
           this.refreshProfileModal();
+          this.tryPendingRoute();
         } catch (err) { console.error(err); }
       },
 
@@ -2045,7 +2080,7 @@
         const av = u.avatarImg ? `<img src="${u.avatarImg}" alt="" class="w-full h-full object-cover">` : this.esc(u.avatar || '');
         const actions = me === uid
           ? '<p class="text-[11px] text-ink-500 text-center">Đây là hồ sơ của bạn.</p>'
-          : `<div class="flex gap-2"><button type="button" onclick="app.toggleFollow('${uid}')" class="flex-1 py-2 rounded-full text-xs font-semibold ${isF ? 'border border-ink-300 bg-white text-ink-800' : 'bg-ink-900 text-parchment-50'}">${isF ? 'Đang theo dõi' : 'Theo dõi'}</button><button type="button" onclick="app.openChat('${uid}')" class="flex-1 py-2 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-800">Nhắn tin</button></div>`;
+          : `<div class="flex gap-2"><button type="button" onclick="app.toggleFollow('${uid}')" class="flex-1 py-2 rounded-full text-xs font-semibold ${isF ? 'border border-ink-300 bg-white text-ink-800' : 'bg-leather-600 text-parchment-50'}">${isF ? 'Đang theo dõi' : 'Theo dõi'}</button><button type="button" onclick="app.openChat('${uid}')" class="flex-1 py-2 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-800">Nhắn tin</button></div>`;
         body.innerHTML = `
           <div class="flex flex-col items-center text-center">
             <div class="w-20 h-20 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-2xl flex items-center justify-center overflow-hidden">${av}</div>
@@ -2157,7 +2192,7 @@
         const esc = s => this.esc(s);
         const me = this.getCurrentUser();
         if (!me) {
-          listEl.innerHTML = `<div class="py-16 text-center text-ink-400"><p class="font-serif text-base">Hãy đăng nhập để xem hộp thư</p><button type="button" onclick="app.openLoginModal()" class="mt-3 px-4 py-2 rounded-full bg-ink-900 text-parchment-50 text-xs font-semibold">Đăng nhập bằng Gmail</button></div>`;
+          listEl.innerHTML = `<div class="py-16 text-center text-ink-400"><p class="font-serif text-base">Hãy đăng nhập để xem hộp thư</p><button type="button" onclick="app.openLoginModal()" class="mt-3 px-4 py-2 rounded-full bg-leather-600 text-parchment-50 text-xs font-semibold">Đăng nhập bằng Gmail</button></div>`;
           return;
         }
         const prev = document.getElementById('chat-input');
@@ -2193,7 +2228,7 @@
           const msgs = this.messages.filter(m => (m.fromId === cur && m.toId === me.id) || (m.fromId === me.id && m.toId === cur)).map(m => {
             const mine = m.fromId === me.id;
             const tag = (m.kind && m.kind !== 'chat' && m.bookTitle) ? `<div class="text-[10px] font-semibold opacity-70 mb-0.5">${esc(kindLabel[m.kind] || 'Liên quan')} • ${esc(m.bookTitle)}</div>` : '';
-            return `<div class="flex ${mine ? 'justify-end' : 'justify-start'}"><div class="max-w-[80%] rounded-2xl px-3 py-2 text-xs leading-relaxed ${mine ? 'bg-ink-900 text-parchment-50' : 'bg-white border border-ink-200 text-ink-800'}">${tag}<div class="whitespace-pre-wrap break-words">${esc(m.text)}</div><div class="text-[9px] mt-1 opacity-60">${this.timeAgo(m.createdAt)}</div></div></div>`;
+            return `<div class="flex ${mine ? 'justify-end' : 'justify-start'}"><div class="max-w-[80%] rounded-2xl px-3 py-2 text-xs leading-relaxed ${mine ? 'bg-leather-600 text-parchment-50' : 'bg-white border border-ink-200 text-ink-800'}">${tag}<div class="whitespace-pre-wrap break-words">${esc(m.text)}</div><div class="text-[9px] mt-1 opacity-60">${this.timeAgo(m.createdAt)}</div></div></div>`;
           }).join('') || '<p class="text-center text-[11px] text-ink-400 py-8">Hãy gửi lời chào đầu tiên!</p>';
           panel = `<div class="flex flex-col rounded-2xl border border-ink-200 bg-parchment-100 min-h-[420px]">
             <div class="flex items-center gap-3 p-3 border-b border-ink-200">
@@ -2204,7 +2239,7 @@
             <div id="chat-messages" class="flex-1 overflow-y-auto p-3 space-y-2 max-h-[55vh]">${msgs}</div>
             <form onsubmit="app.sendChat(event)" class="p-3 border-t border-ink-200 flex gap-2">
               <input id="chat-input" type="text" maxlength="2000" autocomplete="off" placeholder="Nhập tin nhắn..." class="flex-1 bg-white border border-ink-200 rounded-full px-4 py-2 text-xs focus:outline-none focus:border-ink-900">
-              <button type="submit" class="px-4 rounded-full bg-ink-900 text-parchment-50 text-xs font-semibold">Gửi</button>
+              <button type="button" onclick="app.openEmoji(this, 'chat-input')" class="shrink-0 text-lg px-1" aria-label="Chèn emoji">😊</button><button type="submit" class="px-4 rounded-full bg-leather-600 text-parchment-50 text-xs font-semibold">Gửi</button>
             </form>
           </div>`;
         }
@@ -2243,6 +2278,159 @@
         this.activeThread = target.userId;
         this.closeModal('buy-contact-modal');
         this.showToast('Đã gửi tin nhắn đặt mua tới người bán! Xem tại mục Hộp Thư.');
+      },
+
+
+      // ===== ĐIỀU HƯỚNG TỪNG TRANG (F5 không quay về trang chủ) =====
+      TAB_SLUGS: { posts: 'chia-se', reviews: 'review', exchange: 'mua-ban', inbox: 'hop-thu', shelf: 'ke-sach' },
+      setHash(h) { if (location.hash !== h) location.hash = h; },
+      routeFromHash() {
+        const parts = (location.hash || '').replace(/^#\/?/, '').split('/');
+        const slug = parts[0];
+        const closeDetails = () => ['post-detail-modal', 'topic-detail-modal'].forEach(id => { const m = document.getElementById(id); if (m) m.classList.add('hidden'); });
+        const first = !this.__routed;
+        this.__routed = true;
+        if (!slug) { history.replaceState(null, '', '#/chia-se'); if (first || this.currentTab !== 'posts') this.switchTab('posts', true); return; }
+        if (slug === 'bai-viet' && /^[\w-]+$/.test(parts[1] || '')) {
+          if (this.currentTab !== 'posts') this.switchTab('posts', true);
+          const open = document.getElementById('post-detail-modal');
+          const shown = open && !open.classList.contains('hidden') && this.currentActivePost && this.currentActivePost.id === parts[1];
+          if (!shown) { if (this.posts.some(p => p.id === parts[1])) this.openPostDetail(parts[1]); else this._pendingRoute = { kind: 'post', id: parts[1] }; }
+          return;
+        }
+        if (slug === 'sach' && /^[\w-]+$/.test(parts[1] || '')) {
+          if (this.currentTab !== 'reviews') this.switchTab('reviews', true);
+          const open = document.getElementById('topic-detail-modal');
+          const shown = open && !open.classList.contains('hidden') && this.currentActiveTopic && this.currentActiveTopic.id === parts[1];
+          if (!shown) { if (this.topics.some(t => t.id === parts[1])) this.openTopicDetail(parts[1]); else this._pendingRoute = { kind: 'topic', id: parts[1] }; }
+          return;
+        }
+        const tab = Object.keys(this.TAB_SLUGS).find(k => this.TAB_SLUGS[k] === slug) || 'posts';
+        closeDetails();
+        if (first || tab !== this.currentTab) this.switchTab(tab, true);
+      },
+      tryPendingRoute() {
+        const p = this._pendingRoute;
+        if (!p) return;
+        const list = p.kind === 'post' ? this.posts : this.topics;
+        if (list.some(x => x.id === p.id)) { this._pendingRoute = null; if (p.kind === 'post') this.openPostDetail(p.id); else this.openTopicDetail(p.id); }
+        else if (this._loadedOnce[p.kind === 'post' ? 'posts' : 'topics']) { this._pendingRoute = null; this.showToast('Nội dung này không còn tồn tại.'); this.setHash('#/' + this.TAB_SLUGS[this.currentTab]); }
+      },
+
+      // ===== AVATAR, EMOJI, CHECK-IN, VIDEO =====
+      avatarCircle(uid, name, size) {
+        const img = this.avatarOf(uid);
+        const parts = this.unesc(name || '').trim().split(/\s+/).filter(Boolean);
+        const ini = (parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : (parts[0] || '?').slice(0, 2)).toUpperCase();
+        return `<div class="${size} rounded-full bg-leather-100 border border-leather-400/40 text-leather-600 font-bold flex items-center justify-center shrink-0 overflow-hidden text-[10px]">${img ? `<img src="${img}" alt="" class="w-full h-full object-cover">` : this.esc(ini)}</div>`;
+      },
+      openEmoji(btn, inputId) {
+        let pop = document.getElementById('emoji-pop');
+        if (!pop) {
+          pop = document.createElement('div');
+          pop.id = 'emoji-pop';
+          pop.className = 'fixed z-[90] hidden grid grid-cols-8 gap-1 p-2 bg-white rounded-2xl shadow-xl border border-ink-200 max-w-[18rem]';
+          document.body.appendChild(pop);
+          document.addEventListener('click', e => { if (!pop.classList.contains('hidden') && !pop.contains(e.target) && !(e.target.closest && e.target.closest('[data-emoji-btn]'))) pop.classList.add('hidden'); });
+        }
+        const EMOJIS = ['😀','😄','😆','😂','😊','😍','🥰','😘','😉','😎','🤓','🤔','🤗','😴','😭','😢','🥳','🤩','🙏','👍','👏','🙌','💪','❤️','🧡','💛','💚','💙','💜','🖤','💖','✨','🌟','🔥','🌸','🌷','🌿','🍃','🍂','☕','🍵','📚','📖','📕','📗','📘','📙','✍️','📝','🔖','🕯️','🌙','☀️','🌧️','🏡'];
+        pop.innerHTML = EMOJIS.map(e => `<button type="button" class="text-xl leading-none p-1 rounded-lg hover:bg-parchment-200">${e}</button>`).join('');
+        pop.onclick = ev => {
+          const b = ev.target.closest('button'); if (!b) return;
+          const el = document.getElementById(inputId); if (!el) return;
+          const s = el.selectionStart == null ? el.value.length : el.selectionStart;
+          const en = el.selectionEnd == null ? s : el.selectionEnd;
+          el.value = el.value.slice(0, s) + b.textContent + el.value.slice(en);
+          const pos = s + b.textContent.length;
+          el.focus(); try { el.setSelectionRange(pos, pos); } catch (err) {}
+        };
+        btn.setAttribute('data-emoji-btn', '1');
+        const r = btn.getBoundingClientRect();
+        pop.classList.remove('hidden');
+        const w = pop.offsetWidth, h = pop.offsetHeight;
+        pop.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left)) + 'px';
+        pop.style.top = (r.top - h - 8 > 8 ? r.top - h - 8 : r.bottom + 8) + 'px';
+      },
+      mapsUrl(post) {
+        const lat = post.checkinLat, lng = post.checkinLng;
+        const q = (typeof lat === 'number' && typeof lng === 'number' && isFinite(lat) && isFinite(lng)) ? (lat + ',' + lng) : encodeURIComponent(this.unesc(post.checkinName || ''));
+        return 'https://www.google.com/maps/search/?api=1&query=' + q;
+      },
+      useMyLocation() {
+        if (!navigator.geolocation) { this.showToast('Trình duyệt không hỗ trợ lấy vị trí.'); return; }
+        this.showToast('Đang lấy vị trí của bạn...');
+        navigator.geolocation.getCurrentPosition(pos => {
+          this.checkinCoords = { lat: Math.round(pos.coords.latitude * 1e5) / 1e5, lng: Math.round(pos.coords.longitude * 1e5) / 1e5 };
+          const el = document.getElementById('post-input-checkin');
+          if (el && !el.value.trim()) el.value = 'Vị trí hiện tại';
+          this.showToast('Đã lấy vị trí. Bạn có thể sửa lại tên địa điểm.');
+        }, () => this.showToast('Không lấy được vị trí. Hãy cho phép truy cập vị trí hoặc gõ tên địa điểm.'), { timeout: 10000 });
+      },
+      previewCheckin() {
+        const el = document.getElementById('post-input-checkin');
+        const name = (el && el.value || '').trim();
+        const q = this.checkinCoords ? (this.checkinCoords.lat + ',' + this.checkinCoords.lng) : encodeURIComponent(name);
+        if (!q) { this.showToast('Hãy nhập tên địa điểm trước.'); return; }
+        window.open('https://www.google.com/maps/search/?api=1&query=' + q, '_blank', 'noopener');
+      },
+
+      // ===== XEM ẢNH FULL SIZE =====
+      openLightbox(col, id, idx) {
+        const it = (this[col] || []).find(x => x.id === id);
+        if (!it) return;
+        const list = (it.images && it.images.length ? it.images : (it.covers && it.covers.length ? it.covers : [it.image || it.cover])).filter(Boolean);
+        if (!list.length) return;
+        this._lb = { list: list, i: Math.min(Math.max(idx || 0, 0), list.length - 1) };
+        this.renderLightbox();
+        document.getElementById('lightbox-modal').classList.remove('hidden');
+        if (!this._lbKey) {
+          this._lbKey = e => { if (e.key === 'Escape') this.closeLightbox(); else if (e.key === 'ArrowLeft') this.lightboxStep(-1); else if (e.key === 'ArrowRight') this.lightboxStep(1); };
+          document.addEventListener('keydown', this._lbKey);
+          const box = document.getElementById('lightbox-modal'); let x0 = null;
+          box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+          box.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) this.lightboxStep(dx < 0 ? 1 : -1); x0 = null; }, { passive: true });
+        }
+      },
+      renderLightbox() {
+        const lb = this._lb; if (!lb) return;
+        document.getElementById('lb-img').src = lb.list[lb.i];
+        document.getElementById('lb-count').innerText = lb.list.length > 1 ? (lb.i + 1) + ' / ' + lb.list.length : '';
+        ['lb-prev', 'lb-next'].forEach(id => { document.getElementById(id).classList.toggle('hidden', lb.list.length < 2); });
+      },
+      lightboxStep(d) {
+        const lb = this._lb; if (!lb || lb.list.length < 2) return;
+        lb.i = (lb.i + d + lb.list.length) % lb.list.length; this.renderLightbox();
+      },
+      closeLightbox() { document.getElementById('lightbox-modal').classList.add('hidden'); },
+
+      // ===== CHIA SẺ BÀI VIẾT =====
+      shareUrl(id) { return location.origin + location.pathname + '#/bai-viet/' + id; },
+      sharePost(id) {
+        const post = this.posts.find(p => p.id === id);
+        if (!post) return;
+        this._shareId = id;
+        const el = document.getElementById('share-url'); if (el) el.innerText = this.shareUrl(id);
+        const nat = document.getElementById('share-native'); if (nat) nat.classList.toggle('hidden', !navigator.share);
+        document.getElementById('share-modal').classList.remove('hidden');
+      },
+      shareText() { const p = this.posts.find(x => x.id === this._shareId); return 'Bài chia sẻ trên Thư Hiên' + (p ? ': ' + this.unesc(p.bookTitle) : ''); },
+      shareCopy() { this.copyText(this.shareUrl(this._shareId)); },
+      shareNative() { if (navigator.share) navigator.share({ title: 'Thư Hiên', text: this.shareText(), url: this.shareUrl(this._shareId) }).catch(() => {}); },
+      shareTo(kind) {
+        const url = this.shareUrl(this._shareId), text = this.shareText();
+        if (kind === 'facebook') window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank', 'noopener');
+        else if (kind === 'sms') location.href = 'sms:?&body=' + encodeURIComponent(text + ' ' + url);
+        else if (kind === 'email') location.href = 'mailto:?subject=' + encodeURIComponent(text) + '&body=' + encodeURIComponent(text + '\n' + url);
+      },
+      copyText(t) {
+        const done = () => this.showToast('Đã sao chép liên kết!');
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, () => this.copyFallback(t, done));
+        else this.copyFallback(t, done);
+      },
+      copyFallback(t, done) {
+        const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (err) { this.showToast('Không sao chép được. Hãy chọn và sao chép thủ công.'); }
+        ta.remove();
       },
 
 
@@ -2345,7 +2533,7 @@
       },
 
       // Navigation & Tab Switching
-      switchTab(tab) {
+      switchTab(tab, fromRoute) {
         this.currentTab = tab;
 
         // Hide all views
@@ -2356,7 +2544,7 @@
         navIds.forEach(id => {
           const btn = document.getElementById(id);
           if (btn) {
-            btn.classList.remove('bg-ink-900', 'text-parchment-50', 'hover:bg-ink-900');
+            btn.classList.remove('bg-leather-600', 'text-parchment-50', 'hover:bg-leather-500');
             btn.classList.add('text-ink-700', 'hover:bg-parchment-100');
           }
         });
@@ -2378,7 +2566,7 @@
         const activeDNav = document.getElementById('nav-tab-' + tab);
         if (activeDNav) {
           activeDNav.classList.remove('text-ink-700', 'hover:bg-parchment-100');
-          activeDNav.classList.add('bg-ink-900', 'text-parchment-50');
+          activeDNav.classList.add('bg-leather-600', 'text-parchment-50');
         }
 
         const activeMNav = document.getElementById('m-nav-' + tab);
@@ -2402,6 +2590,7 @@
           this.renderShelf();
         }
 
+        if (!fromRoute) this.setHash('#/' + this.TAB_SLUGS[tab]);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },
 
@@ -2414,13 +2603,13 @@
         if (this.currentTab === 'posts') {
           tag.innerText = "Dòng Thời Gian";
           tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-ink-100 text-ink-800 border border-ink-300";
-          title.innerText = "Chia Sẻ Sách (Bài Post Bạn Đọc)";
+          title.innerText = "Chia Sẻ Sách";
           desc.innerText = "Dòng thời gian cộng đồng: Trích dẫn hay, góc bàn trà và suy ngẫm chân thành từ những trang sách.";
           actionBox.innerHTML = '';
         } else if (this.currentTab === 'reviews') {
           tag.innerText = "Thư Mục Review";
           tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300";
-          title.innerText = "Review Sách (Mỗi Topic Là 1 Cuốn Sách)";
+          title.innerText = "Review Sách";
           desc.innerText = "Mỗi chủ đề đại diện cho 1 đầu sách cụ thể. Toàn bộ bình luận bên dưới chính là các bài review đánh giá chi tiết.";
           actionBox.innerHTML = `
             <button type="button" onclick="app.openNewTopicModal()" class="bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
@@ -2430,7 +2619,7 @@
         } else if (this.currentTab === 'exchange') {
           tag.innerText = "Chợ Sách Sang Nhượng";
           tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-terracotta-100 text-terracotta-900 border border-terracotta-300";
-          title.innerText = "Bán & Trao Đổi Sách";
+          title.innerText = "Mua Bán & Trao Đổi Sách";
           desc.innerText = "Phân biệt rõ 2 nhu cầu: Đổi sách lấy cuốn khác (Swap) HOẶC Bán lại theo giá mong muốn (Pass lại sách cũ).";
           actionBox.innerHTML = `
             <button type="button" onclick="app.openNewExchangeModal()" class="bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
@@ -2483,13 +2672,13 @@
       setPostFilter(cat) {
         this.postFilter = cat;
         document.querySelectorAll('.post-pill').forEach(btn => {
-          btn.classList.remove('bg-ink-900', 'text-parchment-50');
+          btn.classList.remove('bg-leather-600', 'text-parchment-50');
           btn.classList.add('text-ink-700', 'bg-parchment-200');
         });
         const activeBtn = document.getElementById('post-filter-' + cat);
         if (activeBtn) {
           activeBtn.classList.remove('text-ink-700', 'bg-parchment-200');
-          activeBtn.classList.add('bg-ink-900', 'text-parchment-50');
+          activeBtn.classList.add('bg-leather-600', 'text-parchment-50');
         }
         this.renderPosts();
       },
@@ -2539,7 +2728,7 @@
               </div>
               <p class="font-serif text-ink-800 text-base">Chưa có bài chia sẻ nào phù hợp</p>
               <p class="text-xs text-ink-500 mt-1">Hãy là người đầu tiên ký gửi trang sách cho chủ đề này nhé.</p>
-              <button type="button" onclick="app.openNewPostModal()" class="mt-4 px-4 py-2 rounded-full bg-ink-900 text-parchment-50 text-xs font-semibold">Bạn đang tâm đắc điều gì?</button>
+              <button type="button" onclick="app.openNewPostModal()" class="mt-4 px-4 py-2 rounded-full bg-leather-600 text-parchment-50 text-xs font-semibold">Bạn đang tâm đắc điều gì?</button>
             </div>
           `;
           return;
@@ -2564,28 +2753,10 @@
               </span>
             </div>
 
-            <!-- Attached Book Tag & Language -->
-            <div class="mb-2.5 flex flex-wrap items-center gap-1.5">
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-parchment-200/90 text-ink-800 text-[11px] font-medium border border-ink-200/60">
-                <svg class="w-3.5 h-3.5 text-leather-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
-                <span>Đang đọc: <strong class="text-ink-900">${post.bookTitle}</strong></span>
-              </div>
-              ${post.language ? `<span onclick="event.stopPropagation(); app.filterByTag('${this.attrSafe(post.language)}')" class="cursor-pointer hover:bg-leather-100 px-2 py-0.5 rounded-lg text-[10px] font-medium bg-parchment-200 text-ink-600 border border-ink-200/60 transition">🌐 ${post.language}</span>` : ''}
-            </div>
-
-            <!-- Clickable Tags Row -->
-            ${post.tags && post.tags.length ? `
-              <div class="mb-3 flex flex-wrap gap-1">
-                ${post.tags.map(t => `<span onclick="event.stopPropagation(); app.filterByTag('${this.attrSafe(t)}')" class="cursor-pointer hover:bg-ink-900 hover:text-white px-2 py-0.5 rounded-full text-[10px] bg-parchment-200/80 text-ink-600 border border-ink-200/50 transition">#${t}</span>`).join('')}
-              </div>
-            ` : ''}
-
-            <!-- Book / Moment Image -->
-            ${post.image ? `
-              <div class="rounded-2xl overflow-hidden mb-3.5 border border-ink-200/60 aspect-[4/3] bg-parchment-200 relative group">
-                <div class="relative w-full h-full"><img src="${post.image}" alt="${post.bookTitle}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />${this.countBadge((post.images || []).length)}</div>
-              </div>
-            ` : ''}
+            <!-- Post Content Excerpt -->
+            <p class="text-xs text-ink-700 leading-relaxed line-clamp-3 mb-4 font-light">
+              ${post.content}
+            </p>
 
             <!-- Quote Highlight (if exists) -->
             ${post.quote ? `
@@ -2596,10 +2767,33 @@
               </div>
             ` : ''}
 
-            <!-- Post Content Excerpt -->
-            <p class="text-xs text-ink-700 leading-relaxed line-clamp-3 mb-4 font-light">
-              ${post.content}
-            </p>
+            <!-- Book / Moment Image -->
+            ${post.image ? `
+              <div class="rounded-2xl overflow-hidden mb-3.5 border border-ink-200/60 aspect-[3/4] bg-parchment-200 relative group cursor-zoom-in" onclick="event.stopPropagation(); app.openLightbox('posts', '${post.id}', 0)">
+                <div class="relative w-full h-full"><img src="${post.image}" alt="${post.bookTitle}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />${this.countBadge((post.images || []).length)}</div>
+              </div>
+            ` : ''}
+
+            <!-- Check-in -->
+          ${post.checkinName ? `<div class="mb-3 flex flex-wrap items-center gap-1.5">
+            ${post.checkinName ? `<a href="${this.mapsUrl(post)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-parchment-200 border border-ink-200/60 text-[11px] text-ink-700 hover:bg-leather-100">📍 ${post.checkinName}</a>` : ''}
+          </div>` : ''}
+
+          <!-- Clickable Tags Row -->
+            ${post.tags && post.tags.length ? `
+              <div class="mb-3 flex flex-wrap gap-1">
+                ${post.tags.map(t => `<span onclick="event.stopPropagation(); app.filterByTag('${this.attrSafe(t)}')" class="cursor-pointer hover:bg-leather-500 hover:text-white px-2 py-0.5 rounded-full text-[10px] bg-parchment-200/80 text-ink-600 border border-ink-200/50 transition">#${t}</span>`).join('')}
+              </div>
+            ` : ''}
+
+            <!-- Attached Book Tag & Language -->
+            <div class="mb-2.5 flex flex-wrap items-center gap-1.5">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-parchment-200/90 text-ink-800 text-[11px] font-medium border border-ink-200/60">
+                <svg class="w-3.5 h-3.5 text-leather-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+                <span>Đang đọc: <strong class="text-ink-900">${post.bookTitle}</strong></span>
+              </div>
+              ${post.language ? `<span onclick="event.stopPropagation(); app.filterByTag('${this.attrSafe(post.language)}')" class="cursor-pointer hover:bg-leather-100 px-2 py-0.5 rounded-lg text-[10px] font-medium bg-parchment-200 text-ink-600 border border-ink-200/60 transition">🌐 ${post.language}</span>` : ''}
+            </div>
 
             <!-- Bottom Interactions -->
             <div class="flex items-center justify-between pt-3 border-t border-ink-200/60 text-xs text-ink-500" onclick="event.stopPropagation()">
@@ -2617,7 +2811,7 @@
                 <svg class="w-4 h-4 ${post.userSaved ? 'fill-current' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
               </button>
 
-              <button type="button" onclick="app.copyPostLink('${post.id}')" class="hover:text-ink-900 transition">
+              <button type="button" onclick="app.sharePost('${post.id}')" class="hover:text-ink-900 transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
               </button>
             </div>
@@ -2630,6 +2824,7 @@
         const post = this.posts.find(p => p.id === postId);
         if (!post) return;
         this.currentActivePost = post;
+        this.setHash('#/bai-viet/' + postId);
 
         const content = document.getElementById('post-detail-content');
         content.innerHTML = `
@@ -2650,18 +2845,10 @@
               </button>
             </div>
 
-            <!-- Book Tag -->
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-parchment-200 text-ink-800 text-xs font-semibold">
-              <svg class="w-4 h-4 text-leather-600" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
-              <span>Cuốn sách: <strong class="text-ink-900">${post.bookTitle}</strong></span>
-            </div>
-
-            <!-- Main Image -->
-            ${post.image ? `
-              <div class="rounded-2xl overflow-hidden border border-ink-200 max-h-96 bg-parchment-200">
-                ${this.galleryHtml(post.images, post.image, post.bookTitle, 'w-full h-full object-cover')}
-              </div>
-            ` : ''}
+            <!-- Full Content -->
+            <p class="text-sm text-ink-800 leading-relaxed font-light whitespace-pre-line">
+              ${post.content}
+            </p>
 
             <!-- Quote Block -->
             ${post.quote ? `
@@ -2672,10 +2859,22 @@
               </div>
             ` : ''}
 
-            <!-- Full Content -->
-            <p class="text-sm text-ink-800 leading-relaxed font-light whitespace-pre-line">
-              ${post.content}
-            </p>
+            <!-- Main Image -->
+            ${post.image ? `
+              <div class="rounded-2xl overflow-hidden border border-ink-200 h-[28rem] max-h-[70vh] bg-parchment-200">
+                ${this.galleryHtml(post.images, post.image, post.bookTitle, 'w-full h-full object-cover', ['posts', post.id])}
+              </div>
+            ` : ''}
+
+            <!-- Check-in / Tags -->
+        ${post.checkinName ? `<a href="${this.mapsUrl(post)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-parchment-200 border border-ink-200/60 text-xs text-ink-700 hover:bg-leather-100">📍 ${post.checkinName} <span class="text-[10px] text-ink-400">(mở Google Maps)</span></a>` : ''}
+        ${(post.tags && post.tags.length) ? `<div class="flex flex-wrap gap-1">${post.tags.map(t => `<span class="px-2 py-0.5 rounded-full text-[10px] bg-parchment-200 text-ink-600 border border-ink-200/60">#${t}</span>`).join('')}</div>` : ''}
+
+        <!-- Book Tag -->
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-parchment-200 text-ink-800 text-xs font-semibold">
+              <svg class="w-4 h-4 text-leather-600" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+              <span>Cuốn sách: <strong class="text-ink-900">${post.bookTitle}</strong></span>
+            </div>
 
             <!-- Interaction toolbar -->
             <div class="flex items-center justify-between py-3 border-y border-ink-200 text-xs">
@@ -2689,7 +2888,7 @@
                   <span>${post.userSaved ? 'Đã lưu' : 'Lưu bài'}</span>
                 </button>
               </div>
-              <button type="button" onclick="app.copyPostLink('${post.id}')" class="text-ink-500 hover:text-ink-800 flex items-center gap-1">
+              <button type="button" onclick="app.sharePost('${post.id}')" class="text-ink-500 hover:text-ink-800 flex items-center gap-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
                 <span>Chia sẻ</span>
               </button>
@@ -2701,20 +2900,17 @@
               
               <div id="modal-post-comments-list" class="space-y-2.5 max-h-48 overflow-y-auto">
                 ${post.comments.map(c => `
-                  <div class="bg-parchment-200/60 rounded-2xl p-3 text-xs">
-                    <div class="flex items-center justify-between font-bold text-ink-900 mb-0.5">
+                  <div class="bg-parchment-200/60 rounded-2xl p-3 text-xs flex gap-2.5">${this.avatarCircle(c.authorId, c.author, 'w-8 h-8')}<div class="min-w-0 flex-1"><div class="flex items-center justify-between font-bold text-ink-900 mb-0.5">
                       <span class="cursor-pointer hover:underline" onclick="app.openUserProfile('${c.authorId || ''}')">${c.author}</span>
                       <span class="text-[10px] text-ink-400 font-normal">${c.time}</span>
-                    </div>
-                    <p class="text-ink-700 leading-relaxed font-light">${c.text}</p>
-                  </div>
+                    </div><p class="text-ink-700 leading-relaxed font-light">${c.text}</p></div></div>
                 `).join('')}
               </div>
 
               <!-- Comment input -->
               <form onsubmit="app.submitPostComment(event)" class="flex gap-2 pt-2">
                 <input type="text" id="post-comment-input" required placeholder="Gửi vài dòng cảm xúc hoặc trao đổi..." class="flex-1 bg-parchment-200 border border-ink-200 rounded-full px-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-leather-500" />
-                <button type="submit" class="bg-ink-900 hover:bg-leather-600 text-white rounded-full px-4 py-2 text-xs font-semibold shrink-0 transition">Gửi</button>
+                <button type="button" onclick="app.openEmoji(this, \'post-comment-input\')" class="shrink-0 text-lg px-1" aria-label="Chèn emoji">😊</button><button type="submit" class="bg-leather-600 hover:bg-leather-600 text-white rounded-full px-4 py-2 text-xs font-semibold shrink-0 transition">Gửi</button>
               </form>
             </div>
           </div>
@@ -2819,6 +3015,9 @@
           content: content,
           image: this.uploadedImages.post[0] || APP_IMAGES[selectedImgIndex] || IMG_0,
         images: this.uploadedImages.post.slice(),
+        checkinName: ((document.getElementById('post-input-checkin')?.value || '').trim() || (this.checkinCoords ? 'Vị trí hiện tại' : '')).slice(0, 80),
+        checkinLat: this.checkinCoords ? this.checkinCoords.lat : null,
+        checkinLng: this.checkinCoords ? this.checkinCoords.lng : null,
           language: document.getElementById('post-input-language')?.value || 'Tiếng Việt',
           authorTag: document.getElementById('post-input-author')?.value.trim() || '',
           tags: (document.getElementById('post-input-tags')?.value.trim() ? document.getElementById('post-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat([document.getElementById('post-input-language')?.value || 'Tiếng Việt']).filter((v, i, a) => a.indexOf(v) === i),
@@ -2833,6 +3032,8 @@
         };
 
         this.posts.unshift(newPost);
+        this.checkinCoords = null;
+        ['post-input-checkin'].forEach(i => { const el = document.getElementById(i); if (el) el.value = ''; });
         this.saveAll();
         this.removeUploadedImage('post'); this.closeModal('new-post-modal');
         this.switchTab('posts');
@@ -2843,13 +3044,13 @@
       setTopicGenre(genre) {
         this.topicGenre = genre;
         document.querySelectorAll('.topic-pill').forEach(btn => {
-          btn.classList.remove('bg-ink-900', 'text-parchment-50');
+          btn.classList.remove('bg-leather-600', 'text-parchment-50');
           btn.classList.add('text-ink-700', 'bg-parchment-200');
         });
         const activeBtn = document.getElementById('topic-genre-' + genre);
         if (activeBtn) {
           activeBtn.classList.remove('text-ink-700', 'bg-parchment-200');
-          activeBtn.classList.add('bg-ink-900', 'text-parchment-50');
+          activeBtn.classList.add('bg-leather-600', 'text-parchment-50');
         }
         this.renderTopics();
       },
@@ -2996,6 +3197,7 @@
         const topic = this.topics.find(t => t.id === topicId);
         if (!topic) return;
         this.currentActiveTopic = topic;
+        this.setHash('#/sach/' + topicId);
         this.selectedFormRating = 5;
 
         const avg = this.calcAvgRating(topic);
@@ -3020,7 +3222,7 @@
             <!-- Book Hero Overview -->
             <div class="flex flex-col sm:flex-row gap-5 items-start bg-parchment-100 rounded-3xl p-5 border border-ink-200">
               <div class="w-28 sm:w-36 rounded-2xl overflow-hidden shadow-lg border border-ink-300 shrink-0 bg-parchment-200">
-                ${this.galleryHtml(topic.covers, topic.cover || IMG_0, topic.title, 'w-full h-full object-cover')}
+                ${this.galleryHtml(topic.covers, topic.cover || IMG_0, topic.title, 'w-full h-full object-cover', ['topics', topic.id])}
               </div>
               <div class="flex-1 space-y-2">
                 <h2 class="font-serif font-bold text-2xl text-ink-900 leading-tight">${topic.title}</h2>
@@ -3083,7 +3285,7 @@
 
                 <div>
                   <label class="block font-semibold text-ink-800 mb-1">Nội dung review chi tiết (Cảm bút phân tích)</label>
-                  <textarea id="rev-input-content" required rows="3" placeholder="Chia sẻ góc nhìn sâu sắc của bạn về cốt truyện, ngòi bút tác giả, tư tưởng và bài học đọng lại..." class="w-full bg-white border border-amber-300 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-amber-500 font-light"></textarea>
+                  <textarea id="rev-input-content" required rows="3" placeholder="Chia sẻ góc nhìn sâu sắc của bạn về cốt truyện, ngòi bút tác giả, tư tưởng và bài học đọng lại..." class="w-full bg-white border border-amber-300 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-amber-500 font-light"></textarea><div class="mt-1 flex justify-end"><button type="button" onclick="app.openEmoji(this, 'rev-input-content')" class="text-xs text-ink-500 hover:text-ink-900">😊 Chèn emoji</button></div>
                 </div>
 
                 <div class="flex justify-end pt-1">
@@ -3401,7 +3603,7 @@
                 <!-- Book Image & Basic Info -->
                 <div class="flex gap-3.5 items-start mb-3.5">
                   <div class="w-20 h-28 rounded-xl overflow-hidden shrink-0 shadow-md border border-ink-300 bg-parchment-200">
-                    ${this.galleryHtml(item.images, item.image || IMG_0, item.bookTitle, 'w-full h-full object-cover')}
+                    ${this.galleryHtml(item.images, item.image || IMG_0, item.bookTitle, 'w-full h-full object-cover', ['exchanges', item.id])}
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-serif font-bold text-base text-ink-900 leading-snug line-clamp-2">${item.bookTitle}</h3>
@@ -3710,7 +3912,7 @@
             container.innerHTML = `
               <div class="py-12 text-center space-y-2">
                 <p class="text-xs text-ink-400 italic">Bạn chưa đăng bài chia sẻ nào dưới tài khoản này.</p>
-                <button type="button" onclick="app.openNewPostModal()" class="px-4 py-1.5 rounded-full bg-ink-900 text-white text-xs font-medium hover:bg-leather-600 transition shadow-sm">Bạn đang tâm đắc điều gì?</button>
+                <button type="button" onclick="app.openNewPostModal()" class="px-4 py-1.5 rounded-full bg-leather-600 text-white text-xs font-medium hover:bg-leather-600 transition shadow-sm">Bạn đang tâm đắc điều gì?</button>
               </div>
             `;
           } else {
@@ -3802,7 +4004,7 @@
             container.innerHTML = `
               <div class="py-12 text-center space-y-2">
                 <p class="text-xs text-ink-400 italic">Chưa có bài viết hay trang sách nào được lưu trong kệ.</p>
-                <button type="button" onclick="app.switchTab('posts')" class="px-4 py-1.5 rounded-full bg-ink-900 text-white text-xs font-medium hover:bg-leather-600 transition shadow-sm">Dạo Bước Xem Trang Sách</button>
+                <button type="button" onclick="app.switchTab('posts')" class="px-4 py-1.5 rounded-full bg-leather-600 text-white text-xs font-medium hover:bg-leather-600 transition shadow-sm">Dạo Bước Xem Trang Sách</button>
               </div>
             `;
           } else {
@@ -3855,6 +4057,7 @@
       closeModal(modalId) {
         const el = document.getElementById(modalId);
         if (el) el.classList.add('hidden');
+        if (modalId === 'post-detail-modal' || modalId === 'topic-detail-modal') this.setHash('#/' + this.TAB_SLUGS[this.currentTab]);
       },
 
       copyPostLink(postId) {
