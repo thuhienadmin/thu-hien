@@ -814,13 +814,15 @@
           <label class="block font-semibold text-ink-800 mb-1">Nội dung chia sẻ / Cảm nghĩ của bạn</label>
           <textarea id="post-input-content" required rows="4" placeholder="Viết đôi dòng chia sẻ về trải nghiệm đọc, bối cảnh hay suy ngẫm của bạn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500"></textarea><div class="mt-1 flex justify-end"><button type="button" onclick="app.openEmoji(this, 'post-input-content')" class="text-xs text-ink-500 hover:text-ink-900">😊 Chèn emoji</button></div>
 <div>
-<label class="block font-semibold text-ink-800 mb-1">Check-in địa điểm (Tùy chọn)</label>
-<div class="flex flex-wrap gap-2">
-<input type="text" id="post-input-checkin" maxlength="80" placeholder="Ví dụ: Phố sách Hà Nội, quán cà phê sách..." class="flex-1 min-w-[10rem] bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs">
-<button type="button" onclick="app.useMyLocation()" class="px-3 py-2 rounded-xl border border-ink-300 bg-white text-xs font-semibold hover:bg-parchment-100">📍 Vị trí của tôi</button>
-<button type="button" onclick="app.previewCheckin()" class="px-3 py-2 rounded-xl border border-ink-300 bg-white text-xs font-semibold hover:bg-parchment-100">Xem Google Maps</button>
+<button type="button" id="checkin-open" onclick="app.toggleCheckin()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-700 hover:bg-parchment-100">📍 Check-in</button>
+<div id="checkin-chip" class="hidden inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-parchment-200 border border-ink-200 text-xs text-ink-800"><span>📍 <span id="checkin-chip-text"></span></span><button type="button" onclick="app.clearCheckin()" class="text-ink-400 hover:text-ink-900" aria-label="Bỏ check-in">✕</button></div>
+<div id="checkin-box" class="hidden mt-2">
+<div class="flex items-center gap-2">
+<input type="text" id="post-input-checkin" maxlength="80" placeholder="Bạn đang ở đâu?" onkeydown="if (event.key === 'Enter') { event.preventDefault(); app.confirmCheckin(); }" class="flex-1 min-w-0 bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs">
+<button type="button" onclick="app.confirmCheckin()" class="px-3 py-2 rounded-xl bg-leather-600 text-white text-xs font-semibold">Xong</button>
 </div>
-<p class="text-[11px] text-ink-400 mt-1">Nếu dùng "Vị trí của tôi", tọa độ sẽ hiện công khai trên bài. Bạn có thể chỉ gõ tên địa điểm.</p>
+<button type="button" onclick="app.useMyLocation()" class="mt-1 text-[11px] text-leather-600 underline">Dùng vị trí hiện tại</button>
+</div>
 </div>
 
         </div>
@@ -2356,6 +2358,27 @@
         const q = (typeof lat === 'number' && typeof lng === 'number' && isFinite(lat) && isFinite(lng)) ? (lat + ',' + lng) : encodeURIComponent(this.unesc(post.checkinName || ''));
         return 'https://www.google.com/maps/search/?api=1&query=' + q;
       },
+      toggleCheckin() {
+        document.getElementById('checkin-open').classList.add('hidden');
+        document.getElementById('checkin-box').classList.remove('hidden');
+        const el = document.getElementById('post-input-checkin'); if (el) el.focus();
+      },
+      confirmCheckin() {
+        const el = document.getElementById('post-input-checkin');
+        const name = (el && el.value || '').trim() || (this.checkinCoords ? 'Vị trí hiện tại' : '');
+        if (!name) { this.clearCheckin(); return; }
+        document.getElementById('checkin-chip-text').innerText = name;
+        document.getElementById('checkin-box').classList.add('hidden');
+        document.getElementById('checkin-open').classList.add('hidden');
+        document.getElementById('checkin-chip').classList.remove('hidden');
+      },
+      clearCheckin() {
+        this.checkinCoords = null;
+        const el = document.getElementById('post-input-checkin'); if (el) el.value = '';
+        document.getElementById('checkin-chip').classList.add('hidden');
+        document.getElementById('checkin-box').classList.add('hidden');
+        document.getElementById('checkin-open').classList.remove('hidden');
+      },
       useMyLocation() {
         if (!navigator.geolocation) { this.showToast('Trình duyệt không hỗ trợ lấy vị trí.'); return; }
         this.showToast('Đang lấy vị trí của bạn...');
@@ -2363,15 +2386,8 @@
           this.checkinCoords = { lat: Math.round(pos.coords.latitude * 1e5) / 1e5, lng: Math.round(pos.coords.longitude * 1e5) / 1e5 };
           const el = document.getElementById('post-input-checkin');
           if (el && !el.value.trim()) el.value = 'Vị trí hiện tại';
-          this.showToast('Đã lấy vị trí. Bạn có thể sửa lại tên địa điểm.');
+          this.confirmCheckin();
         }, () => this.showToast('Không lấy được vị trí. Hãy cho phép truy cập vị trí hoặc gõ tên địa điểm.'), { timeout: 10000 });
-      },
-      previewCheckin() {
-        const el = document.getElementById('post-input-checkin');
-        const name = (el && el.value || '').trim();
-        const q = this.checkinCoords ? (this.checkinCoords.lat + ',' + this.checkinCoords.lng) : encodeURIComponent(name);
-        if (!q) { this.showToast('Hãy nhập tên địa điểm trước.'); return; }
-        window.open('https://www.google.com/maps/search/?api=1&query=' + q, '_blank', 'noopener');
       },
 
       // ===== XEM ẢNH FULL SIZE =====
@@ -2744,7 +2760,7 @@
                   ${this.avatarOf(post.authorId) ? `<img src="${this.avatarOf(post.authorId)}" alt="" class="w-full h-full object-cover rounded-full">` : (post.authorAvatar || post.author.substring(0, 2).toUpperCase())}
                 </div>
                 <div>
-                  <h4 class="font-bold text-xs text-ink-900 leading-tight cursor-pointer hover:underline" onclick="event.stopPropagation(); app.openUserProfile('${post.authorId || ''}')">${post.author}</h4>
+                  <div class="flex flex-wrap items-baseline gap-x-1.5"><h4 class="font-bold text-xs text-ink-900 leading-tight cursor-pointer hover:underline" onclick="event.stopPropagation(); app.openUserProfile('${post.authorId || ''}')">${post.author}</h4>${post.checkinName ? `<span class="text-[11px] text-ink-500">đang ở <a href="${this.mapsUrl(post)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="font-semibold text-ink-800 hover:underline">📍 ${post.checkinName}</a></span>` : ''}</div>
                   <p class="text-[10px] text-ink-500">${post.authorVibe || 'Độc giả'} • ${post.time}</p>
                 </div>
               </div>
@@ -2774,12 +2790,7 @@
               </div>
             ` : ''}
 
-            <!-- Check-in -->
-          ${post.checkinName ? `<div class="mb-3 flex flex-wrap items-center gap-1.5">
-            ${post.checkinName ? `<a href="${this.mapsUrl(post)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-parchment-200 border border-ink-200/60 text-[11px] text-ink-700 hover:bg-leather-100">📍 ${post.checkinName}</a>` : ''}
-          </div>` : ''}
-
-          <!-- Clickable Tags Row -->
+            <!-- Clickable Tags Row -->
             ${post.tags && post.tags.length ? `
               <div class="mb-3 flex flex-wrap gap-1">
                 ${post.tags.map(t => `<span onclick="event.stopPropagation(); app.filterByTag('${this.attrSafe(t)}')" class="cursor-pointer hover:bg-leather-500 hover:text-white px-2 py-0.5 rounded-full text-[10px] bg-parchment-200/80 text-ink-600 border border-ink-200/50 transition">#${t}</span>`).join('')}
@@ -2836,7 +2847,7 @@
                   ${this.avatarOf(post.authorId) ? `<img src="${this.avatarOf(post.authorId)}" alt="" class="w-full h-full object-cover rounded-full">` : (post.authorAvatar || post.author.substring(0, 2).toUpperCase())}
                 </div>
                 <div>
-                  <h3 class="font-bold text-sm text-ink-900 cursor-pointer hover:underline" onclick="app.openUserProfile('${post.authorId || ''}')">${post.author}</h3>
+                  <div class="flex flex-wrap items-baseline gap-x-1.5"><h3 class="font-bold text-sm text-ink-900 cursor-pointer hover:underline" onclick="app.openUserProfile('${post.authorId || ''}')">${post.author}</h3>${post.checkinName ? `<span class="text-[11px] text-ink-500">đang ở <a href="${this.mapsUrl(post)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="font-semibold text-ink-800 hover:underline">📍 ${post.checkinName}</a></span>` : ''}</div>
                   <p class="text-xs text-ink-500">${post.authorVibe || 'Độc giả'} • ${post.time}</p>
                 </div>
               </div>
@@ -2867,7 +2878,6 @@
             ` : ''}
 
             <!-- Check-in / Tags -->
-        ${post.checkinName ? `<a href="${this.mapsUrl(post)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-parchment-200 border border-ink-200/60 text-xs text-ink-700 hover:bg-leather-100">📍 ${post.checkinName} <span class="text-[10px] text-ink-400">(mở Google Maps)</span></a>` : ''}
         ${(post.tags && post.tags.length) ? `<div class="flex flex-wrap gap-1">${post.tags.map(t => `<span class="px-2 py-0.5 rounded-full text-[10px] bg-parchment-200 text-ink-600 border border-ink-200/60">#${t}</span>`).join('')}</div>` : ''}
 
         <!-- Book Tag -->
@@ -3032,8 +3042,7 @@
         };
 
         this.posts.unshift(newPost);
-        this.checkinCoords = null;
-        ['post-input-checkin'].forEach(i => { const el = document.getElementById(i); if (el) el.value = ''; });
+        this.clearCheckin();
         this.saveAll();
         this.removeUploadedImage('post'); this.closeModal('new-post-modal');
         this.switchTab('posts');
