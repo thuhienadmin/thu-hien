@@ -133,7 +133,12 @@
     }
   /* iOS tự phóng to khi chạm vào ô nhập nhỏ hơn 16px: chỉ áp dụng trên iOS để giữ giao diện gọn */
     @supports (-webkit-touch-callout: none) { input, select, textarea { font-size: 16px !important; } }
+  /* Nút và thẻ chỉ hiển thị trên một dòng */
+    button, [class*="rounded-full"][class*="px-"] { white-space: nowrap; }
+    /* Tránh nháy trạng thái "chưa đăng nhập" khi đang kiểm tra phiên đăng nhập */
+    html.has-hint:not(.ui-ready) #header-avatar, html.has-hint:not(.ui-ready) #header-user-name { visibility: hidden; }
   </style>
+<script>try { if (localStorage.getItem('thuhien_hint')) document.documentElement.classList.add('has-hint'); } catch (e) {}</script>
 <script>(function(){var u=location.origin+'/';var c=document.getElementById('canonical-link');if(c)c.href=u;var o=document.getElementById('og-url');if(o)o.content=u;})();</script>
 </head>
 <body class="bg-paper text-ink-900 font-sans antialiased min-h-full flex flex-col selection:bg-leather-100 selection:text-leather-600 pb-20 md:pb-8">
@@ -818,6 +823,11 @@
           <label class="block font-semibold text-ink-800 mb-1">Nội dung chia sẻ / Cảm nghĩ của bạn</label>
           <textarea id="post-input-content" required rows="4" placeholder="Viết đôi dòng chia sẻ về trải nghiệm đọc, bối cảnh hay suy ngẫm của bạn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500"></textarea><div class="mt-1 flex justify-end"><button type="button" onclick="app.openEmoji(this, 'post-input-content')" class="text-xs text-ink-500 hover:text-ink-900">😊 Chèn emoji</button></div>
 <div>
+<button type="button" onclick="app.pickVideo()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-700 hover:bg-parchment-100">🎬 Thêm video</button>
+<input type="file" id="post-video-file" accept="video/*" class="hidden" onchange="app.handleVideoUpload(event)">
+<div id="post-video-status" class="hidden mt-2 text-xs text-ink-700"></div>
+</div>
+<div>
 <button type="button" id="checkin-open" onclick="app.toggleCheckin()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-700 hover:bg-parchment-100">📍 Check-in</button>
 <div id="checkin-chip" class="hidden inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-parchment-200 border border-ink-200 text-xs text-ink-800"><span>📍 <span id="checkin-chip-text"></span></span><button type="button" onclick="app.clearCheckin()" class="text-ink-400 hover:text-ink-900" aria-label="Bỏ check-in">✕</button></div>
 <div id="checkin-box" class="hidden mt-2">
@@ -1351,6 +1361,17 @@
 </div>
 </div>
 
+<!-- ================= POPUP CHÀO MỪNG (khách chưa đăng nhập) ================= -->
+<div id="welcome-modal" class="fixed inset-0 z-[96] hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+<div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-ink-200 text-center">
+<div class="text-3xl">📚</div>
+<h3 class="font-serif font-bold text-xl text-ink-900 mt-2">Chào mừng đến với Thư Hiên</h3>
+<p class="text-xs text-ink-600 mt-2 leading-relaxed">Tạo tài khoản hoặc đăng nhập để chia sẻ trang sách, viết review, đổi hoặc bán lại sách cũ và nhắn tin cùng cộng đồng yêu sách.</p>
+<button type="button" onclick="app.welcomeSignIn()" class="mt-5 w-full py-2.5 rounded-full bg-leather-600 hover:bg-leather-500 text-white text-xs font-semibold flex items-center justify-center gap-2 transition"><svg class="w-4 h-4 shrink-0 bg-white rounded-full p-0.5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg><span>Tạo tài khoản / Đăng nhập bằng Google</span></button>
+<button type="button" onclick="app.dismissWelcome()" class="mt-3 text-xs text-ink-500 hover:text-ink-800">Để sau, tôi muốn xem trước</button>
+</div>
+</div>
+
 <!-- ================= MODAL HỒ SƠ ĐỘC GIẢ ================= -->
 <div id="user-profile-modal" class="fixed inset-0 z-[95] hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4">
 <div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-ink-200 relative">
@@ -1485,6 +1506,9 @@
       // Uploaded Images Storage (FileReader Base64)
       GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
       pendingAvatar: undefined,
+      CLOUDINARY: { cloudName: '', uploadPreset: '' },
+      GOOGLE_PLACES_KEY: '',
+      uploadedVideo: null, _videoBusy: false, _ctaT: null, _hint: null, _authResolved: false, _geo: null, checkinPlaceId: '',
       _placeT: null, _placeSeq: 0, _places: [], checkinAddr: '',
       _admin: null, _adminLoading: false, _trackPending: false,
       checkinCoords: null, _pendingRoute: null, _lb: null, _lbKey: null, _shareId: null, _loadedOnce: { posts: false, topics: false, exchanges: false },
@@ -1512,6 +1536,11 @@
 
       init() {
         this.__inited = true;
+        try {
+          const h = JSON.parse(localStorage.getItem('thuhien_hint') || 'null');
+          if (h && typeof h.n === 'string' && typeof h.a === 'string') this._hint = { n: h.n.slice(0, 80), a: h.a.slice(0, 3), i: /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(h.i || '') ? h.i : '' };
+        } catch (e) {}
+        setTimeout(() => { if (!this._authResolved) { this._authResolved = true; this.updateUserUI(); this.maybeShowWelcome(); } }, 6000);
         this.users = getStoredData('users', SEED_USERS);
         this.currentUserId = null;
         this.posts = getStoredData('posts', SEED_POSTS);
@@ -1539,6 +1568,7 @@
 
         // Render Initial Views & User Profile UI
         this.updateUserUI();
+        document.documentElement.classList.add('ui-ready');
         this.routeFromHash();
         window.addEventListener('hashchange', () => this.routeFromHash());
         this.updateBadges();
@@ -1568,7 +1598,8 @@
 
       // Update All User-related UI components
       updateUserUI() {
-        const user = this.getCurrentUser();
+        const hint = this._hint;
+        const user = this.getCurrentUser() || ((!this._authResolved && hint) ? { name: hint.n, avatar: hint.a, avatarImg: hint.i, vibe: 'Độc giả Thư Hiên', location: '', contact: '', showPhone: false } : null);
         const admBtn = document.getElementById('menu-admin');
         if (admBtn) admBtn.classList.toggle('hidden', !this.isAdmin());
         const headerAvatar = document.getElementById('header-avatar');
@@ -2026,8 +2057,11 @@
 
       async onAuthChanged(fbUser) {
         if (!fbUser) {
+          this._authResolved = true; this._hint = null;
+          try { localStorage.removeItem('thuhien_hint'); } catch (e) {}
           this.currentUserId = null; this.myPrivate = null; this.activeThread = null;
           this.watchMessages(); this.redecorate(); this.updateUserUI(); this.refreshViews();
+          this.maybeShowWelcome();
           return;
         }
         const uid = fbUser.uid;
@@ -2040,6 +2074,7 @@
           } catch (err) {
             console.error('Không tải được hồ sơ', err);
             this.showToast('Chưa kết nối được cơ sở dữ liệu. Hãy kiểm tra quy tắc Firestore rồi tải lại trang.');
+            this._authResolved = true; this.updateUserUI();
             return;
           }
         } else {
@@ -2065,8 +2100,11 @@
         if (idx >= 0) this.users[idx] = profile; else this.users.push(profile);
         profile.lastLoginAt = Date.now();
         if (isNew) profile.createdAt = Date.now();
+        this._authResolved = true;
         this.currentUserId = uid;
         this.saveUsers();
+        try { localStorage.setItem('thuhien_hint', JSON.stringify({ n: profile.name, a: profile.avatar, i: profile.avatarImg || '' })); } catch (e) {}
+        this.closeModal('welcome-modal');
         if (this.isAdmin()) { try { localStorage.setItem('thuhien_notrack', '1'); } catch (e) {} }
         this.closeModal('login-modal');
         this.watchMessages(); this.redecorate(); this.updateUserUI(); this.refreshViews();
@@ -2348,33 +2386,6 @@
         const ini = (parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : (parts[0] || '?').slice(0, 2)).toUpperCase();
         return `<div class="${size} rounded-full bg-leather-100 border border-leather-400/40 text-leather-600 font-bold flex items-center justify-center shrink-0 overflow-hidden text-[10px]">${img ? `<img src="${img}" alt="" class="w-full h-full object-cover">` : this.esc(ini)}</div>`;
       },
-      openEmoji(btn, inputId) {
-        let pop = document.getElementById('emoji-pop');
-        if (!pop) {
-          pop = document.createElement('div');
-          pop.id = 'emoji-pop';
-          pop.className = 'fixed z-[90] hidden grid grid-cols-8 gap-1 p-2 bg-white rounded-2xl shadow-xl border border-ink-200 max-w-[18rem]';
-          document.body.appendChild(pop);
-          document.addEventListener('click', e => { if (!pop.classList.contains('hidden') && !pop.contains(e.target) && !(e.target.closest && e.target.closest('[data-emoji-btn]'))) pop.classList.add('hidden'); });
-        }
-        const EMOJIS = ['😀','😄','😆','😂','😊','😍','🥰','😘','😉','😎','🤓','🤔','🤗','😴','😭','😢','🥳','🤩','🙏','👍','👏','🙌','💪','❤️','🧡','💛','💚','💙','💜','🖤','💖','✨','🌟','🔥','🌸','🌷','🌿','🍃','🍂','☕','🍵','📚','📖','📕','📗','📘','📙','✍️','📝','🔖','🕯️','🌙','☀️','🌧️','🏡'];
-        pop.innerHTML = EMOJIS.map(e => `<button type="button" class="text-xl leading-none p-1 rounded-lg hover:bg-parchment-200">${e}</button>`).join('');
-        pop.onclick = ev => {
-          const b = ev.target.closest('button'); if (!b) return;
-          const el = document.getElementById(inputId); if (!el) return;
-          const s = el.selectionStart == null ? el.value.length : el.selectionStart;
-          const en = el.selectionEnd == null ? s : el.selectionEnd;
-          el.value = el.value.slice(0, s) + b.textContent + el.value.slice(en);
-          const pos = s + b.textContent.length;
-          el.focus(); try { el.setSelectionRange(pos, pos); } catch (err) {}
-        };
-        btn.setAttribute('data-emoji-btn', '1');
-        const r = btn.getBoundingClientRect();
-        pop.classList.remove('hidden');
-        const w = pop.offsetWidth, h = pop.offsetHeight;
-        pop.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left)) + 'px';
-        pop.style.top = (r.top - h - 8 > 8 ? r.top - h - 8 : r.bottom + 8) + 'px';
-      },
       toggleCheckin() {
         document.getElementById('checkin-open').classList.add('hidden');
         document.getElementById('checkin-box').classList.remove('hidden');
@@ -2391,7 +2402,7 @@
         document.getElementById('checkin-chip').classList.remove('hidden');
       },
       clearCheckin() {
-        this.checkinCoords = null; this.checkinAddr = '';
+        this.checkinCoords = null; this.checkinAddr = ''; this.checkinPlaceId = '';
         const sb = document.getElementById('checkin-suggest'); if (sb) sb.classList.add('hidden');
         const el = document.getElementById('post-input-checkin'); if (el) el.value = '';
         document.getElementById('checkin-chip').classList.add('hidden');
@@ -2626,85 +2637,13 @@
       },
 
       // ===== CHECK-IN: TÌM ĐỊA ĐIỂM THẬT (dữ liệu OpenStreetMap) & MỞ GOOGLE MAPS =====
-      mapsUrl(post) {
-        const lat = post.checkinLat, lng = post.checkinLng;
-        const name = this.unesc(post.checkinName || ''), addr = this.unesc(post.checkinAddr || '');
-        const hasCoords = typeof lat === 'number' && typeof lng === 'number' && isFinite(lat) && isFinite(lng);
-        let q;
-        if (hasCoords && !addr) q = lat + ',' + lng;
-        else q = encodeURIComponent(addr ? name + ', ' + addr : name);
-        return 'https://www.google.com/maps/search/?api=1&query=' + q;
-      },
-      placeFromFeature(f) {
-        const p = f.properties || {}, c = f.geometry && f.geometry.coordinates;
-        if (!c || typeof c[0] !== 'number' || typeof c[1] !== 'number') return null;
-        const road = p.street ? ((p.housenumber ? p.housenumber + ' ' : '') + p.street) : '';
-        const name = p.name || road;
-        if (!name) return null;
-        const addr = [road, p.district || p.locality, p.city || p.county, p.state].filter(Boolean).filter((x, i, a) => a.indexOf(x) === i && x !== name).join(', ');
-        return { name: String(name).slice(0, 80), addr: addr.slice(0, 120), lat: Math.round(c[1] * 1e5) / 1e5, lng: Math.round(c[0] * 1e5) / 1e5 };
-      },
       onCheckinInput(v) {
         clearTimeout(this._placeT);
-        this.checkinCoords = null; this.checkinAddr = '';
+        this.checkinCoords = null; this.checkinAddr = ''; this.checkinPlaceId = '';
         const q = (v || '').trim();
         const box = document.getElementById('checkin-suggest');
         if (q.length < 2) { this._placeSeq++; if (box) box.classList.add('hidden'); return; }
         this._placeT = setTimeout(() => this.searchPlaces(q), 450);
-      },
-      async searchPlaces(q) {
-        const box = document.getElementById('checkin-suggest');
-        if (!box) return;
-        const seq = ++this._placeSeq;
-        box.classList.remove('hidden');
-        box.innerHTML = '<div class="p-2.5 text-ink-400">Đang tìm địa điểm...</div>';
-        try {
-          const res = await fetch('https://photon.komoot.io/api/?limit=6&bbox=102.1,8.4,109.6,23.4&q=' + encodeURIComponent(q));
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          const data = await res.json();
-          if (seq !== this._placeSeq) return;
-          this._places = (data.features || []).map(f => this.placeFromFeature(f)).filter(Boolean);
-          this.renderPlaces('Không thấy địa điểm phù hợp. Bạn có thể giữ tên vừa gõ và bấm Xong.');
-        } catch (err) {
-          if (seq !== this._placeSeq) return;
-          this._places = [];
-          this.renderPlaces('Chưa tìm được gợi ý lúc này. Bạn vẫn có thể gõ tên địa điểm rồi bấm Xong.');
-        }
-      },
-      renderPlaces(emptyText) {
-        const box = document.getElementById('checkin-suggest');
-        if (!box) return;
-        const list = this._places || [];
-        box.classList.remove('hidden');
-        box.innerHTML = (list.length ? list.map((pl, i) => `<button type="button" onclick="app.pickPlace(${i})" class="w-full text-left px-3 py-2 hover:bg-parchment-100 border-b border-ink-200/60"><div class="font-semibold text-ink-900">📍 ${this.esc(pl.name)}</div>${pl.addr ? `<div class="text-[11px] text-ink-500">${this.esc(pl.addr)}</div>` : ''}</button>`).join('') : `<div class="p-2.5 text-ink-500">${emptyText}</div>`) + '<div class="px-3 py-1 text-[10px] text-ink-400 bg-parchment-100">Dữ liệu địa điểm © OpenStreetMap • bản đồ mở bằng Google Maps</div>';
-      },
-      pickPlace(i) {
-        const pl = (this._places || [])[i];
-        if (!pl) return;
-        const el = document.getElementById('post-input-checkin');
-        if (el) el.value = pl.name;
-        this.checkinCoords = { lat: pl.lat, lng: pl.lng };
-        this.checkinAddr = pl.addr || '';
-        this.confirmCheckin();
-      },
-      useMyLocation() {
-        if (!navigator.geolocation) { this.showToast('Trình duyệt không hỗ trợ lấy vị trí.'); return; }
-        this.showToast('Đang lấy vị trí của bạn...');
-        navigator.geolocation.getCurrentPosition(async pos => {
-          const lat = Math.round(pos.coords.latitude * 1e5) / 1e5, lng = Math.round(pos.coords.longitude * 1e5) / 1e5;
-          const here = { name: 'Vị trí hiện tại', addr: '', lat: lat, lng: lng };
-          const seq = ++this._placeSeq;
-          this._places = [here];
-          this.renderPlaces('');
-          try {
-            const res = await fetch('https://photon.komoot.io/reverse?limit=6&radius=1&lon=' + lng + '&lat=' + lat);
-            const data = await res.json();
-            if (seq !== this._placeSeq) return;
-            const near = (data.features || []).map(f => this.placeFromFeature(f)).filter(Boolean);
-            this._places = [here].concat(near);
-            this.renderPlaces('');
-          } catch (err) { /* vẫn dùng được "Vị trí hiện tại" */ }
-        }, () => this.showToast('Không lấy được vị trí. Hãy cho phép truy cập vị trí hoặc gõ tên địa điểm.'), { timeout: 10000 });
       },
 
 
@@ -2779,7 +2718,7 @@
         return `<div id="lb-scroll" class="flex-1 min-h-0 overflow-y-auto">
           <div class="p-4">
             <div class="flex items-center gap-3">${this.avatarCircle(p.authorId, p.author, 'w-10 h-10')}<div class="min-w-0"><div class="flex flex-wrap items-baseline gap-x-1.5"><button type="button" onclick="app.openUserProfile('${p.authorId || ''}')" class="font-bold text-sm text-ink-900 hover:underline">${p.author}</button>${checkin}</div><div class="text-[11px] text-ink-400">${p.time || ''}</div></div></div>
-            <p class="mt-3 text-sm text-ink-800 leading-relaxed whitespace-pre-line break-words">${p.content || ''}</p>${quote}${tags}
+            <p class="mt-3 text-sm text-ink-800 leading-relaxed whitespace-pre-line break-words">${p.content || ''}</p>${p.videoUrl ? `<div class="mt-3">${this.videoHtml(p)}</div>` : ''}${quote}${tags}
             <div class="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-parchment-200 border border-ink-200/60 text-[11px] text-ink-700">📖 ${p.bookTitle || ''}</div>
           </div>
           <div class="px-4 py-2 text-[11px] text-ink-500 flex items-center justify-between"><span>${p.userLiked ? '❤️' : '🤍'} ${p.likes || 0} lượt thích</span><span>${(p.comments || []).length} bình luận</span></div>
@@ -2849,6 +2788,227 @@
         this.showToast('Đã gửi bình luận!');
       },
 
+
+      openEmoji(btn, inputId) {
+        let pop = document.getElementById('emoji-pop');
+        if (!pop) {
+          pop = document.createElement('div');
+          pop.id = 'emoji-pop';
+          pop.style.display = 'none';
+          document.body.appendChild(pop);
+          document.addEventListener('click', e => {
+            if (pop.style.display !== 'none' && !pop.contains(e.target) && !(e.target.closest && e.target.closest('[data-emoji-btn]'))) pop.style.display = 'none';
+          });
+        }
+        const EMOJIS = ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','😉','😍','🥰','😘','😋','😎','🤓','🤔','🤗','😴','😭','😢','😡','🥳','🤩','🙏','👍','👏','🙌','💪','🧡','💛','💚','💙','💜','🖤','💖','💗','✨','🌟','🔥','🌸','🌷','🌿','🍃','🍂','☕','🍵','📚','📖','📕','📗','📘','📙','📝','🔖','🌙','🏡'];
+        const mobile = window.innerWidth < 768;
+        const font = "'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif";
+        pop.style.cssText = (mobile
+          ? 'position:fixed;left:0;right:0;bottom:0;z-index:90;max-height:44vh;overflow-y:auto;background:#fff;border-top:1px solid #d9cdb8;border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.15);padding:10px 10px calc(10px + env(safe-area-inset-bottom));'
+          : 'position:fixed;z-index:90;width:304px;max-height:260px;overflow-y:auto;background:#fff;border:1px solid #d9cdb8;border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:8px;') + 'display:block;';
+        pop.innerHTML = `<div style="display:grid;grid-template-columns:repeat(${mobile ? 7 : 8},1fr);gap:${mobile ? 6 : 2}px">` +
+          EMOJIS.map(e => `<button type="button" data-e="${e}" style="width:100%;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:${mobile ? 26 : 22}px;line-height:1;padding:0;margin:0;border:0;background:transparent;border-radius:10px;cursor:pointer;font-family:${font};touch-action:manipulation">${e}</button>`).join('') + '</div>' +
+          (mobile ? '<div style="text-align:center;padding-top:8px"><button type="button" data-close="1" style="padding:6px 18px;border:1px solid #d9cdb8;border-radius:999px;background:#faf6ee;font-size:12px;font-weight:600">Đóng</button></div>' : '');
+        pop.onmousedown = ev => ev.preventDefault();
+        pop.onclick = ev => {
+          const b = ev.target.closest('button'); if (!b) return;
+          if (b.getAttribute('data-close')) { pop.style.display = 'none'; return; }
+          const el = document.getElementById(inputId); if (!el) return;
+          const em = b.getAttribute('data-e');
+          const s = el.selectionStart == null ? el.value.length : el.selectionStart;
+          const en = el.selectionEnd == null ? s : el.selectionEnd;
+          el.value = el.value.slice(0, s) + em + el.value.slice(en);
+          const pos = s + em.length;
+          el.focus({ preventScroll: true }); try { el.setSelectionRange(pos, pos); } catch (err) {}
+        };
+        btn.setAttribute('data-emoji-btn', '1');
+        if (!mobile) {
+          const r = btn.getBoundingClientRect();
+          const w = 304, h = Math.min(260, pop.scrollHeight);
+          pop.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left)) + 'px';
+          pop.style.top = Math.max(8, (r.top - h - 8 > 8 ? r.top - h - 8 : r.bottom + 8)) + 'px';
+        }
+      },
+
+      maybeShowWelcome() {
+        if (this.currentUserId || !this._authResolved) return;
+        if (!window.thuhienAuth || !window.thuhienAuth.ready) return;
+        try { if (sessionStorage.getItem('thuhien_cta')) return; } catch (e) {}
+        clearTimeout(this._ctaT);
+        this._ctaT = setTimeout(() => {
+          if (this.currentUserId) return;
+          const m = document.getElementById('welcome-modal'), l = document.getElementById('login-modal');
+          if (m && (!l || l.classList.contains('hidden'))) m.classList.remove('hidden');
+        }, 1200);
+      },
+      dismissWelcome() { try { sessionStorage.setItem('thuhien_cta', '1'); } catch (e) {} this.closeModal('welcome-modal'); },
+      welcomeSignIn() { this.closeModal('welcome-modal'); this.signInWithGoogle(); },
+
+      // ===== VIDEO TRONG BÀI ĐĂNG (tải lên Cloudinary) =====
+      safeVideo(url) { return /^https:\/\/res\.cloudinary\.com\/[\w-]+\/video\/upload\/[\w\-.\/,%]+$/.test(url || '') ? url : ''; },
+      videoSrc(u) { return u.replace('/video/upload/', '/video/upload/f_mp4,q_auto/').replace(/\.\w+$/, '.mp4'); },
+      videoPoster(u) { return u.replace('/video/upload/', '/video/upload/so_0,w_720,c_limit/').replace(/\.\w+$/, '.jpg'); },
+      videoHtml(post) {
+        const u = this.safeVideo(this.unesc(post.videoUrl || ''));
+        if (!u) return '';
+        return `<div class="rounded-2xl overflow-hidden border border-ink-200 bg-black" onclick="event.stopPropagation()"><video src="${this.videoSrc(u)}" poster="${this.videoPoster(u)}" controls playsinline preload="none" class="w-full max-h-[70vh]"></video></div>`;
+      },
+      pickVideo() {
+        if (!this.CLOUDINARY.cloudName || !this.CLOUDINARY.uploadPreset) { this.showToast('Tính năng đăng video đang chờ được cấu hình.'); return; }
+        if (this._videoBusy) { this.showToast('Video đang được tải lên, vui lòng đợi.'); return; }
+        document.getElementById('post-video-file').click();
+      },
+      renderVideoStatus(msg) {
+        const st = document.getElementById('post-video-status');
+        if (!st) return;
+        if (msg) { st.classList.remove('hidden'); st.innerHTML = msg; return; }
+        if (this.uploadedVideo) { st.classList.remove('hidden'); st.innerHTML = '🎬 Video đã sẵn sàng <button type="button" onclick="app.removeVideo()" class="ml-2 text-ink-400 hover:text-ink-900" aria-label="Bỏ video">✕</button>'; }
+        else st.classList.add('hidden');
+      },
+      removeVideo() { this.uploadedVideo = null; this.renderVideoStatus(); },
+      handleVideoUpload(e) {
+        const f = e.target.files && e.target.files[0];
+        e.target.value = '';
+        if (!f) return;
+        if (!/^video\//.test(f.type)) { this.showToast('Vui lòng chọn tệp video.'); return; }
+        if (f.size > 100 * 1024 * 1024) { this.showToast('Video tối đa 100 MB.'); return; }
+        const C = this.CLOUDINARY;
+        const fd = new FormData();
+        fd.append('file', f); fd.append('upload_preset', C.uploadPreset);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + encodeURIComponent(C.cloudName) + '/video/upload');
+        this._videoBusy = true; this.uploadedVideo = null;
+        this.renderVideoStatus('Đang tải video... 0%');
+        xhr.upload.onprogress = ev => { if (ev.lengthComputable) this.renderVideoStatus('Đang tải video... ' + Math.round(ev.loaded / ev.total * 100) + '%'); };
+        const fail = m => { this._videoBusy = false; this.renderVideoStatus('<span class="text-terracotta-700">Không tải được video' + (m ? ': ' + this.esc(m) : '') + '</span>'); };
+        xhr.onerror = () => fail('lỗi mạng');
+        xhr.onload = () => {
+          try {
+            const r = JSON.parse(xhr.responseText);
+            if (xhr.status >= 200 && xhr.status < 300 && this.safeVideo(r.secure_url)) { this._videoBusy = false; this.uploadedVideo = { url: r.secure_url }; this.renderVideoStatus(); }
+            else fail(r && r.error && r.error.message);
+          } catch (err) { fail(''); }
+        };
+        xhr.send(fd);
+      },
+
+      mapsUrl(post) {
+        const lat = post.checkinLat, lng = post.checkinLng;
+        const name = this.unesc(post.checkinName || ''), addr = this.unesc(post.checkinAddr || '');
+        const pid = /^[\w-]{10,200}$/.test(post.checkinPlaceId || '') ? post.checkinPlaceId : '';
+        const hasCoords = typeof lat === 'number' && typeof lng === 'number' && isFinite(lat) && isFinite(lng);
+        if (pid) return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(name) + '&query_place_id=' + pid;
+        if (hasCoords) return 'https://www.google.com/maps?q=' + lat + ',' + lng + '(' + encodeURIComponent(name.replace(/[()]/g, '') || 'Địa điểm') + ')&z=17';
+        return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(addr ? name + ', ' + addr : name);
+      },
+      distM(a, b) {
+        const R = 6371000, rad = x => x * Math.PI / 180;
+        const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng);
+        const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
+        return 2 * R * Math.asin(Math.sqrt(h));
+      },
+      fmtDist(m) { return m < 1000 ? Math.round(m / 10) * 10 + ' m' : (m / 1000).toFixed(1) + ' km'; },
+      placeFromFeature(f) {
+        const p = f.properties || {}, c = f.geometry && f.geometry.coordinates;
+        if (!c || typeof c[0] !== 'number' || typeof c[1] !== 'number') return null;
+        const road = p.street ? ((p.housenumber ? p.housenumber + ' ' : '') + p.street) : '';
+        const name = p.name || road;
+        if (!name) return null;
+        const addr = [road, p.district || p.locality, p.city || p.county, p.state].filter(Boolean).filter((x, i, a) => a.indexOf(x) === i && x !== name).join(', ');
+        const pl = { name: String(name).slice(0, 80), addr: addr.slice(0, 120), lat: Math.round(c[1] * 1e5) / 1e5, lng: Math.round(c[0] * 1e5) / 1e5 };
+        if (this._geo) pl.dist = this.distM(this._geo, pl);
+        return pl;
+      },
+      gToken() { return this._gTok || (this._gTok = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2)); },
+      async searchGoogle(q) {
+        const body = { input: q, languageCode: 'vi', regionCode: 'VN', includedRegionCodes: ['vn'], sessionToken: this.gToken() };
+        if (this._geo) body.locationBias = { circle: { center: { latitude: this._geo.lat, longitude: this._geo.lng }, radius: 30000 } };
+        const res = await fetch('https://places.googleapis.com/v1/places:autocomplete', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': this.GOOGLE_PLACES_KEY }, body: JSON.stringify(body) });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        return (data.suggestions || []).filter(s => s.placePrediction && s.placePrediction.placeId).slice(0, 6).map(s => {
+          const pp = s.placePrediction, sf = pp.structuredFormat || {};
+          return { name: String((sf.mainText && sf.mainText.text) || (pp.text && pp.text.text) || '').slice(0, 80), addr: String((sf.secondaryText && sf.secondaryText.text) || '').slice(0, 120), placeId: pp.placeId, lat: null, lng: null };
+        });
+      },
+      async searchPlaces(q) {
+        const box = document.getElementById('checkin-suggest');
+        if (!box) return;
+        const seq = ++this._placeSeq;
+        box.classList.remove('hidden');
+        box.innerHTML = '<div class="p-2.5 text-ink-400">Đang tìm địa điểm...</div>';
+        let list = null, via = 'osm';
+        if (this.GOOGLE_PLACES_KEY) {
+          try { list = await this.searchGoogle(q); via = 'google'; } catch (err) { console.warn('Google Places lỗi, dùng OpenStreetMap:', err); }
+        }
+        if (seq !== this._placeSeq) return;
+        if (!list) {
+          try {
+            let url = 'https://photon.komoot.io/api/?limit=8&bbox=102.1,8.4,109.6,23.4&q=' + encodeURIComponent(q);
+            if (this._geo) url += '&lat=' + this._geo.lat + '&lon=' + this._geo.lng + '&location_bias_scale=0.6';
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            list = (data.features || []).map(f => this.placeFromFeature(f)).filter(Boolean);
+            const seen = new Set();
+            list = list.filter(p => { const k = p.name.toLowerCase() + '|' + p.addr.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, 6);
+          } catch (err) {
+            if (seq !== this._placeSeq) return;
+            this._places = [];
+            this.renderPlaces('Chưa tìm được gợi ý lúc này. Bạn vẫn có thể gõ tên địa điểm rồi bấm Xong.', via);
+            return;
+          }
+        }
+        if (seq !== this._placeSeq) return;
+        this._places = list;
+        this.renderPlaces('Không thấy địa điểm phù hợp. Bạn có thể giữ tên vừa gõ và bấm Xong.', via);
+      },
+      renderPlaces(emptyText, via) {
+        const box = document.getElementById('checkin-suggest');
+        if (!box) return;
+        const list = this._places || [];
+        box.classList.remove('hidden');
+        const credit = via === 'google' ? 'Gợi ý địa điểm từ Google Maps' : 'Dữ liệu địa điểm © OpenStreetMap • bản đồ mở bằng Google Maps';
+        box.innerHTML = (list.length ? list.map((pl, i) => `<button type="button" onclick="app.pickPlace(${i})" class="w-full text-left px-3 py-2 hover:bg-parchment-100 border-b border-ink-200/60"><div class="font-semibold text-ink-900 truncate">📍 ${this.esc(pl.name)}${pl.dist != null ? ` <span class="font-normal text-[11px] text-ink-400">• ${this.fmtDist(pl.dist)}</span>` : ''}</div>${pl.addr ? `<div class="text-[11px] text-ink-500 truncate">${this.esc(pl.addr)}</div>` : ''}</button>`).join('') : `<div class="p-2.5 text-ink-500">${emptyText}</div>`) + `<div class="px-3 py-1 text-[10px] text-ink-400 bg-parchment-100">${credit}</div>`;
+      },
+      async pickPlace(i) {
+        const pl = (this._places || [])[i];
+        if (!pl) return;
+        const el = document.getElementById('post-input-checkin');
+        if (el) el.value = pl.name;
+        this.checkinAddr = pl.addr || '';
+        this.checkinPlaceId = pl.placeId || '';
+        this.checkinCoords = (typeof pl.lat === 'number' && typeof pl.lng === 'number') ? { lat: pl.lat, lng: pl.lng } : null;
+        this.confirmCheckin();
+        if (pl.placeId && !this.checkinCoords && this.GOOGLE_PLACES_KEY) {
+          try {
+            const res = await fetch('https://places.googleapis.com/v1/places/' + encodeURIComponent(pl.placeId) + '?languageCode=vi&sessionToken=' + encodeURIComponent(this.gToken()), { headers: { 'X-Goog-Api-Key': this.GOOGLE_PLACES_KEY, 'X-Goog-FieldMask': 'location' } });
+            const d = await res.json();
+            if (d && d.location && this.checkinPlaceId === pl.placeId) this.checkinCoords = { lat: Math.round(d.location.latitude * 1e5) / 1e5, lng: Math.round(d.location.longitude * 1e5) / 1e5 };
+            this._gTok = null;
+          } catch (err) { /* vẫn dùng được placeId */ }
+        }
+      },
+      useMyLocation() {
+        if (!navigator.geolocation) { this.showToast('Trình duyệt không hỗ trợ lấy vị trí.'); return; }
+        this.showToast('Đang lấy vị trí của bạn...');
+        navigator.geolocation.getCurrentPosition(async pos => {
+          const lat = Math.round(pos.coords.latitude * 1e5) / 1e5, lng = Math.round(pos.coords.longitude * 1e5) / 1e5;
+          this._geo = { lat: lat, lng: lng };
+          const here = { name: 'Vị trí hiện tại', addr: '', lat: lat, lng: lng };
+          const seq = ++this._placeSeq;
+          this._places = [here];
+          this.renderPlaces('');
+          try {
+            const res = await fetch('https://photon.komoot.io/reverse?limit=10&radius=0.5&lon=' + lng + '&lat=' + lat);
+            const data = await res.json();
+            if (seq !== this._placeSeq) return;
+            const near = (data.features || []).map(f => this.placeFromFeature(f)).filter(Boolean).filter(p => p.dist == null || p.dist <= 600).sort((a, b) => (a.dist || 0) - (b.dist || 0)).slice(0, 6);
+            this._places = [here].concat(near);
+            this.renderPlaces('');
+          } catch (err) { /* vẫn dùng được "Vị trí hiện tại" */ }
+        }, () => this.showToast('Không lấy được vị trí. Hãy cho phép truy cập vị trí hoặc gõ tên địa điểm.'), { timeout: 10000, enableHighAccuracy: true });
+      },
 
       openEditProfileModal() {
         const user = this.getCurrentUser();
@@ -3039,7 +3199,7 @@
           tag.innerText = "Chợ Sách Sang Nhượng";
           tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-terracotta-100 text-terracotta-900 border border-terracotta-300";
           title.innerText = "Mua Bán & Trao Đổi Sách";
-          desc.innerText = "Phân biệt rõ 2 nhu cầu: Đổi sách lấy cuốn khác (Swap) HOẶC Bán lại theo giá mong muốn (Pass lại sách cũ).";
+          desc.innerText = "Tìm kiếm, đổi sách lấy cuốn khác hoặc bán lại theo giá mong muốn.";
           actionBox.innerHTML = `
             <button type="button" onclick="app.openNewExchangeModal()" class="bg-terracotta-600 hover:bg-terracotta-700 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5 transition">
               <span>Đăng Tin Đổi / Bán</span>
@@ -3199,7 +3359,8 @@
               </div>
             ` : ''}
 
-            <!-- Clickable Tags Row -->
+            ${post.videoUrl ? `<div class="mb-3.5">${this.videoHtml(post)}</div>` : ''}
+          <!-- Clickable Tags Row -->
             ${post.tags && post.tags.length ? `
               <div class="mb-3 flex flex-wrap gap-1">
                 ${post.tags.map(t => `<span onclick="event.stopPropagation(); app.filterByTag('${this.attrSafe(t)}')" class="cursor-pointer hover:bg-leather-500 hover:text-white px-2 py-0.5 rounded-full text-[10px] bg-parchment-200/80 text-ink-600 border border-ink-200/50 transition">#${t}</span>`).join('')}
@@ -3286,7 +3447,8 @@
               </div>
             ` : ''}
 
-            <!-- Check-in / Tags -->
+            ${post.videoUrl ? this.videoHtml(post) : ''}
+        <!-- Check-in / Tags -->
         ${(post.tags && post.tags.length) ? `<div class="flex flex-wrap gap-1">${post.tags.map(t => `<span class="px-2 py-0.5 rounded-full text-[10px] bg-parchment-200 text-ink-600 border border-ink-200/60">#${t}</span>`).join('')}</div>` : ''}
 
         <!-- Book Tag -->
@@ -3399,6 +3561,7 @@
 
       submitNewPost(e) {
         e.preventDefault();
+        if (this._videoBusy) { this.showToast('Video đang được tải lên, vui lòng đợi xong rồi đăng.'); return; }
         const book = document.getElementById('post-input-book').value.trim();
         const catName = document.getElementById('post-input-category').value.trim() || 'Chia sẻ';
         const cat = this.slugify(catName);
@@ -3432,9 +3595,11 @@
           categoryName: catName,
           quote: quote,
           content: content,
-          image: this.uploadedImages.post[0] || APP_IMAGES[selectedImgIndex] || IMG_0,
+          image: this.uploadedImages.post[0] || (this.uploadedVideo ? '' : (APP_IMAGES[selectedImgIndex] || IMG_0)),
+        videoUrl: this.uploadedVideo ? this.uploadedVideo.url : '',
         images: this.uploadedImages.post.slice(),
-        checkinAddr: this.checkinCoords ? (this.checkinAddr || '') : '',
+        checkinAddr: (this.checkinCoords || this.checkinPlaceId) ? (this.checkinAddr || '') : '',
+        checkinPlaceId: this.checkinPlaceId || '',
         checkinName: ((document.getElementById('post-input-checkin')?.value || '').trim() || (this.checkinCoords ? 'Vị trí hiện tại' : '')).slice(0, 80),
         checkinLat: this.checkinCoords ? this.checkinCoords.lat : null,
         checkinLng: this.checkinCoords ? this.checkinCoords.lng : null,
@@ -3452,6 +3617,7 @@
         };
 
         this.posts.unshift(newPost);
+        this.uploadedVideo = null; this.renderVideoStatus();
         this.clearCheckin();
         this.saveAll();
         this.removeUploadedImage('post'); this.closeModal('new-post-modal');
