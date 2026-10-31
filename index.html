@@ -823,11 +823,6 @@
           <label class="block font-semibold text-ink-800 mb-1">Nội dung chia sẻ / Cảm nghĩ của bạn</label>
           <textarea id="post-input-content" required rows="4" placeholder="Viết đôi dòng chia sẻ về trải nghiệm đọc, bối cảnh hay suy ngẫm của bạn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500"></textarea><div class="mt-1 flex justify-end"><button type="button" onclick="app.openEmoji(this, 'post-input-content')" class="text-xs text-ink-500 hover:text-ink-900">😊 Chèn emoji</button></div>
 <div>
-<button type="button" onclick="app.pickVideo()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-700 hover:bg-parchment-100">🎬 Thêm video</button>
-<input type="file" id="post-video-file" accept="video/*" class="hidden" onchange="app.handleVideoUpload(event)">
-<div id="post-video-status" class="hidden mt-2 text-xs text-ink-700"></div>
-</div>
-<div>
 <button type="button" id="checkin-open" onclick="app.toggleCheckin()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-700 hover:bg-parchment-100">📍 Check-in</button>
 <div id="checkin-chip" class="hidden inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-parchment-200 border border-ink-200 text-xs text-ink-800"><span>📍 <span id="checkin-chip-text"></span></span><button type="button" onclick="app.clearCheckin()" class="text-ink-400 hover:text-ink-900" aria-label="Bỏ check-in">✕</button></div>
 <div id="checkin-box" class="hidden mt-2">
@@ -870,7 +865,7 @@
         <!-- Tải Ảnh Bìa / Ảnh Thực Tế Sách Từ Thiết Bị -->
         <div class="space-y-2">
           <label class="block font-semibold text-ink-800 mb-1 flex items-center justify-between">
-            <span>Tải hình ảnh từ thiết bị của bạn <span class="text-terracotta-600">*</span></span>
+            <span>Ảnh và video của bài viết</span>
             <span class="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Tự do tải ảnh từ máy tính / điện thoại</span>
           </label>
           
@@ -902,6 +897,16 @@
               </div>
             </div>
           </div>
+          <!-- Tải video (cùng khu vực với ảnh) -->
+          <div onclick="app.pickVideo()" role="button" tabindex="0" onkeydown="if (event.key === 'Enter') app.pickVideo()" class="flex items-center gap-3 border-2 border-dashed border-ink-300 hover:border-leather-600 rounded-2xl px-4 py-3 cursor-pointer bg-white/70 hover:bg-parchment-200/70 transition">
+            <div class="w-10 h-10 rounded-full bg-parchment-200 flex items-center justify-center text-xl shrink-0">🎬</div>
+            <div class="min-w-0 flex-1">
+              <p class="font-serif font-semibold text-xs text-ink-900">Thêm video</p>
+              <p class="text-[10px] text-ink-500">mp4, mov, webm • tối đa 500 MB • giữ nguyên chất lượng gốc</p>
+            </div>
+          </div>
+          <input type="file" id="post-video-file" accept="video/mp4,video/quicktime,video/webm,video/*" class="hidden" onchange="app.handleVideoUpload(event)">
+          <div id="post-video-status" class="hidden text-xs text-ink-700"></div>
           <!-- Tùy chọn dự phòng ảnh mẫu gợi ý -->
           <div class="mt-2 pt-1 border-t border-ink-100">
             <details class="text-[11px] text-ink-500">
@@ -1506,7 +1511,7 @@
       // Uploaded Images Storage (FileReader Base64)
       GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
       pendingAvatar: undefined,
-      CLOUDINARY: { cloudName: '', uploadPreset: '' },
+      VIDEO: { endpoint: 'https://thuhien-upload.thien-nguyen1696.workers.dev', base: 'https://thuhien-media.fohu.asia', maxMB: 500 },
       GOOGLE_PLACES_KEY: '',
       uploadedVideo: null, _videoBusy: false, _ctaT: null, _hint: null, _authResolved: false, _geo: null, checkinPlaceId: '',
       _placeT: null, _placeSeq: 0, _places: [], checkinAddr: '',
@@ -2616,6 +2621,7 @@
       adminDelete(col, id) {
         if (!this.isAdmin() || !/^[\w-]+$/.test(id)) return;
         if (!confirm('Xóa vĩnh viễn nội dung này? Không thể khôi phục.')) return;
+        if (col === 'posts') { const pv = this.posts.find(p => p.id === id); if (pv && pv.videoUrl) this.deleteVideoUrl(pv.videoUrl); }
         window.thuhienDB.del(col + '/' + id).then(() => {
           this[col] = this[col].filter(x => x.id !== id);
           if (this._synced[col]) delete this._synced[col][id];
@@ -2845,51 +2851,12 @@
       welcomeSignIn() { this.closeModal('welcome-modal'); this.signInWithGoogle(); },
 
       // ===== VIDEO TRONG BÀI ĐĂNG (tải lên Cloudinary) =====
-      safeVideo(url) { return /^https:\/\/res\.cloudinary\.com\/[\w-]+\/video\/upload\/[\w\-.\/,%]+$/.test(url || '') ? url : ''; },
-      videoSrc(u) { return u.replace('/video/upload/', '/video/upload/f_mp4,q_auto/').replace(/\.\w+$/, '.mp4'); },
-      videoPoster(u) { return u.replace('/video/upload/', '/video/upload/so_0,w_720,c_limit/').replace(/\.\w+$/, '.jpg'); },
-      videoHtml(post) {
-        const u = this.safeVideo(this.unesc(post.videoUrl || ''));
-        if (!u) return '';
-        return `<div class="rounded-2xl overflow-hidden border border-ink-200 bg-black" onclick="event.stopPropagation()"><video src="${this.videoSrc(u)}" poster="${this.videoPoster(u)}" controls playsinline preload="none" class="w-full max-h-[70vh]"></video></div>`;
-      },
-      pickVideo() {
-        if (!this.CLOUDINARY.cloudName || !this.CLOUDINARY.uploadPreset) { this.showToast('Tính năng đăng video đang chờ được cấu hình.'); return; }
-        if (this._videoBusy) { this.showToast('Video đang được tải lên, vui lòng đợi.'); return; }
-        document.getElementById('post-video-file').click();
-      },
       renderVideoStatus(msg) {
         const st = document.getElementById('post-video-status');
         if (!st) return;
         if (msg) { st.classList.remove('hidden'); st.innerHTML = msg; return; }
         if (this.uploadedVideo) { st.classList.remove('hidden'); st.innerHTML = '🎬 Video đã sẵn sàng <button type="button" onclick="app.removeVideo()" class="ml-2 text-ink-400 hover:text-ink-900" aria-label="Bỏ video">✕</button>'; }
         else st.classList.add('hidden');
-      },
-      removeVideo() { this.uploadedVideo = null; this.renderVideoStatus(); },
-      handleVideoUpload(e) {
-        const f = e.target.files && e.target.files[0];
-        e.target.value = '';
-        if (!f) return;
-        if (!/^video\//.test(f.type)) { this.showToast('Vui lòng chọn tệp video.'); return; }
-        if (f.size > 100 * 1024 * 1024) { this.showToast('Video tối đa 100 MB.'); return; }
-        const C = this.CLOUDINARY;
-        const fd = new FormData();
-        fd.append('file', f); fd.append('upload_preset', C.uploadPreset);
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + encodeURIComponent(C.cloudName) + '/video/upload');
-        this._videoBusy = true; this.uploadedVideo = null;
-        this.renderVideoStatus('Đang tải video... 0%');
-        xhr.upload.onprogress = ev => { if (ev.lengthComputable) this.renderVideoStatus('Đang tải video... ' + Math.round(ev.loaded / ev.total * 100) + '%'); };
-        const fail = m => { this._videoBusy = false; this.renderVideoStatus('<span class="text-terracotta-700">Không tải được video' + (m ? ': ' + this.esc(m) : '') + '</span>'); };
-        xhr.onerror = () => fail('lỗi mạng');
-        xhr.onload = () => {
-          try {
-            const r = JSON.parse(xhr.responseText);
-            if (xhr.status >= 200 && xhr.status < 300 && this.safeVideo(r.secure_url)) { this._videoBusy = false; this.uploadedVideo = { url: r.secure_url }; this.renderVideoStatus(); }
-            else fail(r && r.error && r.error.message);
-          } catch (err) { fail(''); }
-        };
-        xhr.send(fd);
       },
 
       mapsUrl(post) {
@@ -3010,6 +2977,76 @@
         }, () => this.showToast('Không lấy được vị trí. Hãy cho phép truy cập vị trí hoặc gõ tên địa điểm.'), { timeout: 10000, enableHighAccuracy: true });
       },
 
+      // ===== VIDEO: tải thẳng lên Cloudflare R2 (qua Worker cấp quyền) =====
+      safeVideo(url) {
+        const b = String((this.VIDEO && this.VIDEO.base) || '').replace(/\/+$/, '');
+        if (!b || typeof url !== 'string' || !url.startsWith(b + '/thuhien/videos/')) return '';
+        return (/^[\w\-.\/%]+$/.test(url.slice(b.length + 1)) && /\.(mp4|mov|webm)$/i.test(url)) ? url : '';
+      },
+      videoHtml(post) {
+        const u = this.safeVideo(this.unesc(post.videoUrl || ''));
+        if (!u) return '';
+        return `<div class="rounded-2xl overflow-hidden border border-ink-200 bg-black" onclick="event.stopPropagation()"><video src="${u}#t=0.1" controls playsinline preload="metadata" class="w-full max-h-[70vh] bg-black"></video></div>`;
+      },
+      async getAuthToken() {
+        try { return (window.thuhienAuth && window.thuhienAuth.getToken) ? await window.thuhienAuth.getToken() : null; } catch (e) { return null; }
+      },
+      async deleteVideoUrl(url) {
+        try {
+          const u = this.safeVideo(this.unesc(url || ''));
+          if (!u || !this.VIDEO.endpoint) return;
+          const token = await this.getAuthToken();
+          if (!token) return;
+          await fetch(this.VIDEO.endpoint.replace(/\/+$/, '') + '/thuhien/video-delete', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ url: u }) });
+        } catch (e) { /* xóa video là việc phụ, bỏ qua lỗi */ }
+      },
+      removeVideo() {
+        const v = this.uploadedVideo;
+        this.uploadedVideo = null;
+        this.renderVideoStatus();
+        if (v) this.deleteVideoUrl(v.url);
+      },
+      pickVideo() {
+        if (!this.requireLogin()) return;
+        if (!this.VIDEO.endpoint || !this.VIDEO.base) { this.showToast('Tính năng đăng video đang chờ được cấu hình.'); return; }
+        if (this._videoBusy) { this.showToast('Video đang được tải lên, vui lòng đợi.'); return; }
+        document.getElementById('post-video-file').click();
+      },
+      async handleVideoUpload(e) {
+        const f = e.target.files && e.target.files[0];
+        e.target.value = '';
+        if (!f) return;
+        const ext = ((f.name.split('.').pop() || '') + '').toLowerCase();
+        const ct = f.type || ({ mp4: 'video/mp4', mov: 'video/quicktime', webm: 'video/webm' })[ext] || '';
+        if (!['video/mp4', 'video/quicktime', 'video/webm'].includes(ct)) { this.showToast('Chỉ nhận video mp4, mov hoặc webm.'); return; }
+        const maxMB = this.VIDEO.maxMB || 500;
+        if (f.size > maxMB * 1048576) { this.showToast('Video tối đa ' + maxMB + ' MB.'); return; }
+        this._videoBusy = true; this.uploadedVideo = null;
+        this.renderVideoStatus('Đang chuẩn bị tải video...');
+        try {
+          const token = await this.getAuthToken();
+          if (!token) throw new Error('hãy đăng nhập lại');
+          const res = await fetch(this.VIDEO.endpoint.replace(/\/+$/, '') + '/thuhien/video-url', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ contentType: ct, size: f.size }) });
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok || !j.uploadUrl || !this.safeVideo(j.publicUrl)) throw new Error(j.error || ('máy chủ từ chối (' + res.status + ')'));
+          await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('PUT', j.uploadUrl);
+            xhr.setRequestHeader('Content-Type', ct);
+            xhr.upload.onprogress = ev => { if (ev.lengthComputable) this.renderVideoStatus('Đang tải video... ' + Math.round(ev.loaded / ev.total * 100) + '%'); };
+            xhr.onload = () => (xhr.status >= 200 && xhr.status < 300) ? resolve() : reject(new Error('lưu video thất bại (' + xhr.status + ')'));
+            xhr.onerror = () => reject(new Error('lỗi mạng hoặc R2 chưa cho phép thuhien.net (CORS)'));
+            xhr.send(f);
+          });
+          this.uploadedVideo = { url: j.publicUrl };
+          this._videoBusy = false;
+          this.renderVideoStatus();
+        } catch (err) {
+          this._videoBusy = false;
+          this.renderVideoStatus('<span class="text-terracotta-700">Không tải được video: ' + this.esc(err.message || 'lỗi không xác định') + '</span>');
+        }
+      },
+
       openEditProfileModal() {
         const user = this.getCurrentUser();
         if (!user) {
@@ -3085,6 +3122,8 @@
 
       // Management of My Items in Shelf
       deleteMyPost(postId) {
+        const gone = this.posts.find(p => p.id === postId);
+        if (gone && gone.videoUrl) this.deleteVideoUrl(gone.videoUrl);
         this.posts = this.posts.filter(p => p.id !== postId);
         this.saveAll();
         this.renderShelf();
@@ -4692,7 +4731,7 @@
         const auth = getAuth(fbApp);
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
-        window.thuhienAuth = { ready: true, signIn: () => signInWithPopup(auth, provider), signOut: () => signOut(auth) };
+        window.thuhienAuth = { ready: true, signIn: () => signInWithPopup(auth, provider), signOut: () => signOut(auth), getToken: () => (auth.currentUser ? auth.currentUser.getIdToken() : Promise.resolve(null)) };
         try {
           const fb = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
           const fsdb = fb.getFirestore(fbApp);
