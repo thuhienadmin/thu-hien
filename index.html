@@ -2,7 +2,7 @@
 <html lang="vi" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <title>Thư Hiên — Đọc sách bên hiên nhà</title>
   <link rel="canonical" id="canonical-link" href="">
   <meta property="og:url" id="og-url" content="">
@@ -135,8 +135,15 @@
     @supports (-webkit-touch-callout: none) { input, select, textarea { font-size: 16px !important; } }
   /* Nút và thẻ chỉ hiển thị trên một dòng */
     button, [class*="rounded-full"][class*="px-"] { white-space: nowrap; }
+    /* Thẻ/nút không bao giờ rộng hơn khung chứa, tránh làm trang tràn ngang trên điện thoại */
+    [class*="rounded-full"][class*="px-"], button { max-width: 100%; }
+    [class*="rounded-full"][class*="px-"] { overflow: hidden; text-overflow: ellipsis; }
     /* Tránh nháy trạng thái "chưa đăng nhập" khi đang kiểm tra phiên đăng nhập */
     html.has-hint:not(.ui-ready) #header-avatar, html.has-hint:not(.ui-ready) #header-user-name { visibility: hidden; }
+  /* Chống tràn ngang trên điện thoại (khiến trang bị thu nhỏ, phải vuốt qua lại) */
+    html, body { max-width: 100%; overflow-x: clip; }
+    @supports not (overflow-x: clip) { html, body { overflow-x: hidden; } }
+    .view-content { min-width: 0; max-width: 100%; }
   </style>
 <script>try { if (localStorage.getItem('thuhien_hint')) document.documentElement.classList.add('has-hint'); } catch (e) {}</script>
 <script>(function(){var u=location.origin+'/';var c=document.getElementById('canonical-link');if(c)c.href=u;var o=document.getElementById('og-url');if(o)o.content=u;})();</script>
@@ -435,24 +442,22 @@
       <!-- Segmented Mode Filter: Tất cả vs. Đổi sách vs. Bán lại -->
       <div class="flex items-center justify-between flex-wrap gap-3 pb-2 border-b border-ink-200/60">
         <!-- Segment control -->
-        <div class="inline-flex p-1 bg-parchment-200 rounded-xl border border-ink-200/70 text-xs font-medium">
-          <button type="button" onclick="app.setExchangeMode('all')" id="ex-mode-all" class="ex-mode-btn px-3.5 py-1.5 rounded-lg bg-white text-ink-900 font-semibold shadow-sm transition">
-            Tất Cả Tin Đăng
-          </button>
-          <button type="button" onclick="app.setExchangeMode('swap')" id="ex-mode-swap" class="ex-mode-btn px-3.5 py-1.5 rounded-lg text-ink-700 hover:text-ink-900 transition flex items-center gap-1">
+        <div class="grid grid-cols-3 sm:inline-flex w-full sm:w-auto p-1 bg-parchment-200 rounded-xl border border-ink-200/70 text-xs font-medium">
+          <button type="button" onclick="app.setExchangeMode('all')" id="ex-mode-all" class="ex-mode-btn px-2 sm:px-3.5 py-1.5 rounded-lg bg-white text-ink-900 font-semibold shadow-sm transition text-center"><span class="sm:hidden">Tất cả</span><span class="hidden sm:inline">Tất Cả Tin Đăng</span></button>
+          <button type="button" onclick="app.setExchangeMode('swap')" id="ex-mode-swap" class="ex-mode-btn px-2 sm:px-3.5 py-1.5 rounded-lg text-ink-700 hover:text-ink-900 transition flex items-center justify-center gap-1">
             <span class="w-2 h-2 rounded-full bg-sage-600"></span>
-            <span>Chỉ Sách Đổi (Swap)</span>
+            <span class="sm:hidden">Đổi sách</span><span class="hidden sm:inline">Chỉ Sách Đổi (Swap)</span>
           </button>
-          <button type="button" onclick="app.setExchangeMode('sell')" id="ex-mode-sell" class="ex-mode-btn px-3.5 py-1.5 rounded-lg text-ink-700 hover:text-ink-900 transition flex items-center gap-1">
+          <button type="button" onclick="app.setExchangeMode('sell')" id="ex-mode-sell" class="ex-mode-btn px-2 sm:px-3.5 py-1.5 rounded-lg text-ink-700 hover:text-ink-900 transition flex items-center justify-center gap-1">
             <span class="w-2 h-2 rounded-full bg-terracotta-500"></span>
-            <span>Chỉ Sách Bán Lại (Pass)</span>
+            <span class="sm:hidden">Bán lại</span><span class="hidden sm:inline">Chỉ Sách Bán Lại (Pass)</span>
           </button>
         </div>
 
         <!-- Secondary condition filter -->
-        <div class="flex items-center gap-2 text-xs text-ink-600">
-          <span>Khu vực:</span>
-          <select onchange="app.setExchangeLocation(this.value)" class="bg-parchment-200 border border-ink-200 rounded-lg text-xs py-1.5 px-2.5 focus:outline-none"><option value="all">Toàn quốc (Tất cả)</option><option value="Hà Nội">Hà Nội</option><option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option><option value="Hải Phòng">Hải Phòng</option><option value="Đà Nẵng">Đà Nẵng</option><option value="Cần Thơ">Cần Thơ</option><option value="Huế">Huế</option><option value="Tuyên Quang">Tuyên Quang</option><option value="Lào Cai">Lào Cai</option><option value="Thái Nguyên">Thái Nguyên</option><option value="Phú Thọ">Phú Thọ</option><option value="Bắc Ninh">Bắc Ninh</option><option value="Hưng Yên">Hưng Yên</option><option value="Ninh Bình">Ninh Bình</option><option value="Quảng Trị">Quảng Trị</option><option value="Quảng Ngãi">Quảng Ngãi</option><option value="Gia Lai">Gia Lai</option><option value="Khánh Hòa">Khánh Hòa</option><option value="Lâm Đồng">Lâm Đồng</option><option value="Đắk Lắk">Đắk Lắk</option><option value="Đồng Nai">Đồng Nai</option><option value="Tây Ninh">Tây Ninh</option><option value="Vĩnh Long">Vĩnh Long</option><option value="Đồng Tháp">Đồng Tháp</option><option value="Cà Mau">Cà Mau</option><option value="An Giang">An Giang</option><option value="Lạng Sơn">Lạng Sơn</option><option value="Cao Bằng">Cao Bằng</option><option value="Lai Châu">Lai Châu</option><option value="Điện Biên">Điện Biên</option><option value="Sơn La">Sơn La</option><option value="Quảng Ninh">Quảng Ninh</option><option value="Thanh Hóa">Thanh Hóa</option><option value="Nghệ An">Nghệ An</option><option value="Hà Tĩnh">Hà Tĩnh</option></select>
+        <div class="flex items-center gap-2 text-xs text-ink-600 w-full sm:w-auto">
+          <span class="shrink-0">Khu vực:</span>
+          <select onchange="app.setExchangeLocation(this.value)" class="flex-1 min-w-0 sm:flex-none bg-parchment-200 border border-ink-200 rounded-lg text-xs py-1.5 px-2.5 focus:outline-none"><option value="all">Toàn quốc (Tất cả)</option><option value="Hà Nội">Hà Nội</option><option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option><option value="Hải Phòng">Hải Phòng</option><option value="Đà Nẵng">Đà Nẵng</option><option value="Cần Thơ">Cần Thơ</option><option value="Huế">Huế</option><option value="Tuyên Quang">Tuyên Quang</option><option value="Lào Cai">Lào Cai</option><option value="Thái Nguyên">Thái Nguyên</option><option value="Phú Thọ">Phú Thọ</option><option value="Bắc Ninh">Bắc Ninh</option><option value="Hưng Yên">Hưng Yên</option><option value="Ninh Bình">Ninh Bình</option><option value="Quảng Trị">Quảng Trị</option><option value="Quảng Ngãi">Quảng Ngãi</option><option value="Gia Lai">Gia Lai</option><option value="Khánh Hòa">Khánh Hòa</option><option value="Lâm Đồng">Lâm Đồng</option><option value="Đắk Lắk">Đắk Lắk</option><option value="Đồng Nai">Đồng Nai</option><option value="Tây Ninh">Tây Ninh</option><option value="Vĩnh Long">Vĩnh Long</option><option value="Đồng Tháp">Đồng Tháp</option><option value="Cà Mau">Cà Mau</option><option value="An Giang">An Giang</option><option value="Lạng Sơn">Lạng Sơn</option><option value="Cao Bằng">Cao Bằng</option><option value="Lai Châu">Lai Châu</option><option value="Điện Biên">Điện Biên</option><option value="Sơn La">Sơn La</option><option value="Quảng Ninh">Quảng Ninh</option><option value="Thanh Hóa">Thanh Hóa</option><option value="Nghệ An">Nghệ An</option><option value="Hà Tĩnh">Hà Tĩnh</option></select>
         </div>
       </div>
 
@@ -481,7 +486,7 @@
     <div id="view-shelf" class="view-content hidden max-w-5xl mx-auto space-y-6">
       
       <!-- User Profile Card (Dynamic per Current Account) -->
-      <div id="profile-card-container" class="bg-parchment-100 border border-ink-200 rounded-3xl p-6 flex flex-col sm:flex-row items-center sm:items-start gap-5 shadow-sm transition-all">
+      <div id="profile-card-container" class="bg-parchment-100 border border-ink-200 rounded-3xl p-4 sm:p-6 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 shadow-sm transition-all">
         <div id="profile-avatar" class="overflow-hidden w-20 h-20 rounded-full bg-leather-600 text-parchment-50 font-serif font-bold text-2xl flex items-center justify-center shadow-md ring-4 ring-parchment-200 shrink-0">
           ?
         </div>
@@ -493,7 +498,7 @@
             </div>
 
             <!-- Profile Action Buttons -->
-            <div class="flex items-center justify-center sm:justify-end gap-2 shrink-0">
+            <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2 shrink-0">
               <button type="button" onclick="app.openEditProfileModal()" class="px-3 py-1.5 rounded-full text-xs font-semibold border border-ink-300 bg-parchment-50 hover:bg-parchment-200 text-ink-800 flex items-center gap-1.5 transition shadow-sm">
                 <svg class="w-3.5 h-3.5 text-ink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                 <span>Sửa Hồ Sơ</span>
@@ -513,24 +518,24 @@
               <svg class="w-3.5 h-3.5 text-ink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
               <span id="profile-location"></span>
             </div>
-            <div>•</div>
+            <div class="hidden sm:block">•</div>
             <div class="flex items-center gap-1">
               <svg class="w-3.5 h-3.5 text-ink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
               <span id="profile-contact"></span>
             </div>
-            <div>•</div>
+            <div class="hidden sm:block">•</div>
             <div class="text-ink-400">Gia nhập: <span id="profile-joined"></span></div>
           </div>
 
           <!-- Dynamic Statistics -->
-          <div class="flex items-center justify-center sm:justify-start gap-4 mt-3 text-xs text-ink-700 pt-2.5 border-t border-ink-200/70">
-            <div><span class="font-bold text-ink-900" id="user-posts-count">2</span> Bài chia sẻ</div>
-            <div>•</div>
-            <div><span class="font-bold text-ink-900" id="user-reviews-count">3</span> Bài review</div>
-            <div>•</div>
-            <div><span class="font-bold text-ink-900" id="user-listings-count">2</span> Tin đổi/bán</div>
-            <div>•</div>
-            <div><span class="font-bold text-ink-900" id="user-saved-count">1</span> Đã lưu</div>
+          <div class="grid grid-cols-4 sm:flex sm:items-center sm:justify-start gap-2 sm:gap-4 mt-3 text-[11px] sm:text-xs text-ink-700 pt-2.5 border-t border-ink-200/70 text-center sm:text-left">
+            <div class="flex flex-col sm:block leading-tight"><span class="font-bold text-ink-900 text-sm sm:text-xs" id="user-posts-count">2</span> <span>Bài chia sẻ</span></div>
+            <div class="hidden sm:block">•</div>
+            <div class="flex flex-col sm:block leading-tight"><span class="font-bold text-ink-900 text-sm sm:text-xs" id="user-reviews-count">3</span> <span>Bài review</span></div>
+            <div class="hidden sm:block">•</div>
+            <div class="flex flex-col sm:block leading-tight"><span class="font-bold text-ink-900 text-sm sm:text-xs" id="user-listings-count">2</span> <span>Tin đổi/bán</span></div>
+            <div class="hidden sm:block">•</div>
+            <div class="flex flex-col sm:block leading-tight"><span class="font-bold text-ink-900 text-sm sm:text-xs" id="user-saved-count">1</span> <span>Đã lưu</span></div>
           </div>
         </div>
       </div>
@@ -550,11 +555,11 @@
       </div>
 
       <!-- Sub-tabs in Profile -->
-      <div class="flex items-center gap-2 border-b border-ink-200 text-xs font-medium">
-        <button type="button" onclick="app.setShelfTab('my-posts')" id="shelf-tab-my-posts" class="shelf-pill px-4 py-2 border-b-2 border-ink-900 text-ink-900 font-bold transition">Bài Chia Sẻ Của Tôi</button>
-        <button type="button" onclick="app.setShelfTab('my-reviews')" id="shelf-tab-my-reviews" class="shelf-pill px-4 py-2 border-b-2 border-transparent text-ink-500 hover:text-ink-800 transition">Review Tôi Đã Viết</button>
-        <button type="button" onclick="app.setShelfTab('my-listings')" id="shelf-tab-my-listings" class="shelf-pill px-4 py-2 border-b-2 border-transparent text-ink-500 hover:text-ink-800 transition">Tin Đổi/Bán Của Tôi</button>
-        <button type="button" onclick="app.setShelfTab('saved')" id="shelf-tab-saved" class="shelf-pill px-4 py-2 border-b-2 border-transparent text-ink-500 hover:text-ink-800 transition">Mục Đã Lưu</button>
+      <div class="grid grid-cols-4 sm:flex sm:items-center gap-1 sm:gap-2 border-b border-ink-200 text-xs font-medium">
+        <button type="button" onclick="app.setShelfTab('my-posts')" id="shelf-tab-my-posts" class="shelf-pill px-1 sm:px-4 py-2.5 sm:py-2 border-b-2 border-ink-900 text-ink-900 font-bold transition text-center"><span class="sm:hidden">Bài viết</span><span class="hidden sm:inline">Bài Chia Sẻ Của Tôi</span></button>
+        <button type="button" onclick="app.setShelfTab('my-reviews')" id="shelf-tab-my-reviews" class="shelf-pill px-1 sm:px-4 py-2.5 sm:py-2 border-b-2 border-transparent text-ink-500 hover:text-ink-800 transition text-center"><span class="sm:hidden">Review</span><span class="hidden sm:inline">Review Tôi Đã Viết</span></button>
+        <button type="button" onclick="app.setShelfTab('my-listings')" id="shelf-tab-my-listings" class="shelf-pill px-1 sm:px-4 py-2.5 sm:py-2 border-b-2 border-transparent text-ink-500 hover:text-ink-800 transition text-center"><span class="sm:hidden">Tin đăng</span><span class="hidden sm:inline">Tin Đổi/Bán Của Tôi</span></button>
+        <button type="button" onclick="app.setShelfTab('saved')" id="shelf-tab-saved" class="shelf-pill px-1 sm:px-4 py-2.5 sm:py-2 border-b-2 border-transparent text-ink-500 hover:text-ink-800 transition text-center"><span class="sm:hidden">Đã lưu</span><span class="hidden sm:inline">Mục Đã Lưu</span></button>
       </div>
 
       <div id="shelf-content-grid" class="pt-2">
