@@ -802,156 +802,84 @@
     </div>
   </div>
 
-  <!-- 4. MODAL TẠO BÀI CHIA SẺ MỚI -->
-  <div id="new-post-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="bg-parchment-50 w-full max-w-lg rounded-3xl border border-ink-200/80 shadow-2xl p-6 space-y-4 my-auto">
-      <div class="flex items-center justify-between pb-3 border-b border-ink-200">
-        <div>
-          <span class="text-[10px] font-bold tracking-wider uppercase text-leather-600">Dòng Thời Gian</span>
-          <h3 class="font-serif font-bold text-lg text-ink-900">Đăng Bài Chia Sẻ</h3>
-        </div>
-        <button type="button" onclick="app.closeModal('new-post-modal')" class="p-1.5 text-ink-400 hover:text-ink-700 rounded-full hover:bg-parchment-200">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
+  <!-- 4. MODAL TẠO BÀI (gọn kiểu mạng xã hội) -->
+  <div id="new-post-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center sm:p-4">
+    <div class="bg-parchment-50 w-full max-w-lg rounded-t-3xl sm:rounded-3xl border border-ink-200/80 shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="relative flex items-center justify-center px-4 py-3 border-b border-ink-200 shrink-0">
+        <h3 class="font-serif font-bold text-base text-ink-900">Tạo bài viết</h3>
+        <button type="button" onclick="app.closeModal('new-post-modal')" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-parchment-200 hover:bg-parchment-300 text-ink-600 flex items-center justify-center" aria-label="Đóng">✕</button>
       </div>
-
-      <form onsubmit="app.submitNewPost(event)" class="space-y-3.5 text-xs">
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Cuốn sách liên quan (Tùy chọn)</label>
-          <input type="text" id="post-input-book" placeholder="Ví dụ: Hoàng Tử Bé, Rừng Na Uy... (bỏ trống nếu không liên quan)" class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500" />
-        </div>
-
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Chủ đề bài chia sẻ</label>
-          <input type="text" id="post-input-category" list="post-topic-list" required maxlength="40" placeholder="Ví dụ: Trích dẫn, Góc đọc & Trà, Nhật ký đọc, Review ngắn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs"><datalist id="post-topic-list"><option value="Trích dẫn chạm"><option value="Cách đọc sách"><option value="Địa điểm đọc sách"><option value="Góc đọc & Trà"><option value="Nhật ký đọc"></datalist>
-        </div>
-
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Câu trích dẫn tâm đắc (Tùy chọn)</label>
-          <textarea id="post-input-quote" rows="2" placeholder="Ví dụ: 'Người ta chỉ nhìn thấy thật rõ ràng bằng trái tim...'" class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 font-serif italic focus:outline-none focus:ring-1 focus:ring-leather-500"></textarea>
-        </div>
-
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Nội dung chia sẻ / Cảm nghĩ của bạn</label>
-          <textarea id="post-input-content" required rows="4" placeholder="Bạn đang nghĩ gì? Chia sẻ trang sách, cách đọc, góc đọc, địa điểm đọc sách yêu thích..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500"></textarea><div class="mt-1 flex justify-end"><button type="button" onclick="app.openEmoji(this, 'post-input-content')" class="text-xs text-ink-500 hover:text-ink-900">😊 Chèn emoji</button></div>
-<div>
-<button type="button" id="checkin-open" onclick="app.toggleCheckin()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-700 hover:bg-parchment-100">📍 Check-in</button>
-<div id="checkin-chip" class="hidden inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-parchment-200 border border-ink-200 text-xs text-ink-800"><span>📍 <span id="checkin-chip-text"></span></span><button type="button" onclick="app.clearCheckin()" class="text-ink-400 hover:text-ink-900" aria-label="Bỏ check-in">✕</button></div>
-<div id="checkin-box" class="hidden mt-2">
-<div class="flex items-center gap-2">
-<input type="text" id="post-input-checkin" maxlength="80" oninput="app.onCheckinInput(this.value)" autocomplete="off" placeholder="Bạn đang ở đâu?" onkeydown="if (event.key === 'Enter') { event.preventDefault(); app.confirmCheckin(); }" class="flex-1 min-w-0 bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs">
-<button type="button" onclick="app.confirmCheckin()" class="px-3 py-2 rounded-xl bg-leather-600 text-white text-xs font-semibold">Xong</button>
-</div>
-<div id="checkin-suggest" class="hidden mt-1.5 rounded-xl border border-ink-200 bg-white overflow-hidden text-xs"></div>
-<button type="button" onclick="app.useMyLocation()" class="mt-1 text-[11px] text-leather-600 underline">Dùng vị trí hiện tại</button>
-</div>
-</div>
-
-        </div>
-
-        <!-- Thẻ Sách & Phân Loại -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-ink-800 mb-1">Ngôn ngữ tác phẩm</label>
-            <select id="post-input-language" class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs">
-              <option value="Tiếng Việt" selected>Tiếng Việt</option>
-              <option value="Song ngữ">Song ngữ</option>
-              <option value="English">English</option>
-              <option value="Tiếng Pháp">Tiếng Pháp</option>
-              <option value="Tiếng Nhật">Tiếng Nhật</option>
-              <option value="Ngôn ngữ khác">Ngôn ngữ khác</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-semibold text-ink-800 mb-1">Tác giả sách</label>
-            <input type="text" id="post-input-author" placeholder="Ví dụ: Haruki Murakami, Dostoevsky..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs" />
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-semibold text-ink-800 mb-1">Thẻ từ khóa để tìm kiếm (cách nhau bởi dấu phẩy)</label>
-          <input type="text" id="post-input-tags" placeholder="Ví dụ: Văn học, Kinh điển, Trịnh Lữ, Chữa lành..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs" />
-          <p class="text-[10px] text-ink-500 mt-1">Các thẻ này sẽ hiển thị trên bài viết và giúp bạn đọc khác lọc tìm dễ dàng.</p>
-        </div>
-
-        <!-- Tải Ảnh Bìa / Ảnh Thực Tế Sách Từ Thiết Bị -->
-        <div class="space-y-2">
-          <label class="block font-semibold text-ink-800 mb-1 flex items-center justify-between">
-            <span>Ảnh và video của bài viết</span>
-            <span class="text-[10px] font-normal text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Tự do tải ảnh từ máy tính / điện thoại</span>
-          </label>
-          
-          <input type="file" id="post-file-input" accept="image/*" multiple class="hidden" onchange="app.handleImageUpload(event, 'post')" />
-          
-          <!-- Dropzone -->
-          <div id="post-upload-dropzone" onclick="document.getElementById('post-file-input').click()" class="border-2 border-dashed border-ink-300 hover:border-leather-600 rounded-2xl p-4 text-center cursor-pointer bg-white/70 hover:bg-parchment-200/70 transition group">
-            <div class="flex flex-col items-center justify-center gap-1.5">
-              <div class="w-10 h-10 rounded-full bg-parchment-200 group-hover:bg-leather-100 flex items-center justify-center text-ink-600 group-hover:text-leather-700 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-              </div>
-              <p class="font-serif font-semibold text-xs text-ink-900 group-hover:text-leather-700">Bấm hoặc kéo thả để tải ảnh sách từ máy của bạn</p>
-              <p class="text-[10px] text-ink-500">Tối đa 6 ảnh • JPG, PNG, WebP — Chụp ảnh trực tiếp hoặc chọn ảnh bìa bạn thích</p>
+      <form onsubmit="app.submitNewPost(event)" class="flex flex-col min-h-0 flex-1">
+        <div class="flex-1 min-h-0 overflow-y-auto px-4 pt-3 pb-2 space-y-3">
+          <div class="flex items-center gap-2.5">
+            <div id="composer-avatar" class="shrink-0"></div>
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-x-1.5"><span id="composer-name" class="font-bold text-sm text-ink-900"></span></div>
+              <div id="checkin-chip" class="hidden inline-flex items-center gap-1.5 mt-0.5 px-2.5 py-0.5 rounded-full bg-parchment-200 border border-ink-200 text-[11px] text-ink-800"><span>📍 <span id="checkin-chip-text"></span></span><button type="button" onclick="app.clearCheckin()" class="text-ink-400 hover:text-ink-900" aria-label="Bỏ check-in">✕</button></div>
             </div>
           </div>
 
-          <!-- Preview Container -->
-          <div id="post-upload-preview-container" class="hidden relative rounded-2xl overflow-hidden border border-ink-200 bg-white p-3 shadow-sm">
-            <div class="flex items-center gap-3">
-              <img id="post-upload-preview-img" src="" class="w-16 h-20 object-cover rounded-xl border border-ink-200 shadow-inner" />
-              <div class="flex-1 min-w-0">
-                <p class="font-semibold text-xs text-ink-900 truncate" id="post-upload-filename">Ảnh thực tế sách</p>
-                <span class="inline-block mt-0.5 text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">✓ Đã tải ảnh lên thành công</span>
-                <div class="mt-2 flex gap-3">
-                  <button type="button" onclick="document.getElementById('post-file-input').click()" class="text-[11px] text-leather-600 hover:underline font-medium">Chọn ảnh khác</button>
-                  <span class="text-ink-300">•</span>
-                  <button type="button" onclick="app.removeUploadedImage('post')" class="text-[11px] text-terracotta-600 hover:underline font-medium">Gỡ ảnh này</button>
-                </div>
-              </div>
+          <textarea id="post-input-content" rows="4" placeholder="Bạn đang tâm đắc điều gì?" oninput="app.autoGrow(this)" class="w-full bg-transparent border-0 p-0 text-[15px] leading-relaxed text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-0 resize-none"></textarea>
+
+          <div id="checkin-box" class="hidden">
+            <div class="flex items-center gap-2">
+              <input type="text" id="post-input-checkin" maxlength="80" oninput="app.onCheckinInput(this.value)" autocomplete="off" placeholder="Bạn đang ở đâu?" onkeydown="if (event.key === 'Enter') { event.preventDefault(); app.confirmCheckin(); }" class="flex-1 min-w-0 w-full bg-white border border-ink-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900">
+              <button type="button" onclick="app.confirmCheckin()" class="px-3 py-2 rounded-xl bg-leather-600 text-white text-xs font-semibold">Xong</button>
             </div>
+            <div id="checkin-suggest" class="hidden mt-1.5 rounded-xl border border-ink-200 bg-white overflow-hidden text-xs"></div>
+            <button type="button" onclick="app.useMyLocation()" class="mt-1 text-[11px] text-leather-600 underline">Dùng vị trí hiện tại</button>
           </div>
-          <!-- Tải video (cùng khu vực với ảnh) -->
-          <div onclick="app.pickVideo()" role="button" tabindex="0" onkeydown="if (event.key === 'Enter') app.pickVideo()" class="flex items-center gap-3 border-2 border-dashed border-ink-300 hover:border-leather-600 rounded-2xl px-4 py-3 cursor-pointer bg-white/70 hover:bg-parchment-200/70 transition">
-            <div class="w-10 h-10 rounded-full bg-parchment-200 flex items-center justify-center text-xl shrink-0">🎬</div>
-            <div class="min-w-0 flex-1">
-              <p class="font-serif font-semibold text-xs text-ink-900">Thêm video</p>
-              <p class="text-[10px] text-ink-500">mp4, mov, webm • tối đa 500 MB • giữ nguyên chất lượng gốc</p>
-            </div>
+
+          <!-- Ảnh & video đã chọn -->
+          <div id="post-media-area" class="space-y-2">
+            <div id="post-strip-host"></div>
+            <div id="post-video-status" class="hidden text-xs text-ink-700"></div>
           </div>
+          <input type="file" id="post-file-input" accept="image/*" multiple class="hidden" onchange="app.handleImageUpload(event, 'post')">
           <input type="file" id="post-video-file" accept="video/mp4,video/quicktime,video/webm,video/*" class="hidden" onchange="app.handleVideoUpload(event)">
-          <div id="post-video-status" class="hidden text-xs text-ink-700"></div>
-          <!-- Tùy chọn dự phòng ảnh mẫu gợi ý -->
-          <div class="mt-2 pt-1 border-t border-ink-100">
-            <details class="text-[11px] text-ink-500">
-              <summary class="cursor-pointer hover:text-ink-800 font-medium select-none">Hoặc chọn ảnh minh họa gợi ý nếu chưa có ảnh sẵn</summary>
-              <div class="grid grid-cols-4 gap-2 mt-2">
-                <label class="cursor-pointer border-2 border-leather-600 rounded-xl overflow-hidden aspect-video flex items-center justify-center relative">
-                  <input type="radio" name="post-cover-img" value="0" class="hidden" />
-                  <img id="preset-post-0" src="" class="w-full h-full object-cover" />
-                </label>
-                <label class="cursor-pointer border-2 border-transparent hover:border-leather-400 rounded-xl overflow-hidden aspect-video flex items-center justify-center relative">
-                  <input type="radio" name="post-cover-img" value="1" class="hidden" />
-                  <img id="preset-post-1" src="" class="w-full h-full object-cover" />
-                </label>
-                <label class="cursor-pointer border-2 border-transparent hover:border-leather-400 rounded-xl overflow-hidden aspect-video flex items-center justify-center relative">
-                  <input type="radio" name="post-cover-img" value="2" class="hidden" />
-                  <img id="preset-post-2" src="" class="w-full h-full object-cover" />
-                </label>
-                <label class="cursor-pointer border-2 border-transparent hover:border-leather-400 rounded-xl overflow-hidden aspect-video flex items-center justify-center relative">
-                  <input type="radio" name="post-cover-img" value="3" class="hidden" />
-                  <img id="preset-post-3" src="" class="w-full h-full object-cover" />
-                </label>
-              </div>
-            </details>
+          <div id="post-upload-dropzone" class="hidden"></div>
+          <div id="post-upload-preview-container" class="hidden"><img id="post-upload-preview-img" src=""><span id="post-upload-filename"></span></div>
+
+          <!-- Chi tiết thêm (mở khi cần) -->
+          <div id="post-panel-book" class="hidden space-y-2 rounded-2xl bg-parchment-100 border border-ink-200 p-3">
+            <p class="text-[11px] font-semibold text-ink-700">📖 Gắn cuốn sách liên quan</p>
+            <input type="text" id="post-input-book" placeholder="Tên sách (ví dụ: Hoàng Tử Bé)" class="w-full bg-white border border-ink-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900">
+            <div class="grid grid-cols-2 gap-2">
+              <input type="text" id="post-input-author" placeholder="Tác giả" class="w-full bg-white border border-ink-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900">
+              <select id="post-input-language" class="w-full bg-white border border-ink-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900">
+                <option value="Tiếng Việt" selected>Tiếng Việt</option><option value="Song ngữ">Song ngữ</option><option value="English">English</option><option value="Tiếng Pháp">Tiếng Pháp</option><option value="Tiếng Nhật">Tiếng Nhật</option><option value="Ngôn ngữ khác">Ngôn ngữ khác</option>
+              </select>
+            </div>
           </div>
+          <div id="post-panel-quote" class="hidden space-y-2 rounded-2xl bg-parchment-100 border border-ink-200 p-3">
+            <p class="text-[11px] font-semibold text-ink-700">❝ Câu trích dẫn tâm đắc</p>
+            <textarea id="post-input-quote" rows="2" placeholder="Ví dụ: 'Người ta chỉ nhìn thấy thật rõ ràng bằng trái tim...'" class="w-full bg-white border border-ink-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900 font-serif italic"></textarea>
+          </div>
+          <div id="post-panel-tags" class="hidden space-y-2 rounded-2xl bg-parchment-100 border border-ink-200 p-3">
+            <p class="text-[11px] font-semibold text-ink-700"># Chủ đề và thẻ</p>
+            <input type="text" id="post-input-category" list="post-topic-list" maxlength="40" placeholder="Chủ đề (ví dụ: Cách đọc sách, Địa điểm đọc sách)" class="w-full bg-white border border-ink-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900"><datalist id="post-topic-list"><option value="Trích dẫn chạm"><option value="Cách đọc sách"><option value="Địa điểm đọc sách"><option value="Góc đọc & Trà"><option value="Nhật ký đọc"></datalist>
+            <input type="text" id="post-input-tags" placeholder="Thẻ, cách nhau bằng dấu phẩy (Kinh điển, Chữa lành...)" class="w-full bg-white border border-ink-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900">
+          </div>
+          <div class="hidden"><input type="radio" name="post-cover-img" value="0"><img id="preset-post-0" src=""><input type="radio" name="post-cover-img" value="1"><img id="preset-post-1" src=""><input type="radio" name="post-cover-img" value="2"><img id="preset-post-2" src=""><input type="radio" name="post-cover-img" value="3"><img id="preset-post-3" src=""></div>
         </div>
 
-        <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="app.closeModal('new-post-modal')" class="px-4 py-2 rounded-full border border-ink-300 text-ink-700 hover:bg-parchment-200">Hủy</button>
-          <button type="submit" class="px-5 py-2 rounded-full bg-leather-600 hover:bg-leather-600 text-parchment-50 font-semibold shadow-sm transition">Đăng Bài Chia Sẻ</button>
+        <div class="shrink-0 border-t border-ink-200 px-3 pt-2 pb-3 space-y-2">
+          <p class="text-[11px] text-ink-500 px-1">Thêm vào bài viết</p>
+          <div class="flex items-center justify-between">
+            <button type="button" id="tb-photo" onclick="document.getElementById('post-file-input').click()" class="w-11 flex flex-col items-center gap-0.5 py-1 rounded-xl hover:bg-parchment-200 transition text-ink-700" aria-label="Ảnh" title="Ảnh"><span class="text-xl leading-none h-6 flex items-center justify-center ">📷</span><span class="text-[9px] leading-none">Ảnh</span></button>
+            <button type="button" id="tb-video" onclick="app.pickVideo()" class="w-11 flex flex-col items-center gap-0.5 py-1 rounded-xl hover:bg-parchment-200 transition text-ink-700" aria-label="Video" title="Video"><span class="text-xl leading-none h-6 flex items-center justify-center ">🎬</span><span class="text-[9px] leading-none">Video</span></button>
+            <button type="button" id="tb-checkin" onclick="app.toggleCheckin()" class="w-11 flex flex-col items-center gap-0.5 py-1 rounded-xl hover:bg-parchment-200 transition text-ink-700" aria-label="Vị trí" title="Vị trí"><span class="text-xl leading-none h-6 flex items-center justify-center ">📍</span><span class="text-[9px] leading-none">Vị trí</span></button>
+            <button type="button" id="tb-book" onclick="app.togglePostPanel('book')" class="w-11 flex flex-col items-center gap-0.5 py-1 rounded-xl hover:bg-parchment-200 transition text-ink-700" aria-label="Sách" title="Sách"><span class="text-xl leading-none h-6 flex items-center justify-center ">📖</span><span class="text-[9px] leading-none">Sách</span></button>
+            <button type="button" id="tb-quote" onclick="app.togglePostPanel('quote')" class="w-11 flex flex-col items-center gap-0.5 py-1 rounded-xl hover:bg-parchment-200 transition text-ink-700" aria-label="Trích dẫn" title="Trích dẫn"><span class="text-xl leading-none h-6 flex items-center justify-center font-serif font-bold">❝</span><span class="text-[9px] leading-none">Trích dẫn</span></button>
+            <button type="button" id="tb-tags" onclick="app.togglePostPanel('tags')" class="w-11 flex flex-col items-center gap-0.5 py-1 rounded-xl hover:bg-parchment-200 transition text-ink-700" aria-label="Chủ đề" title="Chủ đề"><span class="text-xl leading-none h-6 flex items-center justify-center font-bold">#</span><span class="text-[9px] leading-none">Chủ đề</span></button>
+            <button type="button" id="tb-emoji" onclick="app.openEmoji(this, 'post-input-content')" class="w-11 flex flex-col items-center gap-0.5 py-1 rounded-xl hover:bg-parchment-200 transition text-ink-700" aria-label="Emoji" title="Emoji"><span class="text-xl leading-none h-6 flex items-center justify-center ">😊</span><span class="text-[9px] leading-none">Emoji</span></button>
+          </div>
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-leather-600 hover:bg-leather-500 text-white font-semibold text-sm shadow-sm transition">Đăng</button>
         </div>
       </form>
     </div>
   </div>
+
 
   <!-- 5. MODAL TẠO TIN TRAO ĐỔI HOẶC BÁN LẠI SÁCH -->
   <div id="new-exchange-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
@@ -1718,30 +1646,7 @@
         if (files.length > room) this.showToast('Chỉ đăng được tối đa 6 ảnh, các ảnh dư đã được bỏ qua.');
       },
 
-      renderUploadStrip(type) {
-        const list = this.uploadedImages[type] || [];
-        const dz = document.getElementById(`${type}-upload-dropzone`);
-        if (!dz) return;
-        const oldPrev = document.getElementById(`${type}-upload-preview-container`);
-        if (oldPrev) oldPrev.classList.add('hidden');
-        let strip = document.getElementById(`${type}-upload-strip`);
-        if (!strip) {
-          strip = document.createElement('div');
-          strip.id = `${type}-upload-strip`;
-          strip.className = 'grid grid-cols-3 sm:grid-cols-6 gap-2 mt-2';
-          dz.insertAdjacentElement('afterend', strip);
-        }
-        strip.innerHTML = list.map((src, i) => `<div class="relative aspect-square rounded-xl overflow-hidden border border-ink-200 bg-white"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="app.removeUploadedImage('${type}', ${i})" class="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-ink-900/80 text-white text-[11px] leading-none flex items-center justify-center">×</button></div>`).join('');
-        dz.classList.toggle('hidden', list.length >= 6);
-      },
 
-      removeUploadedImage(type, index) {
-        const list = this.uploadedImages[type] || [];
-        if (typeof index === 'number') list.splice(index, 1); else this.uploadedImages[type] = [];
-        const input = document.getElementById(`${type}-file-input`);
-        if (input) input.value = '';
-        this.renderUploadStrip(type);
-      },
 
       galleryHtml(images, fallback, alt, cls, ref) {
         const list = (images && images.length) ? images : [fallback];
@@ -2430,29 +2335,6 @@
         const ini = (parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : (parts[0] || '?').slice(0, 2)).toUpperCase();
         return `<div class="${size} rounded-full bg-leather-100 border border-leather-400/40 text-leather-600 font-bold flex items-center justify-center shrink-0 overflow-hidden text-[10px]">${img ? `<img src="${img}" alt="" class="w-full h-full object-cover">` : this.esc(ini)}</div>`;
       },
-      toggleCheckin() {
-        document.getElementById('checkin-open').classList.add('hidden');
-        document.getElementById('checkin-box').classList.remove('hidden');
-        const el = document.getElementById('post-input-checkin'); if (el) el.focus();
-      },
-      confirmCheckin() {
-        const el = document.getElementById('post-input-checkin');
-        const name = (el && el.value || '').trim() || (this.checkinCoords ? 'Vị trí hiện tại' : '');
-        if (!name) { this.clearCheckin(); return; }
-        document.getElementById('checkin-chip-text').innerText = name;
-        const sb = document.getElementById('checkin-suggest'); if (sb) sb.classList.add('hidden');
-        document.getElementById('checkin-box').classList.add('hidden');
-        document.getElementById('checkin-open').classList.add('hidden');
-        document.getElementById('checkin-chip').classList.remove('hidden');
-      },
-      clearCheckin() {
-        this.checkinCoords = null; this.checkinAddr = ''; this.checkinPlaceId = '';
-        const sb = document.getElementById('checkin-suggest'); if (sb) sb.classList.add('hidden');
-        const el = document.getElementById('post-input-checkin'); if (el) el.value = '';
-        document.getElementById('checkin-chip').classList.add('hidden');
-        document.getElementById('checkin-box').classList.add('hidden');
-        document.getElementById('checkin-open').classList.remove('hidden');
-      },
 
       // ===== XEM ẢNH FULL SIZE =====
 
@@ -3040,6 +2922,7 @@
         const st = document.getElementById((type || 'post') + '-video-status');
         if (!st) return;
         if (msg) { st.classList.remove('hidden'); st.innerHTML = msg; return; }
+        const tv = document.getElementById('tb-video'); if (tv && (type || 'post') === 'post') tv.classList.toggle('bg-leather-100', !!this.uploadedVideos.post);
         if (this.uploadedVideos[type || 'post']) { st.classList.remove('hidden'); st.innerHTML = '🎬 Video đã sẵn sàng <button type="button" onclick="app.removeVideo(\'' + (type || 'post') + '\')" class="ml-2 text-ink-400 hover:text-ink-900" aria-label="Bỏ video">✕</button>'; }
         else st.classList.add('hidden');
       },
@@ -3187,6 +3070,76 @@
       },
       openInboxFromNotif() { this.closeNotifications(); this.switchTab('inbox'); },
 
+
+      renderComposerHeader() {
+        const me = this.getCurrentUser();
+        const av = document.getElementById('composer-avatar'), nm = document.getElementById('composer-name');
+        if (av && me) av.innerHTML = this.avatarCircle(me.id, me.name, 'w-10 h-10');
+        if (nm && me) nm.innerText = me.name;
+      },
+      autoGrow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 260) + 'px'; },
+      togglePostPanel(name) {
+        const p = document.getElementById('post-panel-' + name), b = document.getElementById('tb-' + (name === 'tags' ? 'tags' : name));
+        if (!p) return;
+        const open = p.classList.contains('hidden');
+        p.classList.toggle('hidden', !open);
+        if (b) b.classList.toggle('bg-leather-100', open);
+        if (open) { const f = p.querySelector('input, textarea'); if (f) f.focus(); }
+      },
+      toggleCheckin() {
+        const box = document.getElementById('checkin-box'), b = document.getElementById('tb-checkin');
+        if (!box) return;
+        const open = box.classList.contains('hidden');
+        box.classList.toggle('hidden', !open);
+        if (b) b.classList.toggle('bg-leather-100', open);
+        if (open) { const el = document.getElementById('post-input-checkin'); if (el) el.focus(); }
+      },
+      confirmCheckin() {
+        const el = document.getElementById('post-input-checkin');
+        const name = (el && el.value || '').trim() || (this.checkinCoords ? 'Vị trí hiện tại' : '');
+        if (!name) { this.clearCheckin(); return; }
+        const chipText = document.getElementById('checkin-chip-text'), chip = document.getElementById('checkin-chip'), box = document.getElementById('checkin-box'), sb = document.getElementById('checkin-suggest'), b = document.getElementById('tb-checkin');
+        if (chipText) chipText.innerText = name;
+        if (sb) sb.classList.add('hidden');
+        if (box) box.classList.add('hidden');
+        if (chip) chip.classList.remove('hidden');
+        if (b) b.classList.add('bg-leather-100');
+      },
+      clearCheckin() {
+        this.checkinCoords = null; this.checkinAddr = ''; this.checkinPlaceId = '';
+        const el = document.getElementById('post-input-checkin'); if (el) el.value = '';
+        ['checkin-chip', 'checkin-box', 'checkin-suggest'].forEach(i => { const x = document.getElementById(i); if (x) x.classList.add('hidden'); });
+        const b = document.getElementById('tb-checkin'); if (b) b.classList.remove('bg-leather-100');
+      },
+
+      renderUploadStrip(type) {
+        const pre = ({ exchange: 'ex' })[type] || type;
+        const list = this.uploadedImages[type] || [];
+        const dz = document.getElementById(`${pre}-upload-dropzone`);
+        if (!dz) return;
+        const oldPrev = document.getElementById(`${pre}-upload-preview-container`);
+        if (oldPrev) oldPrev.classList.add('hidden');
+        let strip = document.getElementById(`${type}-upload-strip`);
+        if (!strip) {
+          strip = document.createElement('div');
+          strip.id = `${type}-upload-strip`;
+          strip.className = 'grid grid-cols-3 sm:grid-cols-6 gap-2 mt-2';
+          const host = document.getElementById(`${type}-strip-host`);
+          if (host) host.appendChild(strip); else dz.insertAdjacentElement('afterend', strip);
+        }
+        const tiles = list.map((src, i) => `<div class="relative aspect-square rounded-xl overflow-hidden border border-ink-200 bg-white"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="app.removeUploadedImage('${type}', ${i})" class="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-ink-900/80 text-white text-[11px] leading-none flex items-center justify-center">×</button></div>`);
+        if (list.length > 0 && list.length < 6) tiles.push(`<button type="button" onclick="document.getElementById('${pre}-file-input').click()" class="aspect-square rounded-xl border-2 border-dashed border-ink-300 hover:border-leather-600 text-ink-500 text-2xl flex items-center justify-center bg-white/70" aria-label="Thêm ảnh">＋</button>`);
+        strip.innerHTML = tiles.join('');
+        const tb = document.getElementById('tb-photo'); if (tb && type === 'post') tb.classList.toggle('bg-leather-100', list.length > 0);
+      },
+      removeUploadedImage(type, index) {
+        const pre = ({ exchange: 'ex' })[type] || type;
+        const list = this.uploadedImages[type] || [];
+        if (typeof index === 'number') list.splice(index, 1); else this.uploadedImages[type] = [];
+        const input = document.getElementById(`${pre}-file-input`);
+        if (input) input.value = '';
+        this.renderUploadStrip(type);
+      },
 
       openEditProfileModal() {
         const user = this.getCurrentUser();
@@ -3740,12 +3693,14 @@
 
       openNewPostModal() {
         if (!this.requireLogin()) return;
+        this.renderComposerHeader();
         document.getElementById('new-post-modal').classList.remove('hidden');
       },
 
       submitNewPost(e) {
         e.preventDefault();
         if (this._videoBusy) { this.showToast('Video đang được tải lên, vui lòng đợi xong rồi đăng.'); return; }
+        { const _c = (document.getElementById('post-input-content').value || '').trim(); if (!_c && !this.uploadedImages.post.length && !this.uploadedVideos.post) { this.showToast('Hãy viết đôi dòng hoặc thêm ảnh, video cho bài viết.'); return; } }
         const book = document.getElementById('post-input-book').value.trim();
         const catName = document.getElementById('post-input-category').value.trim() || 'Chia sẻ';
         const cat = this.slugify(catName);
@@ -3789,7 +3744,7 @@
         checkinLng: this.checkinCoords ? this.checkinCoords.lng : null,
           language: document.getElementById('post-input-language')?.value || 'Tiếng Việt',
           authorTag: document.getElementById('post-input-author')?.value.trim() || '',
-          tags: (document.getElementById('post-input-tags')?.value.trim() ? document.getElementById('post-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat([document.getElementById('post-input-language')?.value || 'Tiếng Việt']).filter((v, i, a) => a.indexOf(v) === i),
+          tags: (document.getElementById('post-input-tags')?.value.trim() ? document.getElementById('post-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat((document.getElementById('post-input-book')?.value || '').trim() ? [document.getElementById('post-input-language')?.value || 'Tiếng Việt'] : []).filter((v, i, a) => a.indexOf(v) === i),
           createdAt: Date.now(),
         time: "Vừa xong",
         likedBy: [user.id],
@@ -3803,6 +3758,9 @@
         this.posts.unshift(newPost);
         this.uploadedVideos.post = null; this.renderVideoStatus('post');
         this.clearCheckin();
+        ['book', 'quote', 'tags'].forEach(n => { const p = document.getElementById('post-panel-' + n), b = document.getElementById('tb-' + n); if (p) p.classList.add('hidden'); if (b) b.classList.remove('bg-leather-100'); });
+        ['post-input-content', 'post-input-book', 'post-input-author', 'post-input-quote', 'post-input-category', 'post-input-tags'].forEach(i => { const el = document.getElementById(i); if (el) { el.value = ''; if (i === 'post-input-content') el.style.height = ''; } });
+        this.removeUploadedImage('post');
         this.saveAll();
         this.removeUploadedImage('post'); this.closeModal('new-post-modal');
         this.switchTab('posts');
