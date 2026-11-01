@@ -162,12 +162,12 @@
 
       <!-- Desktop Primary Navigation Tabs -->
       <nav class="hidden md:flex items-center gap-1.5 shrink-0 bg-parchment-200/80 p-1 rounded-full border border-ink-200/60 shadow-sm">
-        <!-- Tab 1: Chia Sẻ Sách -->
+        <!-- Tab 1: Chia Sẻ -->
         <button type="button" id="nav-tab-posts" onclick="app.switchTab('posts')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-ink-700 hover:text-ink-900 hover:bg-parchment-100 transition flex items-center gap-1.5">
           <svg class="w-4 h-4 text-ink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
           </svg>
-          <span>Chia Sẻ Sách</span>
+          <span>Chia Sẻ</span>
         </button>
 
         <!-- Tab 2: Review Sách (Mỗi topic là 1 cuốn sách) -->
@@ -227,9 +227,24 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
-          <span class="hidden sm:inline">Ký Gửi Trang Sách</span>
+          <span class="hidden sm:inline">Đăng cái gì đó</span>
           <span class="sm:hidden">Đăng</span>
         </button>
+
+        <!-- Thông báo -->
+        <div class="relative shrink-0" id="notif-wrapper">
+          <button type="button" onclick="app.toggleNotifications()" id="btn-notif" class="relative w-9 h-9 rounded-full border border-ink-200/90 bg-parchment-100 hover:bg-parchment-200 flex items-center justify-center text-ink-800 shadow-sm transition" aria-label="Thông báo">
+            <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0m6 0H9"/></svg>
+            <span id="notif-badge" style="display:none" class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta-600 text-white text-[10px] font-bold items-center justify-center"></span>
+          </button>
+          <div id="notif-panel" style="display:none" class="fixed z-[60] bg-[#FAF6EE] rounded-2xl border border-ink-200 shadow-xl overflow-hidden">
+            <div class="flex items-center justify-between px-3.5 py-2.5 border-b border-ink-200">
+              <span class="font-serif font-bold text-sm text-ink-900">Thông báo</span>
+              <button type="button" onclick="app.markAllNotificationsRead()" class="text-[11px] text-leather-600 hover:underline font-medium">Đánh dấu đã đọc</button>
+            </div>
+            <div id="notif-list" class="max-h-[60vh] overflow-y-auto"></div>
+          </div>
+        </div>
 
         <!-- User Account Menu Dropdown Container -->
         <div class="relative" id="user-menu-wrapper">
@@ -301,7 +316,7 @@
       <div>
         <div class="flex items-center gap-2">
           <span id="banner-tag" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-parchment-200 text-ink-700 border border-ink-300/60">Dòng Thời Gian</span>
-          <h1 id="banner-title" class="font-serif font-bold text-xl sm:text-2xl text-ink-900">Chia Sẻ Sách (Dòng Thời Gian)</h1>
+          <h1 id="banner-title" class="font-serif font-bold text-xl sm:text-2xl text-ink-900">Chia Sẻ</h1>
         </div>
         <p id="banner-desc" class="text-xs sm:text-sm text-ink-500 mt-1 font-light">Nơi lưu giữ trích dẫn, khoảnh khắc đọc và những dòng cảm xúc lắng đọng bên trang sách của bạn đọc.</p>
       </div>
@@ -566,14 +581,6 @@
             </div>
           </div>
           <p class="text-xs text-ink-600 leading-relaxed font-light">Để lại những bộn bề, sân si bên thềm, bước vào Thư Hiên chỉ có chúng ta, sách và sự an yên bất tận. Cảm ơn các bạn đã ghé Thư Hiên, hy vọng chúng ta cùng xây nên một cộng đồng yêu con chữ, câu, văn và những điều đẹp đẽ.</p>
-          <div class="flex items-center gap-2 pt-1">
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-parchment-200 text-ink-800 border border-ink-200">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Thư viện số mở
-            </span>
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-parchment-200 text-ink-800 border border-ink-200">
-              Trao đổi văn minh
-            </span>
-          </div>
         </div>
 
         <!-- Cột 2: Chuyên mục & Khám phá -->
@@ -717,7 +724,7 @@
     <div class="bg-parchment-50 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl border border-ink-200/80 shadow-2xl p-6 space-y-4 animate-in slide-in-from-bottom sm:zoom-in-95">
       <div class="flex items-center justify-between pb-2 border-b border-ink-200">
         <div>
-          <h3 class="font-serif font-bold text-lg text-ink-900">Ký Gửi Lên Thư Hiên</h3>
+          <h3 class="font-serif font-bold text-lg text-ink-900">Bạn muốn đăng gì?</h3>
           <p class="text-xs text-ink-500">Chọn tính năng bạn muốn thực hiện</p>
         </div>
         <button type="button" onclick="app.closeQuickCreateSheet()" class="p-1.5 text-ink-400 hover:text-ink-700 rounded-full hover:bg-parchment-200">
@@ -734,7 +741,7 @@
           </div>
           <div>
             <div class="font-bold text-xs sm:text-sm text-ink-900 flex items-center gap-2">
-              <span>1. Đăng bài chia sẻ sách</span>
+              <span>1. Đăng bài chia sẻ</span>
               <span class="text-[10px] px-2 py-0.5 rounded-full bg-parchment-300 text-ink-700 font-normal">Bài post</span>
             </div>
             <p class="text-xs text-ink-500 mt-0.5">Chia sẻ trích dẫn tâm đắc, góc bàn đọc sách và suy ngẫm cá nhân.</p>
@@ -796,7 +803,7 @@
       <div class="flex items-center justify-between pb-3 border-b border-ink-200">
         <div>
           <span class="text-[10px] font-bold tracking-wider uppercase text-leather-600">Dòng Thời Gian</span>
-          <h3 class="font-serif font-bold text-lg text-ink-900">Đăng Bài Chia Sẻ Sách</h3>
+          <h3 class="font-serif font-bold text-lg text-ink-900">Đăng Bài Chia Sẻ</h3>
         </div>
         <button type="button" onclick="app.closeModal('new-post-modal')" class="p-1.5 text-ink-400 hover:text-ink-700 rounded-full hover:bg-parchment-200">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -805,13 +812,13 @@
 
       <form onsubmit="app.submitNewPost(event)" class="space-y-3.5 text-xs">
         <div>
-          <label class="block font-semibold text-ink-800 mb-1">Cuốn sách liên quan / Đang đọc</label>
-          <input type="text" id="post-input-book" required placeholder="Ví dụ: Hoàng Tử Bé, Rừng Na Uy..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500" />
+          <label class="block font-semibold text-ink-800 mb-1">Cuốn sách liên quan (Tùy chọn)</label>
+          <input type="text" id="post-input-book" placeholder="Ví dụ: Hoàng Tử Bé, Rừng Na Uy... (bỏ trống nếu không liên quan)" class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500" />
         </div>
 
         <div>
           <label class="block font-semibold text-ink-800 mb-1">Chủ đề bài chia sẻ</label>
-          <input type="text" id="post-input-category" list="post-topic-list" required maxlength="40" placeholder="Ví dụ: Trích dẫn, Góc đọc & Trà, Nhật ký đọc, Review ngắn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs"><datalist id="post-topic-list"><option value="Trích dẫn chạm"><option value="Góc đọc & Trà"><option value="Nhật ký đọc"></datalist>
+          <input type="text" id="post-input-category" list="post-topic-list" required maxlength="40" placeholder="Ví dụ: Trích dẫn, Góc đọc & Trà, Nhật ký đọc, Review ngắn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:border-ink-900 text-xs"><datalist id="post-topic-list"><option value="Trích dẫn chạm"><option value="Cách đọc sách"><option value="Địa điểm đọc sách"><option value="Góc đọc & Trà"><option value="Nhật ký đọc"></datalist>
         </div>
 
         <div>
@@ -821,7 +828,7 @@
 
         <div>
           <label class="block font-semibold text-ink-800 mb-1">Nội dung chia sẻ / Cảm nghĩ của bạn</label>
-          <textarea id="post-input-content" required rows="4" placeholder="Viết đôi dòng chia sẻ về trải nghiệm đọc, bối cảnh hay suy ngẫm của bạn..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500"></textarea><div class="mt-1 flex justify-end"><button type="button" onclick="app.openEmoji(this, 'post-input-content')" class="text-xs text-ink-500 hover:text-ink-900">😊 Chèn emoji</button></div>
+          <textarea id="post-input-content" required rows="4" placeholder="Bạn đang nghĩ gì? Chia sẻ trang sách, cách đọc, góc đọc, địa điểm đọc sách yêu thích..." class="w-full bg-parchment-200 border border-ink-200 rounded-xl p-2.5 focus:outline-none focus:ring-1 focus:ring-leather-500"></textarea><div class="mt-1 flex justify-end"><button type="button" onclick="app.openEmoji(this, 'post-input-content')" class="text-xs text-ink-500 hover:text-ink-900">😊 Chèn emoji</button></div>
 <div>
 <button type="button" id="checkin-open" onclick="app.toggleCheckin()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-700 hover:bg-parchment-100">📍 Check-in</button>
 <div id="checkin-chip" class="hidden inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-parchment-200 border border-ink-200 text-xs text-ink-800"><span>📍 <span id="checkin-chip-text"></span></span><button type="button" onclick="app.clearCheckin()" class="text-ink-400 hover:text-ink-900" aria-label="Bỏ check-in">✕</button></div>
@@ -913,7 +920,7 @@
               <summary class="cursor-pointer hover:text-ink-800 font-medium select-none">Hoặc chọn ảnh minh họa gợi ý nếu chưa có ảnh sẵn</summary>
               <div class="grid grid-cols-4 gap-2 mt-2">
                 <label class="cursor-pointer border-2 border-leather-600 rounded-xl overflow-hidden aspect-video flex items-center justify-center relative">
-                  <input type="radio" name="post-cover-img" value="0" checked class="hidden" />
+                  <input type="radio" name="post-cover-img" value="0" class="hidden" />
                   <img id="preset-post-0" src="" class="w-full h-full object-cover" />
                 </label>
                 <label class="cursor-pointer border-2 border-transparent hover:border-leather-400 rounded-xl overflow-hidden aspect-video flex items-center justify-center relative">
@@ -1086,6 +1093,16 @@
               </div>
             </div>
           </div>
+          <!-- Tải video -->
+          <div onclick="app.pickVideo('exchange')" role="button" tabindex="0" onkeydown="if (event.key === 'Enter') app.pickVideo('exchange')" class="flex items-center gap-3 border-2 border-dashed border-ink-300 hover:border-leather-600 rounded-2xl px-4 py-3 cursor-pointer bg-white/70 hover:bg-parchment-200/70 transition">
+            <div class="w-10 h-10 rounded-full bg-parchment-200 flex items-center justify-center text-xl shrink-0">🎬</div>
+            <div class="min-w-0 flex-1">
+              <p class="font-serif font-semibold text-xs text-ink-900">Thêm video</p>
+              <p class="text-[10px] text-ink-500">mp4, mov, webm • tối đa 500 MB • giữ nguyên chất lượng gốc</p>
+            </div>
+          </div>
+          <input type="file" id="exchange-video-file" accept="video/mp4,video/quicktime,video/webm,video/*" class="hidden" onchange="app.handleVideoUpload(event, 'exchange')">
+          <div id="exchange-video-status" class="hidden text-xs text-ink-700"></div>
           <!-- Tùy chọn dự phòng ảnh mẫu gợi ý -->
           <div class="mt-2 pt-1 border-t border-ink-100">
             <details class="text-[11px] text-ink-500">
@@ -1305,6 +1322,16 @@
               </div>
             </div>
           </div>
+          <!-- Tải video -->
+          <div onclick="app.pickVideo('topic')" role="button" tabindex="0" onkeydown="if (event.key === 'Enter') app.pickVideo('topic')" class="flex items-center gap-3 border-2 border-dashed border-ink-300 hover:border-leather-600 rounded-2xl px-4 py-3 cursor-pointer bg-white/70 hover:bg-parchment-200/70 transition">
+            <div class="w-10 h-10 rounded-full bg-parchment-200 flex items-center justify-center text-xl shrink-0">🎬</div>
+            <div class="min-w-0 flex-1">
+              <p class="font-serif font-semibold text-xs text-ink-900">Thêm video</p>
+              <p class="text-[10px] text-ink-500">mp4, mov, webm • tối đa 500 MB • giữ nguyên chất lượng gốc</p>
+            </div>
+          </div>
+          <input type="file" id="topic-video-file" accept="video/mp4,video/quicktime,video/webm,video/*" class="hidden" onchange="app.handleVideoUpload(event, 'topic')">
+          <div id="topic-video-status" class="hidden text-xs text-ink-700"></div>
           <!-- Tùy chọn dự phòng ảnh mẫu gợi ý -->
           <div class="mt-2 pt-1 border-t border-ink-100">
             <details class="text-[11px] text-ink-500">
@@ -1511,9 +1538,10 @@
       // Uploaded Images Storage (FileReader Base64)
       GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
       pendingAvatar: undefined,
+      notifs: [], unwatchNotifs: null, _notifFirst: true, _notifSince: 0, _notifBound: false, _baseTitle: '', _msgFirst: true,
       VIDEO: { endpoint: 'https://thuhien-upload.thien-nguyen1696.workers.dev', base: 'https://thuhien-media.fohu.asia', maxMB: 500 },
       GOOGLE_PLACES_KEY: '',
-      uploadedVideo: null, _videoBusy: false, _ctaT: null, _hint: null, _authResolved: false, _geo: null, checkinPlaceId: '',
+      uploadedVideos: { post: null, topic: null, exchange: null }, _videoBusy: false, _ctaT: null, _hint: null, _authResolved: false, _geo: null, checkinPlaceId: '',
       _placeT: null, _placeSeq: 0, _places: [], checkinAddr: '',
       _admin: null, _adminLoading: false, _trackPending: false,
       checkinCoords: null, _pendingRoute: null, _lb: null, _lbKey: null, _shareId: null, _loadedOnce: { posts: false, topics: false, exchanges: false },
@@ -1999,12 +2027,17 @@
       watchMessages() {
         const db = window.thuhienDB;
         if (this.unwatchMsgs) { this.unwatchMsgs(); this.unwatchMsgs = null; }
-        this.messages = [];
+        this.messages = []; this._msgFirst = true;
         if (!this.remote || !this.currentUserId) { this.renderInbox(); this.updateBadges(); return; }
         this.unwatchMsgs = db.watch('messages', docs => {
+          const prevIds = new Set(this.messages.map(m => m.id));
           this.messages = docs.filter(m => m && m.fromId && m.toId).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+          if (!this._msgFirst) {
+            this.messages.filter(m => !prevIds.has(m.id) && m.toId === this.currentUserId && !(m.readBy || []).includes(this.currentUserId) && !(this.currentTab === 'inbox' && this.activeThread === m.fromId)).slice(-2).forEach(m => this.showToast('💬 ' + this.unesc(m.fromName || 'Một độc giả') + ' đã nhắn tin cho bạn'));
+          }
+          this._msgFirst = false;
           if (this.currentTab === 'inbox' && this.activeThread) this.markThreadRead(this.activeThread);
-          this.renderInbox(); this.updateBadges();
+          this.renderInbox(); this.updateBadges(); this.renderNotifications();
         }, { where: ['participants', 'array-contains', this.currentUserId] });
       },
 
@@ -2065,7 +2098,7 @@
           this._authResolved = true; this._hint = null;
           try { localStorage.removeItem('thuhien_hint'); } catch (e) {}
           this.currentUserId = null; this.myPrivate = null; this.activeThread = null;
-          this.watchMessages(); this.redecorate(); this.updateUserUI(); this.refreshViews();
+          this.watchMessages(); this.watchNotifications(); this.redecorate(); this.updateUserUI(); this.refreshViews();
           this.maybeShowWelcome();
           return;
         }
@@ -2112,7 +2145,7 @@
         this.closeModal('welcome-modal');
         if (this.isAdmin()) { try { localStorage.setItem('thuhien_notrack', '1'); } catch (e) {} }
         this.closeModal('login-modal');
-        this.watchMessages(); this.redecorate(); this.updateUserUI(); this.refreshViews();
+        this.watchMessages(); this.watchNotifications(); this.redecorate(); this.updateUserUI(); this.refreshViews();
         if (isNew) {
           this.showToast('Chào mừng ' + name + ' đến với Thư Hiên! Hãy hoàn thiện hồ sơ của bạn.');
           this.openEditProfileModal();
@@ -2172,6 +2205,7 @@
           this.follows = this.follows.filter(f => f.id !== id);
           db.del('follows/' + id).catch(err => this.onWriteError('follows', id, err));
         } else {
+          this.notify('follow', uid, { key: 'follow_' + me + '_' + uid });
           const f = { id: id, followerId: me, followeeId: uid, createdAt: Date.now() };
           this.follows.push(f);
           const { id: _omit, ...data } = f;
@@ -2427,7 +2461,7 @@
         const nat = document.getElementById('share-native'); if (nat) nat.classList.toggle('hidden', !navigator.share);
         document.getElementById('share-modal').classList.remove('hidden');
       },
-      shareText() { const p = this.posts.find(x => x.id === this._shareId); return 'Bài chia sẻ trên Thư Hiên' + (p ? ': ' + this.unesc(p.bookTitle) : ''); },
+      shareText() { const p = this.posts.find(x => x.id === this._shareId); return 'Bài chia sẻ trên Thư Hiên' + (p ? ': ' + this.unesc(p.bookTitle || (p.content || '').slice(0, 50)) : ''); },
       shareCopy() { this.copyText(this.shareUrl(this._shareId)); },
       shareNative() { if (navigator.share) navigator.share({ title: 'Thư Hiên', text: this.shareText(), url: this.shareUrl(this._shareId) }).catch(() => {}); },
       shareTo(kind) {
@@ -2583,7 +2617,7 @@
           </section>
           <section><h3 class="font-serif font-bold text-base text-ink-900 mb-2">Kiểm duyệt nội dung</h3>
             <div class="grid md:grid-cols-3 gap-3">
-              <div class="rounded-2xl bg-parchment-100 border border-ink-200 p-3"><div class="text-xs font-bold text-ink-800 mb-1">Bài chia sẻ mới nhất</div>${recent(this.posts, p => esc(this.unesc(p.bookTitle)) + ' — ' + esc(this.unesc(p.author)), 'posts')}</div>
+              <div class="rounded-2xl bg-parchment-100 border border-ink-200 p-3"><div class="text-xs font-bold text-ink-800 mb-1">Bài chia sẻ mới nhất</div>${recent(this.posts, p => esc(this.unesc(p.bookTitle || (p.content || '').slice(0, 40))) + ' — ' + esc(this.unesc(p.author)), 'posts')}</div>
               <div class="rounded-2xl bg-parchment-100 border border-ink-200 p-3"><div class="text-xs font-bold text-ink-800 mb-1">Đầu sách mới nhất</div>${recent(this.topics, t => esc(this.unesc(t.title)), 'topics')}</div>
               <div class="rounded-2xl bg-parchment-100 border border-ink-200 p-3"><div class="text-xs font-bold text-ink-800 mb-1">Tin bán/đổi mới nhất</div>${recent(this.exchanges, e => esc(this.unesc(e.bookTitle)) + ' — ' + esc(this.unesc(e.ownerName)), 'exchanges')}</div>
             </div>
@@ -2621,7 +2655,7 @@
       adminDelete(col, id) {
         if (!this.isAdmin() || !/^[\w-]+$/.test(id)) return;
         if (!confirm('Xóa vĩnh viễn nội dung này? Không thể khôi phục.')) return;
-        if (col === 'posts') { const pv = this.posts.find(p => p.id === id); if (pv && pv.videoUrl) this.deleteVideoUrl(pv.videoUrl); }
+        { const pv = (this[col] || []).find(p => p.id === id); if (pv && pv.videoUrl) this.deleteVideoUrl(pv.videoUrl); }
         window.thuhienDB.del(col + '/' + id).then(() => {
           this[col] = this[col].filter(x => x.id !== id);
           if (this._synced[col]) delete this._synced[col][id];
@@ -2725,7 +2759,7 @@
           <div class="p-4">
             <div class="flex items-center gap-3">${this.avatarCircle(p.authorId, p.author, 'w-10 h-10')}<div class="min-w-0"><div class="flex flex-wrap items-baseline gap-x-1.5"><button type="button" onclick="app.openUserProfile('${p.authorId || ''}')" class="font-bold text-sm text-ink-900 hover:underline">${p.author}</button>${checkin}</div><div class="text-[11px] text-ink-400">${p.time || ''}</div></div></div>
             <p class="mt-3 text-sm text-ink-800 leading-relaxed whitespace-pre-line break-words">${p.content || ''}</p>${p.videoUrl ? `<div class="mt-3">${this.videoHtml(p)}</div>` : ''}${quote}${tags}
-            <div class="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-parchment-200 border border-ink-200/60 text-[11px] text-ink-700">📖 ${p.bookTitle || ''}</div>
+            ${p.bookTitle ? `<div class="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-parchment-200 border border-ink-200/60 text-[11px] text-ink-700">📖 ${p.bookTitle}</div>` : ''}
           </div>
           <div class="px-4 py-2 text-[11px] text-ink-500 flex items-center justify-between"><span>${p.userLiked ? '❤️' : '🤍'} ${p.likes || 0} lượt thích</span><span>${(p.comments || []).length} bình luận</span></div>
           <div class="grid grid-cols-4 border-y border-ink-200 text-[11px] font-semibold text-ink-700">
@@ -2745,6 +2779,7 @@
           <p class="text-xs text-ink-600 mt-0.5">${t.author || ''}${t.genreName ? ' • ' + t.genreName : ''}</p>
           <p class="text-xs text-ink-500 mt-2">${avg ? '★ ' + avg + '/5 • ' : ''}${revs.length} bài review</p>
           ${t.synopsis ? `<p class="mt-3 text-sm text-ink-700 leading-relaxed whitespace-pre-line break-words">${t.synopsis}</p>` : ''}
+          ${t.videoUrl ? `<div class="mt-3">${this.videoHtml(t)}</div>` : ''}
           <button type="button" onclick="app.lbOpenTopic()" class="mt-4 w-full py-2.5 rounded-full bg-leather-600 text-white text-xs font-semibold">Xem chi tiết và đọc review</button>
         </div>`;
       },
@@ -2761,6 +2796,7 @@
             ${e.location ? `<span class="px-2.5 py-1 rounded-full bg-parchment-200 text-ink-700">📍 ${e.location}</span>` : ''}
           </div>
           ${e.note ? `<p class="mt-3 text-sm text-ink-700 leading-relaxed whitespace-pre-line break-words">${e.note}</p>` : ''}
+          ${e.videoUrl ? `<div class="mt-3">${this.videoHtml(e)}</div>` : ''}
           <div class="mt-4 flex items-center gap-2.5">${this.avatarCircle(e.userId, e.ownerName, 'w-9 h-9')}<button type="button" onclick="app.openUserProfile('${e.userId || ''}')" class="font-semibold text-sm text-ink-900 hover:underline">${e.ownerName || ''}</button></div>
           ${own ? '<p class="mt-4 text-[11px] text-ink-400">Đây là tin của bạn.</p>' : '<button type="button" onclick="app.lbChatOwner()" class="mt-4 w-full py-2.5 rounded-full bg-leather-600 text-white text-xs font-semibold">Nhắn người đăng</button>'}
         </div>`;
@@ -2786,6 +2822,7 @@
         const user = this.getCurrentUser();
         post.comments = post.comments || [];
         post.comments.push({ author: user.name, text: input.value.trim(), authorId: user.id, createdAt: Date.now(), time: 'Vừa xong' });
+        this.notify('comment', post.authorId, { targetId: post.id, title: this.postLabel(post), snippet: input.value.trim() });
         this.saveAll();
         input.value = '';
         this.renderPosts();
@@ -2851,13 +2888,6 @@
       welcomeSignIn() { this.closeModal('welcome-modal'); this.signInWithGoogle(); },
 
       // ===== VIDEO TRONG BÀI ĐĂNG (tải lên Cloudinary) =====
-      renderVideoStatus(msg) {
-        const st = document.getElementById('post-video-status');
-        if (!st) return;
-        if (msg) { st.classList.remove('hidden'); st.innerHTML = msg; return; }
-        if (this.uploadedVideo) { st.classList.remove('hidden'); st.innerHTML = '🎬 Video đã sẵn sàng <button type="button" onclick="app.removeVideo()" class="ml-2 text-ink-400 hover:text-ink-900" aria-label="Bỏ video">✕</button>'; }
-        else st.classList.add('hidden');
-      },
 
       mapsUrl(post) {
         const lat = post.checkinLat, lng = post.checkinLng;
@@ -3000,19 +3030,31 @@
           await fetch(this.VIDEO.endpoint.replace(/\/+$/, '') + '/thuhien/video-delete', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ url: u }) });
         } catch (e) { /* xóa video là việc phụ, bỏ qua lỗi */ }
       },
-      removeVideo() {
-        const v = this.uploadedVideo;
-        this.uploadedVideo = null;
-        this.renderVideoStatus();
+
+      renderVideoStatus(type, msg) {
+        const st = document.getElementById((type || 'post') + '-video-status');
+        if (!st) return;
+        if (msg) { st.classList.remove('hidden'); st.innerHTML = msg; return; }
+        if (this.uploadedVideos[type || 'post']) { st.classList.remove('hidden'); st.innerHTML = '🎬 Video đã sẵn sàng <button type="button" onclick="app.removeVideo(\'' + (type || 'post') + '\')" class="ml-2 text-ink-400 hover:text-ink-900" aria-label="Bỏ video">✕</button>'; }
+        else st.classList.add('hidden');
+      },
+      removeVideo(type) {
+        type = type || 'post';
+        const v = this.uploadedVideos[type];
+        this.uploadedVideos[type] = null;
+        this.renderVideoStatus(type);
         if (v) this.deleteVideoUrl(v.url);
       },
-      pickVideo() {
+      pickVideo(type) {
+        type = type || 'post';
         if (!this.requireLogin()) return;
         if (!this.VIDEO.endpoint || !this.VIDEO.base) { this.showToast('Tính năng đăng video đang chờ được cấu hình.'); return; }
         if (this._videoBusy) { this.showToast('Video đang được tải lên, vui lòng đợi.'); return; }
-        document.getElementById('post-video-file').click();
+        const el = document.getElementById(type + '-video-file');
+        if (el) el.click();
       },
-      async handleVideoUpload(e) {
+      async handleVideoUpload(e, type) {
+        type = type || 'post';
         const f = e.target.files && e.target.files[0];
         e.target.value = '';
         if (!f) return;
@@ -3021,8 +3063,8 @@
         if (!['video/mp4', 'video/quicktime', 'video/webm'].includes(ct)) { this.showToast('Chỉ nhận video mp4, mov hoặc webm.'); return; }
         const maxMB = this.VIDEO.maxMB || 500;
         if (f.size > maxMB * 1048576) { this.showToast('Video tối đa ' + maxMB + ' MB.'); return; }
-        this._videoBusy = true; this.uploadedVideo = null;
-        this.renderVideoStatus('Đang chuẩn bị tải video...');
+        this._videoBusy = true; this.uploadedVideos[type] = null;
+        this.renderVideoStatus(type, 'Đang chuẩn bị tải video...');
         try {
           const token = await this.getAuthToken();
           if (!token) throw new Error('hãy đăng nhập lại');
@@ -3033,19 +3075,113 @@
             const xhr = new XMLHttpRequest();
             xhr.open('PUT', j.uploadUrl);
             xhr.setRequestHeader('Content-Type', ct);
-            xhr.upload.onprogress = ev => { if (ev.lengthComputable) this.renderVideoStatus('Đang tải video... ' + Math.round(ev.loaded / ev.total * 100) + '%'); };
+            xhr.upload.onprogress = ev => { if (ev.lengthComputable) this.renderVideoStatus(type, 'Đang tải video... ' + Math.round(ev.loaded / ev.total * 100) + '%'); };
             xhr.onload = () => (xhr.status >= 200 && xhr.status < 300) ? resolve() : reject(new Error('lưu video thất bại (' + xhr.status + ')'));
             xhr.onerror = () => reject(new Error('lỗi mạng hoặc R2 chưa cho phép thuhien.net (CORS)'));
             xhr.send(f);
           });
-          this.uploadedVideo = { url: j.publicUrl };
+          this.uploadedVideos[type] = { url: j.publicUrl };
           this._videoBusy = false;
-          this.renderVideoStatus();
+          this.renderVideoStatus(type);
         } catch (err) {
           this._videoBusy = false;
-          this.renderVideoStatus('<span class="text-terracotta-700">Không tải được video: ' + this.esc(err.message || 'lỗi không xác định') + '</span>');
+          this.renderVideoStatus(type, '<span class="text-terracotta-700">Không tải được video: ' + this.esc(err.message || 'lỗi không xác định') + '</span>');
         }
       },
+
+      // ===== THÔNG BÁO (thích, bình luận, theo dõi, review, tin nhắn) =====
+      notifText(n, plain) {
+        const e = plain ? (s => this.unesc(s)) : (s => this.esc(s));
+        const who = e(n.fromName || 'Một độc giả');
+        const t = n.title ? ' «' + e(n.title) + '»' : '';
+        if (n.type === 'like') return who + ' đã thích bài viết' + t + ' của bạn';
+        if (n.type === 'comment') return who + ' đã bình luận về bài viết' + t + ' của bạn';
+        if (n.type === 'follow') return who + ' đã bắt đầu theo dõi bạn';
+        if (n.type === 'review') return who + ' đã viết review cho đầu sách' + t + ' của bạn';
+        return who + ' có tương tác mới với bạn';
+      },
+      postLabel(p) { return this.unesc(p.bookTitle || (p.content || '').slice(0, 40)); },
+      notify(type, toId, extra) {
+        const me = this.getCurrentUser();
+        if (!this.remote || !me || !toId || toId === me.id || !/^[\w-]+$/.test(toId)) return;
+        extra = extra || {};
+        const id = extra.key ? ('n_' + extra.key) : ('n_' + Date.now() + Math.random().toString(36).slice(2, 6));
+        const data = { toId: toId, fromId: me.id, fromName: String(me.name || '').slice(0, 60), type: type, targetId: extra.targetId || '', title: String(extra.title || '').slice(0, 80), snippet: String(extra.snippet || '').slice(0, 100), createdAt: Date.now(), read: false };
+        window.thuhienDB.set('notifications/' + id, data).catch(() => { /* thông báo trùng đã tồn tại: bỏ qua */ });
+      },
+      watchNotifications() {
+        const db = window.thuhienDB;
+        if (this.unwatchNotifs) { this.unwatchNotifs(); this.unwatchNotifs = null; }
+        this.notifs = []; this._notifFirst = true; this._notifSince = Date.now() - 60000;
+        if (!this.remote || !this.currentUserId) { this.renderNotifications(); return; }
+        this.unwatchNotifs = db.watch('notifications', docs => {
+          const list = docs.filter(n => n && /^[\w-]+$/.test(n.id || '') && n.fromId && n.type).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 50);
+          if (!this._notifFirst) {
+            const known = new Set(this.notifs.map(n => n.id));
+            list.filter(n => !known.has(n.id) && !n.read && (n.createdAt || 0) >= this._notifSince).slice(0, 3).forEach(n => this.showToast('🔔 ' + this.notifText(n, true)));
+          }
+          this._notifFirst = false;
+          this.notifs = list;
+          this.renderNotifications();
+        }, { where: ['toId', '==', this.currentUserId] });
+      },
+      renderNotifications() {
+        const unread = this.notifs.filter(n => !n.read).length;
+        const msgs = this.unreadCount();
+        const total = unread + msgs;
+        const badge = document.getElementById('notif-badge');
+        if (badge) { badge.style.display = total > 0 ? 'flex' : 'none'; badge.innerText = total > 9 ? '9+' : String(total); }
+        if (!this._baseTitle) this._baseTitle = document.title.replace(/^\(\d+\)\s*/, '');
+        document.title = (total > 0 ? '(' + total + ') ' : '') + this._baseTitle;
+        const list = document.getElementById('notif-list');
+        if (!list) return;
+        const items = [];
+        if (msgs > 0) items.push(`<button type="button" onclick="app.openInboxFromNotif()" class="w-full text-left flex items-center gap-2.5 px-3.5 py-2.5 border-b border-ink-200/60 bg-leather-50/50 hover:bg-parchment-200"><span class="w-9 h-9 rounded-full bg-leather-100 flex items-center justify-center text-base shrink-0">💬</span><span class="text-xs text-ink-800 font-medium">Bạn có ${msgs} tin nhắn chưa đọc</span></button>`);
+        this.notifs.forEach(n => {
+          items.push(`<button type="button" onclick="app.openNotification('${n.id}')" class="w-full text-left flex gap-2.5 px-3.5 py-2.5 border-b border-ink-200/60 hover:bg-parchment-200 ${n.read ? '' : 'bg-leather-50/50'}">${this.avatarCircle(n.fromId, n.fromName, 'w-9 h-9')}<div class="min-w-0 flex-1"><p class="text-xs text-ink-800 leading-snug">${this.notifText(n)}</p>${n.snippet ? `<p class="text-[11px] text-ink-500 truncate mt-0.5">“${this.esc(n.snippet)}”</p>` : ''}<p class="text-[10px] text-ink-400 mt-0.5">${this.timeAgo(n.createdAt)}</p></div>${n.read ? '' : '<span class="w-2 h-2 rounded-full bg-terracotta-500 mt-1.5 shrink-0"></span>'}</button>`);
+        });
+        list.innerHTML = items.join('') || (this.currentUserId ? '<p class="p-6 text-center text-xs text-ink-400">Chưa có thông báo nào.</p>' : '<div class="p-6 text-center"><p class="text-xs text-ink-500">Đăng nhập để nhận thông báo khi có người tương tác với bạn.</p><button type="button" onclick="app.closeNotifications(); app.openLoginModal()" class="mt-3 px-4 py-2 rounded-full bg-leather-600 text-white text-xs font-semibold">Đăng nhập bằng Gmail</button></div>');
+      },
+      toggleNotifications() {
+        const p = document.getElementById('notif-panel');
+        if (!p) return;
+        if (p.style.display !== 'none') { p.style.display = 'none'; return; }
+        const b = document.getElementById('btn-notif').getBoundingClientRect();
+        const w = Math.min(window.innerWidth - 16, 352);
+        p.style.width = w + 'px';
+        p.style.top = (b.bottom + 8) + 'px';
+        p.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, b.right - w)) + 'px';
+        p.style.display = 'block';
+        this.renderNotifications();
+        if (!this._notifBound) {
+          this._notifBound = true;
+          document.addEventListener('click', e => { const pp = document.getElementById('notif-panel'); if (pp && pp.style.display !== 'none' && !pp.contains(e.target) && !(e.target.closest && e.target.closest('#btn-notif'))) pp.style.display = 'none'; });
+        }
+      },
+      closeNotifications() { const p = document.getElementById('notif-panel'); if (p) p.style.display = 'none'; },
+      markNotificationRead(n) {
+        if (!n || n.read) return;
+        n.read = true;
+        if (this.remote) window.thuhienDB.set('notifications/' + n.id, { read: true }, true).catch(() => {});
+      },
+      markAllNotificationsRead() {
+        this.notifs.forEach(n => this.markNotificationRead(n));
+        this.markAllInboxRead();
+        this.renderNotifications();
+      },
+      openNotification(id) {
+        const n = this.notifs.find(x => x.id === id);
+        if (!n) return;
+        this.markNotificationRead(n);
+        this.closeNotifications();
+        this.renderNotifications();
+        const t = /^[\w-]+$/.test(n.targetId || '') ? n.targetId : '';
+        if ((n.type === 'like' || n.type === 'comment') && t) this.setHash('#/bai-viet/' + t);
+        else if (n.type === 'review' && t) this.setHash('#/sach/' + t);
+        else if (n.fromId) this.openUserProfile(n.fromId);
+      },
+      openInboxFromNotif() { this.closeNotifications(); this.switchTab('inbox'); },
+
 
       openEditProfileModal() {
         const user = this.getCurrentUser();
@@ -3131,6 +3267,8 @@
       },
 
       deleteMyListing(listingId) {
+        const gone = this.exchanges.find(e => e.id === listingId);
+        if (gone && gone.videoUrl) this.deleteVideoUrl(gone.videoUrl);
         this.exchanges = this.exchanges.filter(e => e.id !== listingId);
         this.saveAll();
         this.renderShelf();
@@ -3221,8 +3359,8 @@
         if (this.currentTab === 'posts') {
           tag.innerText = "Dòng Thời Gian";
           tag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-ink-100 text-ink-800 border border-ink-300";
-          title.innerText = "Chia Sẻ Sách";
-          desc.innerText = "Dòng thời gian cộng đồng: Trích dẫn hay, góc bàn trà và suy ngẫm chân thành từ những trang sách.";
+          title.innerText = "Chia Sẻ";
+          desc.innerText = "Chia sẻ trang sách, cách đọc, góc đọc, địa điểm đọc sách và mọi điều bạn tâm đắc.";
           actionBox.innerHTML = '';
         } else if (this.currentTab === 'reviews') {
           tag.innerText = "Thư Mục Review";
@@ -3408,10 +3546,10 @@
 
             <!-- Attached Book Tag & Language -->
             <div class="mb-2.5 flex flex-wrap items-center gap-1.5">
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-parchment-200/90 text-ink-800 text-[11px] font-medium border border-ink-200/60">
+              ${post.bookTitle ? `<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-parchment-200/90 text-ink-800 text-[11px] font-medium border border-ink-200/60">
                 <svg class="w-3.5 h-3.5 text-leather-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
                 <span>Đang đọc: <strong class="text-ink-900">${post.bookTitle}</strong></span>
-              </div>
+              </div>` : ''}
               ${post.language ? `<span onclick="event.stopPropagation(); app.filterByTag('${this.attrSafe(post.language)}')" class="cursor-pointer hover:bg-leather-100 px-2 py-0.5 rounded-lg text-[10px] font-medium bg-parchment-200 text-ink-600 border border-ink-200/60 transition">🌐 ${post.language}</span>` : ''}
             </div>
 
@@ -3491,10 +3629,10 @@
         ${(post.tags && post.tags.length) ? `<div class="flex flex-wrap gap-1">${post.tags.map(t => `<span class="px-2 py-0.5 rounded-full text-[10px] bg-parchment-200 text-ink-600 border border-ink-200/60">#${t}</span>`).join('')}</div>` : ''}
 
         <!-- Book Tag -->
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-parchment-200 text-ink-800 text-xs font-semibold">
+            ${post.bookTitle ? `<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-parchment-200 text-ink-800 text-xs font-semibold">
               <svg class="w-4 h-4 text-leather-600" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
               <span>Cuốn sách: <strong class="text-ink-900">${post.bookTitle}</strong></span>
-            </div>
+            </div>` : ''}
 
             <!-- Interaction toolbar -->
             <div class="flex items-center justify-between py-3 border-y border-ink-200 text-xs">
@@ -3548,6 +3686,7 @@
         if (li >= 0) post.likedBy.splice(li, 1); else post.likedBy.push(this.currentUserId);
         post.userLiked = li < 0;
         post.likes = post.likedBy.length;
+        if (post.userLiked) this.notify('like', post.authorId, { key: 'like_' + post.id + '_' + this.currentUserId, targetId: post.id, title: this.postLabel(post) });
         this.saveAll();
         this.renderPosts();
         if (inModal && this.currentActivePost && this.currentActivePost.id === postId) {
@@ -3586,6 +3725,7 @@
           time: "Vừa xong"
         };
         this.currentActivePost.comments.push(newComment);
+        this.notify('comment', this.currentActivePost.authorId, { targetId: this.currentActivePost.id, title: this.postLabel(this.currentActivePost), snippet: newComment.text });
         this.saveAll();
         input.value = '';
         this.openPostDetail(this.currentActivePost.id);
@@ -3607,7 +3747,7 @@
         const quote = document.getElementById('post-input-quote').value.trim();
         const content = document.getElementById('post-input-content').value.trim();
         
-        let selectedImgIndex = 0;
+        let selectedImgIndex = -1;
         const imgRadios = document.getElementsByName('post-cover-img');
         for (let r of imgRadios) {
           if (r.checked) {
@@ -3634,8 +3774,8 @@
           categoryName: catName,
           quote: quote,
           content: content,
-          image: this.uploadedImages.post[0] || (this.uploadedVideo ? '' : (APP_IMAGES[selectedImgIndex] || IMG_0)),
-        videoUrl: this.uploadedVideo ? this.uploadedVideo.url : '',
+          image: this.uploadedImages.post[0] || ((selectedImgIndex >= 0 && !this.uploadedVideos.post) ? (APP_IMAGES[selectedImgIndex] || IMG_0) : ''),
+        videoUrl: this.uploadedVideos.post ? this.uploadedVideos.post.url : '',
         images: this.uploadedImages.post.slice(),
         checkinAddr: (this.checkinCoords || this.checkinPlaceId) ? (this.checkinAddr || '') : '',
         checkinPlaceId: this.checkinPlaceId || '',
@@ -3656,7 +3796,7 @@
         };
 
         this.posts.unshift(newPost);
-        this.uploadedVideo = null; this.renderVideoStatus();
+        this.uploadedVideos.post = null; this.renderVideoStatus('post');
         this.clearCheckin();
         this.saveAll();
         this.removeUploadedImage('post'); this.closeModal('new-post-modal');
@@ -3866,6 +4006,7 @@
                 </p>
               </div>
             </div>
+            ${topic.videoUrl ? `<div class="mt-4">${this.videoHtml(topic)}</div>` : ''}
 
             <!-- Review Writing Box (FORM GỬI REVIEW CHO ĐẦU SÁCH NÀY) -->
             <div class="bg-amber-50/70 border border-amber-200/90 rounded-3xl p-5 space-y-3">
@@ -4034,6 +4175,7 @@
         };
 
         this.currentActiveTopic.reviews.unshift(newReview);
+        this.notify('review', this.currentActiveTopic.authorId, { targetId: this.currentActiveTopic.id, title: this.unesc(this.currentActiveTopic.title || ''), snippet: content });
         this.saveAll();
         this.openTopicDetail(this.currentActiveTopic.id);
         this.renderTopics();
@@ -4064,6 +4206,7 @@
 
       submitNewTopic(e) {
         e.preventDefault();
+        if (this._videoBusy) { this.showToast('Video đang được tải lên, vui lòng đợi xong rồi đăng.'); return; }
         const title = document.getElementById('topic-input-title').value.trim();
         const author = document.getElementById('topic-input-author').value.trim();
         let genre = document.getElementById('topic-input-genre').value;
@@ -4103,6 +4246,7 @@
           genreName: customGenre || ((this.GENRES.find(g => g[0] === genre) || [])[1]) || 'Sách',
           cover: this.uploadedImages.topic[0] || APP_IMAGES[selectedImgIndex] || IMG_2,
         covers: this.uploadedImages.topic.slice(),
+        videoUrl: this.uploadedVideos.topic ? this.uploadedVideos.topic.url : '',
           language: document.getElementById('topic-input-language')?.value || 'Tiếng Việt',
           tags: (document.getElementById('topic-input-tags')?.value.trim() ? document.getElementById('topic-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat([document.getElementById('topic-input-language')?.value || 'Tiếng Việt']).filter((v, i, a) => a.indexOf(v) === i),
           synopsis: synopsis,
@@ -4120,6 +4264,7 @@
           });
         }
         this.topics.unshift(newTopic);
+        this.uploadedVideos.topic = null; this.renderVideoStatus('topic');
         this.saveAll();
         this.removeUploadedImage('topic'); this.closeModal('new-topic-modal');
         this.switchTab('reviews');
@@ -4238,6 +4383,7 @@
                     </div>
                   </div>
                 </div>
+                ${item.videoUrl ? `<div class="mb-3.5">${this.videoHtml(item)}</div>` : ''}
 
                 <!-- Core Offering Block (SWAP WISH vs RESALE PRICE) -->
                 ${isSwap ? `
@@ -4336,6 +4482,7 @@
 
       submitNewExchange(e) {
         e.preventDefault();
+        if (this._videoBusy) { this.showToast('Video đang được tải lên, vui lòng đợi xong rồi đăng.'); return; }
         let mode = 'swap';
         const typeRadios = document.getElementsByName('exchange-type');
         for (let r of typeRadios) {
@@ -4390,6 +4537,7 @@
           note: note,
           image: this.uploadedImages.exchange[0] || APP_IMAGES[selectedImgIndex] || IMG_1,
         images: this.uploadedImages.exchange.slice(),
+        videoUrl: this.uploadedVideos.exchange ? this.uploadedVideos.exchange.url : '',
           language: document.getElementById('ex-input-language')?.value || 'Tiếng Việt',
           tags: (document.getElementById('ex-input-tags')?.value.trim() ? document.getElementById('ex-input-tags').value.split(',').map(s => s.trim()).filter(Boolean) : []).concat([document.getElementById('ex-input-language')?.value || 'Tiếng Việt']).filter((v, i, a) => a.indexOf(v) === i),
           createdAt: Date.now(),
@@ -4399,6 +4547,7 @@
         };
 
         this.exchanges.unshift(newListing);
+        this.uploadedVideos.exchange = null; this.renderVideoStatus('exchange');
         this.saveAll();
         this.removeUploadedImage('exchange'); this.closeModal('new-exchange-modal');
         this.switchTab('exchange');
@@ -4594,7 +4743,7 @@
             container.innerHTML = `
               <div class="py-12 text-center space-y-2">
                 <p class="text-xs text-ink-400 italic">Bạn chưa đăng tin đổi hoặc bán lại cuốn sách nào.</p>
-                <button type="button" onclick="app.openNewExchangeModal()" class="px-4 py-1.5 rounded-full bg-terracotta-700 text-white text-xs font-medium hover:bg-terracotta-800 transition shadow-sm">+ Ký Gửi Đổi / Bán Sách</button>
+                <button type="button" onclick="app.openNewExchangeModal()" class="px-4 py-1.5 rounded-full bg-terracotta-700 text-white text-xs font-medium hover:bg-terracotta-800 transition shadow-sm">Đăng Tin Đổi / Bán Sách</button>
               </div>
             `;
           } else {
