@@ -812,7 +812,7 @@
     <div class="bg-parchment-50 w-full max-w-lg rounded-t-3xl sm:rounded-3xl border border-ink-200/80 shadow-2xl flex flex-col max-h-[92vh]">
       <div class="relative flex items-center justify-center px-4 py-3 border-b border-ink-200 shrink-0">
         <h3 class="font-serif font-bold text-base text-ink-900">Tạo bài viết</h3>
-        <button type="button" onclick="app.closeModal('new-post-modal')" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-parchment-200 hover:bg-parchment-300 text-ink-600 flex items-center justify-center" aria-label="Đóng">✕</button>
+        <button type="button" onclick="app.closeComposer('post')" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-parchment-200 hover:bg-parchment-300 text-ink-600 flex items-center justify-center" aria-label="Đóng">✕</button>
       </div>
       <form onsubmit="app.submitNewPost(event)" class="flex flex-col min-h-0 flex-1">
         <div class="flex-1 min-h-0 overflow-y-auto px-4 pt-3 pb-2 space-y-3">
@@ -894,7 +894,7 @@
           <span class="text-[10px] font-bold tracking-wider uppercase text-terracotta-600">Chợ Sách Thư Hiên</span>
           <h3 class="font-serif font-bold text-lg text-ink-900">Đăng Tin Đổi Hoặc Bán Sách</h3>
         </div>
-        <button type="button" onclick="app.closeModal('new-exchange-modal')" class="p-1.5 text-ink-400 hover:text-ink-700 rounded-full hover:bg-parchment-200">
+        <button type="button" onclick="app.closeComposer('exchange')" class="p-1.5 text-ink-400 hover:text-ink-700 rounded-full hover:bg-parchment-200">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
@@ -1068,7 +1068,7 @@
         </div>
 
         <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="app.closeModal('new-exchange-modal')" class="px-4 py-2 rounded-full border border-ink-300 text-ink-700 hover:bg-parchment-200">Hủy</button>
+          <button type="button" onclick="app.closeComposer('exchange')" class="px-4 py-2 rounded-full border border-ink-300 text-ink-700 hover:bg-parchment-200">Hủy</button>
           <button type="submit" class="px-5 py-2 rounded-full bg-terracotta-600 hover:bg-terracotta-700 text-white font-semibold shadow-sm transition">Đăng Lên Chợ Sách</button>
         </div>
       </form>
@@ -1169,7 +1169,7 @@
           <span class="text-[10px] font-bold tracking-wider uppercase text-amber-700">Thư Mục Review</span>
           <h3 class="font-serif font-bold text-lg text-ink-900">Thêm Đầu Sách Để Cộng Đồng Review</h3>
         </div>
-        <button type="button" onclick="app.closeModal('new-topic-modal')" class="p-1.5 text-ink-400 hover:text-ink-700 rounded-full hover:bg-parchment-200">
+        <button type="button" onclick="app.closeComposer('topic')" class="p-1.5 text-ink-400 hover:text-ink-700 rounded-full hover:bg-parchment-200">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
@@ -1297,7 +1297,7 @@
         </div>
 
         <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="app.closeModal('new-topic-modal')" class="px-4 py-2 rounded-full border border-ink-300 text-ink-700 hover:bg-parchment-200">Hủy</button>
+          <button type="button" onclick="app.closeComposer('topic')" class="px-4 py-2 rounded-full border border-ink-300 text-ink-700 hover:bg-parchment-200">Hủy</button>
           <button type="submit" class="px-5 py-2 rounded-full bg-amber-700 hover:bg-amber-800 text-white font-semibold shadow-sm transition">Khởi Tạo Chủ Đề Sách</button>
         </div>
       </form>
@@ -1339,6 +1339,18 @@
 <p class="text-xs text-ink-600 mt-2 leading-relaxed">Tạo tài khoản hoặc đăng nhập để chia sẻ trang sách, viết review, đổi hoặc bán lại sách cũ và nhắn tin cùng cộng đồng yêu sách.</p>
 <button type="button" onclick="app.welcomeSignIn()" class="mt-5 w-full py-2.5 rounded-full bg-leather-600 hover:bg-leather-500 text-white text-xs font-semibold flex items-center justify-center gap-2 transition"><svg class="w-4 h-4 shrink-0 bg-white rounded-full p-0.5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg><span>Tạo tài khoản / Đăng nhập bằng Google</span></button>
 <button type="button" onclick="app.dismissWelcome()" class="mt-3 text-xs text-ink-500 hover:text-ink-800">Để sau, tôi muốn xem trước</button>
+</div>
+</div>
+
+<!-- ================= CỬA SỔ XÁC NHẬN ================= -->
+<div id="confirm-modal" class="fixed inset-0 z-[110] hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="if (event.target === this) app.confirmResolve(false)">
+<div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-ink-200" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+<h3 id="confirm-title" class="font-serif font-bold text-base text-ink-900"></h3>
+<p id="confirm-message" class="text-xs text-ink-600 mt-2 leading-relaxed"></p>
+<div class="mt-5 flex gap-2 justify-end">
+<button type="button" id="confirm-cancel" onclick="app.confirmResolve(false)" class="px-4 py-2 rounded-full border border-ink-300 bg-white text-xs font-semibold text-ink-800 hover:bg-parchment-100">Hủy</button>
+<button type="button" id="confirm-ok" onclick="app.confirmResolve(true)" class="px-4 py-2 rounded-full text-xs font-semibold text-white bg-leather-600 hover:bg-leather-500">Đồng ý</button>
+</div>
 </div>
 </div>
 
@@ -1476,6 +1488,7 @@
       // Uploaded Images Storage (FileReader Base64)
       GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
       pendingAvatar: undefined,
+      _confirmRes: null, _confirmKey: null, _skipConfirm: false,
       notifs: [], unwatchNotifs: null, _notifFirst: true, _notifSince: 0, _notifBound: false, _baseTitle: '', _msgFirst: true,
       VIDEO: { endpoint: 'https://thuhien-upload.thien-nguyen1696.workers.dev', base: 'https://thuhien-media.fohu.asia', maxMB: 500 },
       GOOGLE_PLACES_KEY: '',
@@ -2123,6 +2136,11 @@
         if (!this.remote) { this.showToast('Chưa kết nối máy chủ nên chưa theo dõi được.'); return; }
         const db = window.thuhienDB;
         const id = me + '_' + uid;
+        if (this.follows.some(f => f.id === id) && !this._skipConfirm) {
+          const who = this.users.find(x => x.id === uid);
+          this.confirmThen({ title: 'Bỏ theo dõi?', message: 'Bạn sẽ không còn theo dõi ' + (who ? who.name : 'người này') + ' nữa.', ok: 'Bỏ theo dõi' }, () => { this._skipConfirm = true; try { this.toggleFollow(uid); } finally { this._skipConfirm = false; } });
+          return;
+        }
         if (this.follows.some(f => f.id === id)) {
           this.follows = this.follows.filter(f => f.id !== id);
           db.del('follows/' + id).catch(err => this.onWriteError('follows', id, err));
@@ -2553,9 +2571,8 @@
         document.body.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(a.href), 2000);
       },
-      adminDelete(col, id) {
+      doAdminDelete(col, id) {
         if (!this.isAdmin() || !/^[\w-]+$/.test(id)) return;
-        if (!confirm('Xóa vĩnh viễn nội dung này? Không thể khôi phục.')) return;
         { const pv = (this[col] || []).find(p => p.id === id); if (pv && pv.videoUrl) this.deleteVideoUrl(pv.videoUrl); }
         window.thuhienDB.del(col + '/' + id).then(() => {
           this[col] = this[col].filter(x => x.id !== id);
@@ -2940,7 +2957,7 @@
         if (this.uploadedVideos[type || 'post']) { st.classList.remove('hidden'); st.innerHTML = '🎬 Video đã sẵn sàng <button type="button" onclick="app.removeVideo(\'' + (type || 'post') + '\')" class="ml-2 text-ink-400 hover:text-ink-900" aria-label="Bỏ video">✕</button>'; }
         else st.classList.add('hidden');
       },
-      removeVideo(type) {
+      doRemoveVideo(type) {
         type = type || 'post';
         const v = this.uploadedVideos[type];
         this.uploadedVideos[type] = null;
@@ -3156,6 +3173,87 @@
         this.renderUploadStrip(type);
       },
 
+      // ===== XÁC NHẬN TRƯỚC KHI XÓA / THOÁT / THAY ĐỔI DỮ LIỆU =====
+      askConfirm(o) {
+        o = o || {};
+        return new Promise(resolve => {
+          if (this._confirmRes) this._confirmRes(false);
+          this._confirmRes = resolve;
+          document.getElementById('confirm-title').innerText = o.title || 'Xác nhận';
+          document.getElementById('confirm-message').innerText = o.message || '';
+          const ok = document.getElementById('confirm-ok'), no = document.getElementById('confirm-cancel');
+          ok.innerText = o.ok || 'Đồng ý'; no.innerText = o.cancel || 'Hủy';
+          ok.className = 'px-4 py-2 rounded-full text-xs font-semibold text-white ' + (o.danger ? 'bg-terracotta-600 hover:bg-terracotta-700' : 'bg-leather-600 hover:bg-leather-500');
+          document.getElementById('confirm-modal').classList.remove('hidden');
+          if (!this._confirmKey) {
+            this._confirmKey = e => {
+              const m = document.getElementById('confirm-modal');
+              if (e.key === 'Escape' && m && !m.classList.contains('hidden')) { e.stopImmediatePropagation(); e.preventDefault(); this.confirmResolve(false); }
+            };
+            document.addEventListener('keydown', this._confirmKey, true);
+          }
+          no.focus();
+        });
+      },
+      confirmResolve(v) {
+        const m = document.getElementById('confirm-modal');
+        if (m) m.classList.add('hidden');
+        const r = this._confirmRes; this._confirmRes = null;
+        if (r) r(!!v);
+      },
+      confirmThen(o, fn) { this.askConfirm(o).then(ok => { if (ok) fn(); }); },
+
+      deleteMyPost(postId) {
+        const p = this.posts.find(x => x.id === postId);
+        const label = p ? this.postLabel(p) : '';
+        this.confirmThen({ title: 'Xóa bài viết?', message: 'Bài viết' + (label ? ' «' + label + '»' : '') + ' sẽ bị xóa vĩnh viễn cùng ảnh, video và bình luận của bài. Không thể khôi phục.', ok: 'Xóa bài viết', danger: true }, () => this.doDeleteMyPost(postId));
+      },
+      deleteMyListing(listingId) {
+        const e = this.exchanges.find(x => x.id === listingId);
+        const label = e ? this.unesc(e.bookTitle || '') : '';
+        this.confirmThen({ title: 'Gỡ tin đăng?', message: 'Tin' + (label ? ' «' + label + '»' : '') + ' sẽ bị gỡ vĩnh viễn cùng ảnh và video. Không thể khôi phục.', ok: 'Gỡ tin', danger: true }, () => this.doDeleteMyListing(listingId));
+      },
+      logout() {
+        this.confirmThen({ title: 'Đăng xuất?', message: 'Bạn sẽ thoát khỏi tài khoản Thư Hiên trên thiết bị này.', ok: 'Đăng xuất' }, () => this.doLogout());
+      },
+      removeVideo(type) {
+        if (!this.uploadedVideos[type || 'post']) return;
+        this.confirmThen({ title: 'Bỏ video này?', message: 'Video đã tải lên sẽ bị xóa và bạn cần tải lại nếu muốn dùng.', ok: 'Bỏ video', danger: true }, () => this.doRemoveVideo(type));
+      },
+      adminDelete(col, id) {
+        if (!this.isAdmin() || !/^[\w-]+$/.test(id)) return;
+        const it = (this[col] || []).find(x => x.id === id);
+        const label = it ? this.unesc(it.bookTitle || it.title || (it.content || '').slice(0, 40) || '') : '';
+        this.confirmThen({ title: 'Xóa nội dung này?', message: (label ? '«' + label + '» ' : 'Nội dung này ') + 'sẽ bị xóa vĩnh viễn khỏi Thư Hiên (kể cả video). Không thể khôi phục.', ok: 'Xóa vĩnh viễn', danger: true }, () => this.doAdminDelete(col, id));
+      },
+
+      isComposerDirty(kind) {
+        const v = id => { const el = document.getElementById(id); return el && (el.value || '').trim(); };
+        const imgs = (this.uploadedImages[kind] || []).length, vid = !!this.uploadedVideos[kind];
+        if (kind === 'post') return !!(v('post-input-content') || v('post-input-book') || v('post-input-author') || v('post-input-quote') || v('post-input-category') || v('post-input-tags') || v('post-input-checkin') || imgs || vid);
+        if (kind === 'topic') return !!(v('topic-input-title') || v('topic-input-author') || v('topic-input-synopsis') || v('topic-input-review') || imgs || vid);
+        return !!(v('ex-input-title') || v('ex-input-author') || v('ex-input-wish') || v('ex-input-price') || v('ex-input-orig-price') || v('ex-input-note') || imgs || vid);
+      },
+      closeComposer(kind) {
+        const id = ({ post: 'new-post-modal', topic: 'new-topic-modal', exchange: 'new-exchange-modal' })[kind];
+        if (!id) return;
+        if (!this.isComposerDirty(kind)) { this.closeModal(id); return; }
+        this.confirmThen({ title: 'Bỏ nội dung đang soạn?', message: 'Những gì bạn vừa nhập, kể cả ảnh và video đã chọn, sẽ không được lưu.', ok: 'Bỏ nội dung', cancel: 'Tiếp tục soạn', danger: true }, () => {
+          const ids = ({ post: ['post-input-content', 'post-input-book', 'post-input-author', 'post-input-quote', 'post-input-category', 'post-input-tags', 'post-input-checkin'], topic: ['topic-input-title', 'topic-input-author', 'topic-input-synopsis', 'topic-input-review'], exchange: ['ex-input-title', 'ex-input-author', 'ex-input-wish', 'ex-input-price', 'ex-input-orig-price', 'ex-input-note'] })[kind];
+          ids.forEach(i => { const el = document.getElementById(i); if (el) { el.value = ''; if (el.tagName === 'TEXTAREA') el.style.height = ''; } });
+          const v = this.uploadedVideos[kind];
+          this.uploadedVideos[kind] = null; this.renderVideoStatus(kind);
+          if (v) this.deleteVideoUrl(v.url);
+          this.removeUploadedImage(kind);
+          if (kind === 'post') {
+            this.clearCheckin();
+            ['book', 'quote', 'tags'].forEach(n => { const p = document.getElementById('post-panel-' + n), b = document.getElementById('tb-' + n); if (p) p.classList.add('hidden'); if (b) b.classList.remove('bg-leather-100'); });
+          }
+          this.closeModal(id);
+        });
+      },
+
+
       openEditProfileModal() {
         const user = this.getCurrentUser();
         if (!user) {
@@ -3218,7 +3316,7 @@
         this.showToast('Đã cập nhật hồ sơ độc giả thành công!');
       },
 
-      logout() {
+      doLogout() {
         if (window.thuhienAuth && window.thuhienAuth.ready) window.thuhienAuth.signOut();
         this.currentUserId = null;
         this.saveUsers();
@@ -3230,7 +3328,7 @@
       },
 
       // Management of My Items in Shelf
-      deleteMyPost(postId) {
+      doDeleteMyPost(postId) {
         const gone = this.posts.find(p => p.id === postId);
         if (gone && gone.videoUrl) this.deleteVideoUrl(gone.videoUrl);
         this.posts = this.posts.filter(p => p.id !== postId);
@@ -3239,7 +3337,7 @@
         this.showToast('Đã gỡ bài chia sẻ khỏi Thư Hiên.');
       },
 
-      deleteMyListing(listingId) {
+      doDeleteMyListing(listingId) {
         const gone = this.exchanges.find(e => e.id === listingId);
         if (gone && gone.videoUrl) this.deleteVideoUrl(gone.videoUrl);
         this.exchanges = this.exchanges.filter(e => e.id !== listingId);
