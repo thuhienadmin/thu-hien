@@ -149,6 +149,30 @@
     html, body { max-width: 100%; overflow-x: clip; }
     @supports not (overflow-x: clip) { html, body { overflow-x: hidden; } }
     .view-content { min-width: 0; max-width: 100%; }
+  /* Xem ảnh: toàn màn hình trên điện thoại/máy tính bảng; cột tương tác bên phải trên máy tính */
+    #lb-stage { position: absolute; inset: 0; }
+    #lb-img { max-width: 100%; max-height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+    .lb-btn { position: absolute; width: 40px; height: 40px; border-radius: 999px; background: rgba(0,0,0,.55); color: #fff; font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center; z-index: 5; border: 0; cursor: pointer; }
+    .lb-close { top: calc(12px + env(safe-area-inset-top)); left: 12px; }
+    .lb-nav { top: 50%; transform: translateY(-50%); }
+    .lb-prev { left: 10px; } .lb-next { right: 10px; }
+    #lb-count { position: absolute; top: calc(20px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.55); color: #fff; font-size: 11px; z-index: 5; }
+    #lb-mbar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; padding: 36px 14px calc(12px + env(safe-area-inset-bottom)); background: linear-gradient(to top, rgba(0,0,0,.82), rgba(0,0,0,0)); color: #fff; }
+    .lb-chrome { transition: opacity .2s ease; }
+    #lightbox-modal.lb-hide-chrome .lb-chrome { opacity: 0; pointer-events: none; }
+    #lb-panel { position: fixed; left: 0; right: 0; bottom: 0; height: 74vh; height: 74dvh; transform: translateY(105%); transition: transform .28s ease; z-index: 20; background: #FAF6EE; border-radius: 22px 22px 0 0; display: flex; flex-direction: column; min-height: 0; box-shadow: 0 -10px 30px rgba(0,0,0,.35); }
+    #lb-panel.open { transform: translateY(0); }
+    #lb-sheet-handle { padding: 8px 0 4px; cursor: pointer; flex-shrink: 0; }
+    #lb-sheet-handle span { display: block; width: 40px; height: 4px; border-radius: 99px; background: #cdbfa6; margin: 0 auto; }
+    #lb-panel-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    @media (min-width: 1024px) {
+      #lightbox-modal { flex-direction: row; }
+      #lb-stage { position: relative; flex: 1; min-width: 0; }
+      #lb-img { padding: 24px; box-sizing: border-box; }
+      #lb-panel { position: static; width: 24rem; height: auto; transform: none; border-radius: 0; box-shadow: none; border-left: 1px solid #e6dcc9; }
+      #lb-sheet-handle, #lb-mbar { display: none; }
+    }
+    @media (max-width: 1023px) { .lb-nav { display: none !important; } }
   </style>
 <script>try { if (localStorage.getItem('thuhien_hint')) document.documentElement.classList.add('has-hint'); } catch (e) {}</script>
 <script>(function(){var u=location.origin+'/';var c=document.getElementById('canonical-link');if(c)c.href=u;var o=document.getElementById('og-url');if(o)o.content=u;})();</script>
@@ -811,7 +835,7 @@
   <div id="new-post-modal" class="fixed inset-0 z-50 hidden bg-ink-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center sm:p-4">
     <div class="bg-parchment-50 w-full max-w-lg rounded-t-3xl sm:rounded-3xl border border-ink-200/80 shadow-2xl flex flex-col max-h-[92vh]">
       <div class="relative flex items-center justify-center px-4 py-3 border-b border-ink-200 shrink-0">
-        <h3 class="font-serif font-bold text-base text-ink-900">Tạo bài viết</h3>
+        <h3 id="composer-title" class="font-serif font-bold text-base text-ink-900">Tạo bài viết</h3>
         <button type="button" onclick="app.closeComposer('post')" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-parchment-200 hover:bg-parchment-300 text-ink-600 flex items-center justify-center" aria-label="Đóng">✕</button>
       </div>
       <form onsubmit="app.submitNewPost(event)" class="flex flex-col min-h-0 flex-1">
@@ -879,7 +903,7 @@
             <button type="button" id="tb-tags" onclick="app.togglePostPanel('tags')" class="w-11 flex flex-col items-center gap-0.5 py-1 rounded-xl hover:bg-parchment-200 transition text-ink-700" aria-label="Chủ đề" title="Chủ đề"><span class="text-xl leading-none h-6 flex items-center justify-center font-bold">#</span><span class="text-[9px] leading-none">Chủ đề</span></button>
             <button type="button" id="tb-emoji" onclick="app.openEmoji(this, 'post-input-content')" class="w-11 flex flex-col items-center gap-0.5 py-1 rounded-xl hover:bg-parchment-200 transition text-ink-700" aria-label="Emoji" title="Emoji"><span class="text-xl leading-none h-6 flex items-center justify-center ">😊</span><span class="text-[9px] leading-none">Emoji</span></button>
           </div>
-          <button type="submit" class="w-full py-2.5 rounded-xl bg-leather-600 hover:bg-leather-500 text-white font-semibold text-sm shadow-sm transition">Đăng</button>
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-leather-600 hover:bg-leather-500 text-white font-semibold text-sm shadow-sm transition" id="composer-submit">Đăng</button>
         </div>
       </form>
     </div>
@@ -1304,16 +1328,20 @@
     </div>
   </div>
 
-  <!-- ================= MODAL XEM ẢNH (ảnh + cột tương tác) ================= -->
-<div id="lightbox-modal" class="fixed inset-0 z-[80] hidden bg-black/95 flex flex-col md:flex-row">
-<div id="lb-stage" class="relative flex-1 min-h-0 flex items-center justify-center" onclick="if (event.target === this) app.closeLightbox()">
-<button type="button" onclick="app.closeLightbox()" class="absolute top-3 left-3 z-10 w-9 h-9 rounded-full bg-black/60 text-white text-lg leading-none flex items-center justify-center hover:bg-black/80" aria-label="Đóng">✕</button>
-<button id="lb-prev" type="button" onclick="app.lightboxStep(-1)" class="absolute left-2 z-10 w-10 h-10 rounded-full bg-black/50 text-white text-2xl leading-none flex items-center justify-center hover:bg-black/80" aria-label="Ảnh trước">‹</button>
-<img id="lb-img" src="" alt="" class="max-w-full max-h-full object-contain select-none p-2 md:p-6">
-<button id="lb-next" type="button" onclick="app.lightboxStep(1)" class="absolute right-2 z-10 w-10 h-10 rounded-full bg-black/50 text-white text-2xl leading-none flex items-center justify-center hover:bg-black/80" aria-label="Ảnh sau">›</button>
-<div id="lb-count" class="absolute bottom-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-black/60 text-white text-[11px]"></div>
+  <!-- ================= MODAL XEM ẢNH (toàn màn hình trên điện thoại/máy tính bảng, có cột tương tác trên máy tính) ================= -->
+<div id="lightbox-modal" class="fixed inset-0 z-[80] hidden bg-black flex">
+<div id="lb-stage" class="flex items-center justify-center" onclick="app.lbStageTap(event)">
+<button type="button" class="lb-chrome lb-btn lb-close" onclick="event.stopPropagation(); app.closeLightbox()" aria-label="Đóng">✕</button>
+<button id="lb-prev" type="button" class="lb-chrome lb-btn lb-nav lb-prev" onclick="event.stopPropagation(); app.lightboxStep(-1)" aria-label="Ảnh trước">‹</button>
+<img id="lb-img" src="" alt="" draggable="false">
+<button id="lb-next" type="button" class="lb-chrome lb-btn lb-nav lb-next" onclick="event.stopPropagation(); app.lightboxStep(1)" aria-label="Ảnh sau">›</button>
+<div id="lb-count" class="lb-chrome"></div>
+<div id="lb-mbar" class="lb-chrome" onclick="event.stopPropagation()"></div>
 </div>
-<aside id="lb-panel" class="w-full md:w-[24rem] h-[48vh] md:h-auto shrink-0 bg-[#FAF6EE] flex flex-col min-h-0 md:border-l border-ink-200"></aside>
+<aside id="lb-panel">
+<div id="lb-sheet-handle" onclick="app.lbCloseSheet()"><span></span></div>
+<div id="lb-panel-body"></div>
+</aside>
 </div>
 
 <!-- ================= MODAL CHIA SẺ ================= -->
@@ -1331,14 +1359,14 @@
 </div>
 </div>
 
-<!-- ================= POPUP CHÀO MỪNG (khách chưa đăng nhập) ================= -->
+<!-- ================= LỜI CHÀO KHI VÀO TRANG (khách mới / người đã đăng nhập) ================= -->
 <div id="welcome-modal" class="fixed inset-0 z-[96] hidden bg-ink-900/60 backdrop-blur-sm flex items-center justify-center p-4">
 <div class="bg-[#FAF6EE] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-ink-200 text-center">
-<div class="text-3xl">📚</div>
-<h3 class="font-serif font-bold text-xl text-ink-900 mt-2">Chào mừng đến với Thư Hiên</h3>
-<p class="text-xs text-ink-600 mt-2 leading-relaxed">Tạo tài khoản hoặc đăng nhập để chia sẻ trang sách, viết review, đổi hoặc bán lại sách cũ và nhắn tin cùng cộng đồng yêu sách.</p>
-<button type="button" onclick="app.welcomeSignIn()" class="mt-5 w-full py-2.5 rounded-full bg-leather-600 hover:bg-leather-500 text-white text-xs font-semibold flex items-center justify-center gap-2 transition"><svg class="w-4 h-4 shrink-0 bg-white rounded-full p-0.5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg><span>Tạo tài khoản / Đăng nhập bằng Google</span></button>
-<button type="button" onclick="app.dismissWelcome()" class="mt-3 text-xs text-ink-500 hover:text-ink-800">Để sau, tôi muốn xem trước</button>
+<div id="welcome-emoji" class="text-3xl">📚</div>
+<h3 id="welcome-title" class="font-serif font-bold text-xl text-ink-900 mt-2 leading-snug"></h3>
+<p id="welcome-text" class="text-[13px] text-ink-600 mt-3 leading-relaxed"></p>
+<button id="welcome-primary" type="button" onclick="app.welcomePrimary()" class="mt-5 w-full py-2.5 rounded-full bg-leather-600 hover:bg-leather-500 text-white text-xs font-semibold flex items-center justify-center gap-2 transition"><span id="welcome-g"><svg class="w-4 h-4 shrink-0 bg-white rounded-full p-0.5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg></span><span id="welcome-primary-text"></span></button>
+<button id="welcome-secondary" type="button" onclick="app.dismissWelcome()" class="mt-3 text-xs text-ink-500 hover:text-ink-800"></button>
 </div>
 </div>
 
@@ -1488,6 +1516,7 @@
       // Uploaded Images Storage (FileReader Base64)
       GENRES: [['van-hoc','Văn học'],['tieu-thuyet','Tiểu thuyết'],['truyen-ngan','Truyện ngắn'],['tho','Thơ'],['kinh-dien','Văn học kinh điển'],['triet-hoc','Triết học'],['tam-ly','Tâm lý học'],['ky-nang','Kỹ năng sống'],['kinh-te','Kinh tế & Kinh doanh'],['lich-su','Lịch sử'],['khoa-hoc','Khoa học'],['tieu-su','Tiểu sử & Hồi ký'],['ton-giao','Tôn giáo & Tâm linh'],['thieu-nhi','Thiếu nhi'],['trinh-tham','Trinh thám & Kinh dị'],['ngon-tinh','Ngôn tình & Lãng mạn'],['vien-tuong','Khoa học viễn tưởng & Giả tưởng'],['nghe-thuat','Nghệ thuật & Âm nhạc'],['van-hoa','Văn hóa & Xã hội'],['giao-duc','Giáo dục & Nuôi dạy con']],
       pendingAvatar: undefined,
+      editingPostId: null, _editSnap: '', _welcomeMode: '', _signingIn: false,
       _confirmRes: null, _confirmKey: null, _skipConfirm: false,
       notifs: [], unwatchNotifs: null, _notifFirst: true, _notifSince: 0, _notifBound: false, _baseTitle: '', _msgFirst: true,
       VIDEO: { endpoint: 'https://thuhien-upload.thien-nguyen1696.workers.dev', base: 'https://thuhien-media.fohu.asia', maxMB: 500 },
@@ -1555,6 +1584,21 @@
         document.documentElement.classList.add('ui-ready');
         this.routeFromHash();
         window.addEventListener('hashchange', () => this.routeFromHash());
+        document.addEventListener('click', e => {
+          const t = e.target;
+          if (!t || !t.id || t.classList.contains('hidden')) return;
+          const map = {
+            'post-detail-modal': () => this.closeModal('post-detail-modal'),
+            'topic-detail-modal': () => this.closeModal('topic-detail-modal'),
+            'user-profile-modal': () => this.closeModal('user-profile-modal'),
+            'login-modal': () => this.closeModal('login-modal'),
+            'welcome-modal': () => this.dismissWelcome(),
+            'new-post-modal': () => this.closeComposer('post'),
+            'new-topic-modal': () => this.closeComposer('topic'),
+            'new-exchange-modal': () => this.closeComposer('exchange')
+          };
+          if (map[t.id]) map[t.id]();
+        });
         this.updateBadges();
       },
 
@@ -1811,9 +1855,12 @@
           this.showToast('Đăng nhập Google chưa được cấu hình. Vui lòng quay lại sau.');
           return;
         }
+        this._signingIn = true;
+        setTimeout(() => { this._signingIn = false; }, 10000);
         try {
           await auth.signIn();
         } catch (err) {
+          this._signingIn = false;
           const code = (err && err.code) || '';
           if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') return;
           const msgs = {
@@ -2081,6 +2128,8 @@
         if (this.isAdmin()) { try { localStorage.setItem('thuhien_notrack', '1'); } catch (e) {} }
         this.closeModal('login-modal');
         this.watchMessages(); this.watchNotifications(); this.redecorate(); this.updateUserUI(); this.refreshViews();
+        if (this._signingIn || isNew) { try { sessionStorage.setItem('thuhien_hello', '1'); } catch (e) {} }
+        this.maybeShowGreeting();
         if (isNew) {
           this.showToast('Chào mừng ' + name + ' đến với Thư Hiên! Hãy hoàn thiện hồ sơ của bạn.');
           this.openEditProfileModal();
@@ -2605,64 +2654,6 @@
       },
 
 
-      openLightbox(col, id, idx) {
-        const it = (this[col] || []).find(x => x.id === id);
-        if (!it) return;
-        const list = (it.images && it.images.length ? it.images : (it.covers && it.covers.length ? it.covers : [it.image || it.cover])).filter(Boolean);
-        if (!list.length) return;
-        this._lb = { list: list, i: Math.min(Math.max(idx || 0, 0), list.length - 1), col: col, id: id };
-        this.renderLightbox();
-        this.renderLightboxPanel();
-        document.getElementById('lightbox-modal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-        if (!this._lbKey) {
-          this._lbKey = e => {
-            const m = document.getElementById('lightbox-modal');
-            if (!m || m.classList.contains('hidden')) return;
-            const typing = /^(INPUT|TEXTAREA)$/.test((e.target && e.target.tagName) || '');
-            if (e.key === 'Escape') this.closeLightbox();
-            else if (!typing && e.key === 'ArrowLeft') this.lightboxStep(-1);
-            else if (!typing && e.key === 'ArrowRight') this.lightboxStep(1);
-          };
-          document.addEventListener('keydown', this._lbKey);
-          const box = document.getElementById('lb-stage'); let x0 = null;
-          box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
-          box.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) this.lightboxStep(dx < 0 ? 1 : -1); x0 = null; }, { passive: true });
-        }
-      },
-      renderLightbox() {
-        const lb = this._lb; if (!lb) return;
-        document.getElementById('lb-img').src = lb.list[lb.i];
-        document.getElementById('lb-count').innerText = lb.list.length > 1 ? (lb.i + 1) + ' / ' + lb.list.length : '';
-        document.getElementById('lb-count').classList.toggle('hidden', lb.list.length < 2);
-        ['lb-prev', 'lb-next'].forEach(id => { document.getElementById(id).classList.toggle('hidden', lb.list.length < 2); });
-      },
-      lightboxStep(d) {
-        const lb = this._lb; if (!lb || lb.list.length < 2) return;
-        lb.i = (lb.i + d + lb.list.length) % lb.list.length; this.renderLightbox();
-      },
-      closeLightbox() {
-        document.getElementById('lightbox-modal').classList.add('hidden');
-        document.body.style.overflow = '';
-        this._lb = null;
-      },
-      renderLightboxPanel() {
-        const lb = this._lb, panel = document.getElementById('lb-panel');
-        if (!lb || !panel) return;
-        const it = (this[lb.col] || []).find(x => x.id === lb.id);
-        const prev = document.getElementById('lb-comment-input');
-        const draft = prev ? prev.value : '', focused = !!prev && document.activeElement === prev;
-        const sc0 = document.getElementById('lb-scroll'); const st = sc0 ? sc0.scrollTop : 0;
-        let html;
-        if (!it) html = '<div class="p-6 text-center text-xs text-ink-500">Nội dung này không còn tồn tại.</div>';
-        else if (lb.col === 'posts') html = this.lbPostHtml(it);
-        else if (lb.col === 'topics') html = this.lbTopicHtml(it);
-        else html = this.lbExchangeHtml(it);
-        panel.innerHTML = html;
-        const inp = document.getElementById('lb-comment-input');
-        if (inp) { inp.value = draft; if (focused) inp.focus(); }
-        const sc = document.getElementById('lb-scroll'); if (sc) sc.scrollTop = st;
-      },
       lbPostHtml(p) {
         const me = this.getCurrentUser();
         const comments = (p.comments || []).map(c => `<div class="flex gap-2.5">${this.avatarCircle(c.authorId, c.author, 'w-8 h-8')}<div class="min-w-0 flex-1"><div class="bg-parchment-200/70 rounded-2xl px-3 py-2"><button type="button" onclick="app.openUserProfile('${c.authorId || ''}')" class="font-bold text-[11px] text-ink-900 hover:underline">${c.author}</button><p class="text-xs text-ink-700 leading-relaxed whitespace-pre-line break-words">${c.text}</p></div><div class="text-[10px] text-ink-400 mt-0.5 ml-2">${c.time || ''}</div></div></div>`).join('') || '<p class="text-center text-[11px] text-ink-400 py-4">Chưa có bình luận. Hãy là người đầu tiên!</p>';
@@ -2675,10 +2666,11 @@
           : `<div class="p-3 border-t border-ink-200"><button type="button" onclick="app.openLoginModal()" class="w-full py-2 rounded-full bg-leather-600 text-white text-xs font-semibold">Đăng nhập để thích và bình luận</button></div>`;
         return `<div id="lb-scroll" class="flex-1 min-h-0 overflow-y-auto">
           <div class="p-4">
-            <div class="flex items-center gap-3">${this.avatarCircle(p.authorId, p.author, 'w-10 h-10')}<div class="min-w-0"><div class="flex flex-wrap items-baseline gap-x-1.5"><button type="button" onclick="app.openUserProfile('${p.authorId || ''}')" class="font-bold text-sm text-ink-900 hover:underline">${p.author}</button>${checkin}</div><div class="text-[11px] text-ink-400">${p.time || ''}</div></div></div>
+            <div class="flex items-center gap-3">${this.avatarCircle(p.authorId, p.author, 'w-10 h-10')}<div class="min-w-0"><div class="flex flex-wrap items-baseline gap-x-1.5"><button type="button" onclick="app.openUserProfile('${p.authorId || ''}')" class="font-bold text-sm text-ink-900 hover:underline">${p.author}</button>${checkin}</div><div class="text-[11px] text-ink-400">${p.time || ''}${p.editedAt ? ' • đã chỉnh sửa' : ''}</div></div></div>
             <p class="mt-3 text-sm text-ink-800 leading-relaxed whitespace-pre-line break-words">${p.content || ''}</p>${p.videoUrl ? `<div class="mt-3">${this.videoHtml(p)}</div>` : ''}${quote}${tags}
             ${p.bookTitle ? `<div class="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-parchment-200 border border-ink-200/60 text-[11px] text-ink-700">📖 ${p.bookTitle}</div>` : ''}
           </div>
+          ${p.authorId && p.authorId === this.currentUserId ? `<div class="px-4 pb-2 flex items-center gap-2 text-[11px]"><button type="button" onclick="app.editMyPost('${p.id}')" class="px-3 py-1 rounded-full border border-ink-300 bg-white font-semibold text-ink-800">✏️ Sửa bài</button><button type="button" onclick="app.deleteMyPost('${p.id}')" class="px-3 py-1 rounded-full border border-terracotta-300 text-terracotta-700 font-semibold">🗑 Xóa</button></div>` : ''}
           <div class="px-4 py-2 text-[11px] text-ink-500 flex items-center justify-between"><span>${p.userLiked ? '❤️' : '🤍'} ${p.likes || 0} lượt thích</span><span>${(p.comments || []).length} bình luận</span></div>
           <div class="grid grid-cols-4 border-y border-ink-200 text-[11px] font-semibold text-ink-700">
             ${act(p.userLiked ? 'text-terracotta-600' : '', 'app.lbLike()', (p.userLiked ? '❤️' : '🤍') + ' Thích')}
@@ -2722,7 +2714,6 @@
       lbLike() { if (!this._lb) return; this.toggleLikePost(this._lb.id); this.renderLightboxPanel(); },
       lbSave() { if (!this._lb) return; this.toggleSavePost(this._lb.id); this.renderLightboxPanel(); },
       lbShare() { if (this._lb) this.sharePost(this._lb.id); },
-      lbFocusComment() { const i = document.getElementById('lb-comment-input'); if (i) i.focus(); else this.requireLogin(); },
       lbOpenTopic() { if (!this._lb) return; const id = this._lb.id; this.closeLightbox(); this.openTopicDetail(id); },
       lbChatOwner() {
         if (!this._lb) return;
@@ -2791,19 +2782,6 @@
         }
       },
 
-      maybeShowWelcome() {
-        if (this.currentUserId || !this._authResolved) return;
-        if (!window.thuhienAuth || !window.thuhienAuth.ready) return;
-        try { if (sessionStorage.getItem('thuhien_cta')) return; } catch (e) {}
-        clearTimeout(this._ctaT);
-        this._ctaT = setTimeout(() => {
-          if (this.currentUserId) return;
-          const m = document.getElementById('welcome-modal'), l = document.getElementById('login-modal');
-          if (m && (!l || l.classList.contains('hidden'))) m.classList.remove('hidden');
-        }, 1200);
-      },
-      dismissWelcome() { try { sessionStorage.setItem('thuhien_cta', '1'); } catch (e) {} this.closeModal('welcome-modal'); },
-      welcomeSignIn() { this.closeModal('welcome-modal'); this.signInWithGoogle(); },
 
       // ===== VIDEO TRONG BÀI ĐĂNG (tải lên Cloudinary) =====
 
@@ -3228,6 +3206,7 @@
       },
 
       isComposerDirty(kind) {
+        if (kind === 'post' && this.editingPostId) return this.composerSnapshot() !== this._editSnap;
         const v = id => { const el = document.getElementById(id); return el && (el.value || '').trim(); };
         const imgs = (this.uploadedImages[kind] || []).length, vid = !!this.uploadedVideos[kind];
         if (kind === 'post') return !!(v('post-input-content') || v('post-input-book') || v('post-input-author') || v('post-input-quote') || v('post-input-category') || v('post-input-tags') || v('post-input-checkin') || imgs || vid);
@@ -3237,8 +3216,10 @@
       closeComposer(kind) {
         const id = ({ post: 'new-post-modal', topic: 'new-topic-modal', exchange: 'new-exchange-modal' })[kind];
         if (!id) return;
-        if (!this.isComposerDirty(kind)) { this.closeModal(id); return; }
-        this.confirmThen({ title: 'Bỏ nội dung đang soạn?', message: 'Những gì bạn vừa nhập, kể cả ảnh và video đã chọn, sẽ không được lưu.', ok: 'Bỏ nội dung', cancel: 'Tiếp tục soạn', danger: true }, () => {
+        const editing = kind === 'post' && !!this.editingPostId;
+        if (!this.isComposerDirty(kind)) { if (editing) { this.resetPostComposer(); this.setComposerMode(null); } this.closeModal(id); return; }
+        this.confirmThen(editing ? { title: 'Bỏ các thay đổi?', message: 'Những chỗ bạn vừa sửa sẽ không được lưu vào bài viết.', ok: 'Bỏ thay đổi', cancel: 'Tiếp tục sửa', danger: true } : { title: 'Bỏ nội dung đang soạn?', message: 'Những gì bạn vừa nhập, kể cả ảnh và video đã chọn, sẽ không được lưu.', ok: 'Bỏ nội dung', cancel: 'Tiếp tục soạn', danger: true }, () => {
+          if (editing) { this.setComposerMode(null); }
           const ids = ({ post: ['post-input-content', 'post-input-book', 'post-input-author', 'post-input-quote', 'post-input-category', 'post-input-tags', 'post-input-checkin'], topic: ['topic-input-title', 'topic-input-author', 'topic-input-synopsis', 'topic-input-review'], exchange: ['ex-input-title', 'ex-input-author', 'ex-input-wish', 'ex-input-price', 'ex-input-orig-price', 'ex-input-note'] })[kind];
           ids.forEach(i => { const el = document.getElementById(i); if (el) { el.value = ''; if (el.tagName === 'TEXTAREA') el.style.height = ''; } });
           const v = this.uploadedVideos[kind];
@@ -3253,6 +3234,217 @@
         });
       },
 
+
+      openLightbox(col, id, idx) {
+        const it = (this[col] || []).find(x => x.id === id);
+        if (!it) return;
+        const list = (it.images && it.images.length ? it.images : (it.covers && it.covers.length ? it.covers : [it.image || it.cover])).filter(Boolean);
+        if (!list.length) return;
+        this._lb = { list: list, i: Math.min(Math.max(idx || 0, 0), list.length - 1), col: col, id: id };
+        const m = document.getElementById('lightbox-modal');
+        m.classList.remove('lb-hide-chrome');
+        document.getElementById('lb-panel').classList.remove('open');
+        this.renderLightbox();
+        this.renderLightboxPanel();
+        m.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        if (!this._lbKey) {
+          this._lbKey = e => {
+            const mm = document.getElementById('lightbox-modal');
+            if (!mm || mm.classList.contains('hidden')) return;
+            const typing = /^(INPUT|TEXTAREA)$/.test((e.target && e.target.tagName) || '');
+            if (e.key === 'Escape') { if (document.getElementById('lb-panel').classList.contains('open') && window.innerWidth < 1024) this.lbCloseSheet(); else this.closeLightbox(); }
+            else if (!typing && e.key === 'ArrowLeft') this.lightboxStep(-1);
+            else if (!typing && e.key === 'ArrowRight') this.lightboxStep(1);
+          };
+          document.addEventListener('keydown', this._lbKey);
+          const box = document.getElementById('lb-stage'); let x0 = null, y0 = null;
+          box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+          box.addEventListener('touchend', e => {
+            if (x0 == null) return;
+            const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+            if (document.getElementById('lb-panel').classList.contains('open') && window.innerWidth < 1024) return;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) this.lightboxStep(dx < 0 ? 1 : -1);
+            else if (dy > 90 && Math.abs(dx) < 70 && window.innerWidth < 1024) this.closeLightbox();
+          }, { passive: true });
+        }
+      },
+      renderLightbox() {
+        const lb = this._lb; if (!lb) return;
+        document.getElementById('lb-img').src = lb.list[lb.i];
+        const cnt = document.getElementById('lb-count');
+        cnt.innerText = lb.list.length > 1 ? (lb.i + 1) + ' / ' + lb.list.length : '';
+        cnt.style.display = lb.list.length > 1 ? '' : 'none';
+        ['lb-prev', 'lb-next'].forEach(id => { document.getElementById(id).classList.toggle('hidden', lb.list.length < 2); });
+        this.renderLightboxBar();
+      },
+      lightboxStep(d) {
+        const lb = this._lb; if (!lb || lb.list.length < 2) return;
+        lb.i = (lb.i + d + lb.list.length) % lb.list.length; this.renderLightbox();
+      },
+      closeLightbox() {
+        const m = document.getElementById('lightbox-modal');
+        m.classList.add('hidden'); m.classList.remove('lb-hide-chrome');
+        const p = document.getElementById('lb-panel'); if (p) p.classList.remove('open');
+        document.body.style.overflow = '';
+        this._lb = null;
+      },
+      lbStageTap(e) {
+        const t = e.target;
+        const open = document.getElementById('lb-panel').classList.contains('open');
+        if (open && window.innerWidth < 1024) { this.lbCloseSheet(); return; }
+        if (t && t.id === 'lb-img') { if (window.innerWidth < 1024) document.getElementById('lightbox-modal').classList.toggle('lb-hide-chrome'); return; }
+        if (t && t.id === 'lb-stage') this.closeLightbox();
+      },
+      lbOpenSheet() { document.getElementById('lightbox-modal').classList.remove('lb-hide-chrome'); document.getElementById('lb-panel').classList.add('open'); },
+      lbCloseSheet() { document.getElementById('lb-panel').classList.remove('open'); },
+      lbFocusComment() {
+        this.lbOpenSheet();
+        const i = document.getElementById('lb-comment-input');
+        if (i) i.focus(); else this.requireLogin();
+      },
+      renderLightboxBar() {
+        const bar = document.getElementById('lb-mbar'), lb = this._lb;
+        if (!bar || !lb) return;
+        const it = (this[lb.col] || []).find(x => x.id === lb.id);
+        if (!it) { bar.innerHTML = ''; return; }
+        const pill = (oc, label) => `<button type="button" onclick="${oc}" style="background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer">${label}</button>`;
+        let cap = '', btns = '';
+        if (lb.col === 'posts') {
+          const txt = (it.content || it.quote || it.bookTitle || '');
+          cap = `<div onclick="app.lbOpenSheet()" style="cursor:pointer"><div style="font-weight:700;font-size:14px">${it.author || ''}</div>${txt ? `<div style="font-size:13px;opacity:.92;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${txt}</div>` : ''}</div>`;
+          btns = pill('app.lbLike()', (it.userLiked ? '❤️' : '🤍') + ' ' + (it.likes || 0)) + pill('app.lbOpenSheet()', '💬 ' + (it.comments || []).length) + pill('app.lbSave()', '🔖 ' + (it.userSaved ? 'Đã lưu' : 'Lưu')) + pill('app.lbShare()', '↗ Chia sẻ');
+        } else if (lb.col === 'topics') {
+          cap = `<div onclick="app.lbOpenSheet()" style="cursor:pointer"><div style="font-weight:700;font-size:14px">${it.title || ''}</div><div style="font-size:12px;opacity:.9">${it.author || ''}</div></div>`;
+          btns = pill('app.lbOpenSheet()', 'ℹ️ Thông tin') + pill('app.lbOpenTopic()', 'Xem chi tiết và review');
+        } else {
+          cap = `<div onclick="app.lbOpenSheet()" style="cursor:pointer"><div style="font-weight:700;font-size:14px">${it.bookTitle || ''}</div><div style="font-size:12px;opacity:.9">${it.ownerName || ''}</div></div>`;
+          btns = pill('app.lbOpenSheet()', 'ℹ️ Thông tin') + ((this.currentUserId && it.userId === this.currentUserId) ? '' : pill('app.lbChatOwner()', '💬 Nhắn người đăng'));
+        }
+        bar.innerHTML = cap + `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">${btns}</div>`;
+      },
+      renderLightboxPanel() {
+        const lb = this._lb, body = document.getElementById('lb-panel-body');
+        if (!lb || !body) return;
+        const it = (this[lb.col] || []).find(x => x.id === lb.id);
+        const prev = document.getElementById('lb-comment-input');
+        const draft = prev ? prev.value : '', focused = !!prev && document.activeElement === prev;
+        const sc0 = document.getElementById('lb-scroll'); const st = sc0 ? sc0.scrollTop : 0;
+        let html;
+        if (!it) html = '<div class="p-6 text-center text-xs text-ink-500">Nội dung này không còn tồn tại.</div>';
+        else if (lb.col === 'posts') html = this.lbPostHtml(it);
+        else if (lb.col === 'topics') html = this.lbTopicHtml(it);
+        else html = this.lbExchangeHtml(it);
+        body.innerHTML = html;
+        const inp = document.getElementById('lb-comment-input');
+        if (inp) { inp.value = draft; if (focused) inp.focus(); }
+        const sc = document.getElementById('lb-scroll'); if (sc) sc.scrollTop = st;
+        this.renderLightboxBar();
+      },
+
+      // ===== SỬA BÀI VIẾT CỦA MÌNH =====
+      composerSnapshot() {
+        const g = id => (document.getElementById(id) ? document.getElementById(id).value : '');
+        return JSON.stringify([g('post-input-content'), g('post-input-book'), g('post-input-author'), g('post-input-language'), g('post-input-quote'), g('post-input-category'), g('post-input-tags'), g('post-input-checkin'), this.checkinPlaceId, (this.uploadedImages.post || []).map(s => s.length + ':' + s.slice(-24)), this.uploadedVideos.post ? this.uploadedVideos.post.url : '']);
+      },
+      setComposerMode(postId) {
+        this.editingPostId = postId || null;
+        const t = document.getElementById('composer-title'), s = document.getElementById('composer-submit');
+        if (t) t.innerText = postId ? 'Sửa bài viết' : 'Tạo bài viết';
+        if (s) s.innerText = postId ? 'Lưu thay đổi' : 'Đăng';
+      },
+      resetPostComposer() {
+        this.clearCheckin();
+        ['book', 'quote', 'tags'].forEach(n => { const p = document.getElementById('post-panel-' + n), b = document.getElementById('tb-' + n); if (p) p.classList.add('hidden'); if (b) b.classList.remove('bg-leather-100'); });
+        ['post-input-content', 'post-input-book', 'post-input-author', 'post-input-quote', 'post-input-category', 'post-input-tags'].forEach(i => { const el = document.getElementById(i); if (el) { el.value = ''; if (i === 'post-input-content') el.style.height = ''; } });
+        const lg = document.getElementById('post-input-language'); if (lg) lg.value = 'Tiếng Việt';
+        this.uploadedVideos.post = null; this.renderVideoStatus('post');
+        this.removeUploadedImage('post');
+      },
+      editMyPost(postId) {
+        if (!this.requireLogin()) return;
+        const p = this.posts.find(x => x.id === postId);
+        if (!p || !p.authorId || p.authorId !== this.currentUserId) { this.showToast('Bạn chỉ sửa được bài viết của chính mình.'); return; }
+        this.closeLightbox();
+        const dm = document.getElementById('post-detail-modal'); if (dm) dm.classList.add('hidden');
+        this.resetPostComposer();
+        this.openNewPostModal();
+        this.setComposerMode(postId);
+        const u = s => this.unesc(s == null ? '' : s);
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+        set('post-input-content', u(p.content)); set('post-input-book', u(p.bookTitle)); set('post-input-author', u(p.authorTag));
+        set('post-input-language', u(p.language) || 'Tiếng Việt'); set('post-input-quote', u(p.quote));
+        set('post-input-category', (p.categoryName && u(p.categoryName) !== 'Chia sẻ') ? u(p.categoryName) : '');
+        const lang = u(p.language);
+        set('post-input-tags', (p.tags || []).map(u).filter(t => !(p.bookTitle && t === lang)).join(', '));
+        this.checkinCoords = (typeof p.checkinLat === 'number' && typeof p.checkinLng === 'number') ? { lat: p.checkinLat, lng: p.checkinLng } : null;
+        this.checkinAddr = u(p.checkinAddr); this.checkinPlaceId = p.checkinPlaceId || '';
+        if (p.checkinName) { set('post-input-checkin', u(p.checkinName)); this.confirmCheckin(); }
+        this.uploadedImages.post = (p.images && p.images.length ? p.images : (p.image ? [p.image] : [])).slice();
+        this.renderUploadStrip('post');
+        this.uploadedVideos.post = p.videoUrl ? { url: u(p.videoUrl) } : null; this.renderVideoStatus('post');
+        const open = n => { const pn = document.getElementById('post-panel-' + n); if (pn && pn.classList.contains('hidden')) this.togglePostPanel(n); };
+        if (p.bookTitle || p.authorTag) open('book');
+        if (p.quote) open('quote');
+        if ((p.tags && p.tags.length) || (p.categoryName && u(p.categoryName) !== 'Chia sẻ')) open('tags');
+        const ta = document.getElementById('post-input-content'); if (ta) this.autoGrow(ta);
+        this._editSnap = this.composerSnapshot();
+      },
+      saveEditedPost(np) {
+        const old = this.posts.find(x => x.id === this.editingPostId);
+        if (!old || old.authorId !== this.currentUserId) { this.showToast('Không tìm thấy bài viết để sửa.'); return; }
+        const oldVideo = this.unesc(old.videoUrl || '');
+        ['bookTitle', 'category', 'categoryName', 'quote', 'content', 'image', 'videoUrl', 'images', 'checkinAddr', 'checkinPlaceId', 'checkinName', 'checkinLat', 'checkinLng', 'language', 'authorTag', 'tags'].forEach(k => { old[k] = np[k]; });
+        old.editedAt = Date.now();
+        if (oldVideo && oldVideo !== np.videoUrl) this.deleteVideoUrl(oldVideo);
+        this.saveAll();
+        this.resetPostComposer();
+        this.setComposerMode(null);
+        this.closeModal('new-post-modal');
+        this.refreshViews();
+        this.showToast('Đã lưu thay đổi bài viết.');
+      },
+
+      WELCOME_COPY: {
+        guest: { emoji: '📚', title: 'Chào mừng bạn đến với Thư Hiên', text: 'Nơi hiên nhà hiền hòa dành cho những tâm hồn yêu con chữ. Hãy đăng nhập để trở thành một trong những thành viên đầu tiên, cùng chung tay vun đắp một cộng đồng yêu con chữ, yêu trang sách của người Việt, nơi mỗi quyển sách tìm được người đọc và mỗi người đọc tìm được tri kỷ.', primary: 'Đăng nhập bằng Google', secondary: 'Để sau, tôi muốn xem trước' },
+        back: { emoji: '☕', title: 'Chào mừng bạn đã quay lại với Thư Hiên', text: 'Hiên nhà vẫn sáng đèn chờ bạn. Hôm nay bạn đang đọc gì, đọc ở nơi đâu và đọc theo cách riêng nào? Hãy chia sẻ đôi dòng về một quyển sách, một cách đọc hay một góc đọc sách yêu thích để cùng các đồng thư thêm một ngày nhiều trang chữ đẹp nhé.', primary: 'Chia sẻ ngay', secondary: 'Để sau' }
+      },
+      maybeShowWelcome() { this.maybeShowGreeting(); },
+      maybeShowGreeting() {
+        if (!this._authResolved) return;
+        const guest = !this.currentUserId;
+        if (guest && (!window.thuhienAuth || !window.thuhienAuth.ready)) return;
+        const key = guest ? 'thuhien_cta' : 'thuhien_hello';
+        try { if (sessionStorage.getItem(key)) return; } catch (e) {}
+        clearTimeout(this._ctaT);
+        this._ctaT = setTimeout(() => {
+          if (!this._authResolved || !!this.currentUserId === guest) return;
+          if (this.currentTab === 'admin') return;
+          const busy = ['login-modal', 'edit-profile-modal', 'new-post-modal', 'lightbox-modal', 'confirm-modal', 'post-detail-modal', 'topic-detail-modal'].some(i => { const el = document.getElementById(i); return el && !el.classList.contains('hidden'); });
+          if (busy) return;
+          try { sessionStorage.setItem(key, '1'); } catch (e) {}
+          this.showWelcome(guest ? 'guest' : 'back');
+        }, 1400);
+      },
+      showWelcome(mode) {
+        const c = this.WELCOME_COPY[mode];
+        const me = this.getCurrentUser();
+        const last = me ? String(me.name || '').trim().split(/\s+/).pop() : '';
+        this._welcomeMode = mode;
+        document.getElementById('welcome-emoji').innerText = c.emoji;
+        document.getElementById('welcome-title').innerText = c.title;
+        document.getElementById('welcome-text').innerText = (mode === 'back' && last) ? (last + ' ơi, ' + c.text.charAt(0).toLowerCase() + c.text.slice(1)) : c.text;
+        document.getElementById('welcome-primary-text').innerText = c.primary;
+        document.getElementById('welcome-secondary').innerText = c.secondary;
+        document.getElementById('welcome-g').style.display = mode === 'guest' ? '' : 'none';
+        document.getElementById('welcome-modal').classList.remove('hidden');
+      },
+      dismissWelcome() { this.closeModal('welcome-modal'); },
+      welcomePrimary() {
+        const mode = this._welcomeMode;
+        this.closeModal('welcome-modal');
+        if (mode === 'guest') this.signInWithGoogle(); else this.openNewPostModal();
+      },
 
       openEditProfileModal() {
         const user = this.getCurrentUser();
@@ -3329,6 +3521,8 @@
 
       // Management of My Items in Shelf
       doDeleteMyPost(postId) {
+        if (this.currentActivePost && this.currentActivePost.id === postId) this.closeModal('post-detail-modal');
+        if (this._lb && this._lb.id === postId) this.closeLightbox();
         const gone = this.posts.find(p => p.id === postId);
         if (gone && gone.videoUrl) this.deleteVideoUrl(gone.videoUrl);
         this.posts = this.posts.filter(p => p.id !== postId);
@@ -3578,7 +3772,7 @@
                 </div>
                 <div>
                   <div class="flex flex-wrap items-baseline gap-x-1.5"><h4 class="font-bold text-xs text-ink-900 leading-tight cursor-pointer hover:underline" onclick="event.stopPropagation(); app.openUserProfile('${post.authorId || ''}')">${post.author}</h4>${post.checkinName ? `<span class="text-[11px] text-ink-500">đang ở <a href="${this.mapsUrl(post)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="font-semibold text-ink-800 hover:underline">📍 ${post.checkinName}</a></span>` : ''}</div>
-                  <p class="text-[10px] text-ink-500">${post.authorVibe || 'Độc giả'} • ${post.time}</p>
+                  <p class="text-[10px] text-ink-500">${post.authorVibe || 'Độc giả'} • ${post.time}${post.editedAt ? ' • đã chỉnh sửa' : ''}</p>
                 </div>
               </div>
               <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-parchment-200 text-ink-700 border border-ink-300/40">
@@ -3666,7 +3860,7 @@
                 </div>
                 <div>
                   <div class="flex flex-wrap items-baseline gap-x-1.5"><h3 class="font-bold text-sm text-ink-900 cursor-pointer hover:underline" onclick="app.openUserProfile('${post.authorId || ''}')">${post.author}</h3>${post.checkinName ? `<span class="text-[11px] text-ink-500">đang ở <a href="${this.mapsUrl(post)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="font-semibold text-ink-800 hover:underline">📍 ${post.checkinName}</a></span>` : ''}</div>
-                  <p class="text-xs text-ink-500">${post.authorVibe || 'Độc giả'} • ${post.time}</p>
+                  <p class="text-xs text-ink-500">${post.authorVibe || 'Độc giả'} • ${post.time}${post.editedAt ? ' • đã chỉnh sửa' : ''}</p>
                 </div>
               </div>
               <button type="button" onclick="app.closeModal('post-detail-modal')" class="p-1.5 text-ink-400 hover:text-ink-700 rounded-full hover:bg-parchment-200">
@@ -3705,7 +3899,9 @@
               <span>Cuốn sách: <strong class="text-ink-900">${post.bookTitle}</strong></span>
             </div>` : ''}
 
-            <!-- Interaction toolbar -->
+            ${post.authorId && post.authorId === this.currentUserId ? `<div class="flex items-center gap-2 text-xs"><button type="button" onclick="app.editMyPost('${post.id}')" class="px-3 py-1.5 rounded-full border border-ink-300 bg-white font-semibold text-ink-800 hover:bg-parchment-100">✏️ Sửa bài viết</button><button type="button" onclick="app.deleteMyPost('${post.id}')" class="px-3 py-1.5 rounded-full border border-terracotta-300 text-terracotta-700 font-semibold hover:bg-terracotta-50">🗑 Xóa</button></div>` : ''}
+
+        <!-- Interaction toolbar -->
             <div class="flex items-center justify-between py-3 border-y border-ink-200 text-xs">
               <div class="flex items-center gap-4">
                 <button type="button" onclick="app.toggleLikePost('${post.id}', true)" class="flex items-center gap-1.5 ${post.userLiked ? 'text-terracotta-600 font-bold' : 'text-ink-600'}">
@@ -3806,6 +4002,7 @@
 
       openNewPostModal() {
         if (!this.requireLogin()) return;
+        this.setComposerMode(null);
         this.renderComposerHeader();
         document.getElementById('new-post-modal').classList.remove('hidden');
       },
@@ -3868,6 +4065,7 @@
           comments: []
         };
 
+        if (this.editingPostId) { this.saveEditedPost(newPost); return; }
         this.posts.unshift(newPost);
         this.uploadedVideos.post = null; this.renderVideoStatus('post');
         this.clearCheckin();
@@ -4775,14 +4973,14 @@
                     <div class="cursor-pointer" onclick="app.openPostDetail('${p.id}')">
                       <div class="flex items-center justify-between mb-1">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-leather-600">${p.categoryName || 'Chia sẻ'}</span>
-                        <span class="text-[10px] text-ink-400">${p.time}</span>
+                        <span class="text-[10px] text-ink-400">${p.time}${p.editedAt ? ' • đã chỉnh sửa' : ''}</span>
                       </div>
-                      <h4 class="font-serif font-bold text-sm text-ink-900">${p.bookTitle}</h4>
+                      <h4 class="font-serif font-bold text-sm text-ink-900">${p.bookTitle || p.categoryName || 'Bài chia sẻ'}</h4>
                       <p class="text-xs text-ink-700 italic line-clamp-2 mt-1">"${p.quote || p.content}"</p>
                     </div>
                     <div class="flex items-center justify-between pt-3 mt-3 border-t border-ink-200/60 text-[11px]">
                       <span class="text-ink-500">${p.likes} lượt thích • ${p.comments ? p.comments.length : 0} bình luận</span>
-                      <button type="button" onclick="app.deleteMyPost('${p.id}')" class="text-terracotta-600 hover:text-terracotta-800 font-semibold px-2 py-0.5 rounded hover:bg-terracotta-50 transition">Gỡ bài</button>
+                      <div class="flex items-center gap-1"><button type="button" onclick="app.editMyPost('${p.id}')" class="text-leather-600 hover:text-ink-900 font-semibold px-2 py-0.5 rounded hover:bg-parchment-200 transition">Sửa</button><button type="button" onclick="app.deleteMyPost('${p.id}')" class="text-terracotta-600 hover:text-terracotta-800 font-semibold px-2 py-0.5 rounded hover:bg-terracotta-50 transition">Gỡ bài</button></div>
                     </div>
                   </div>
                 `).join('')}
@@ -4867,7 +5065,7 @@
                     <div>
                       <div class="flex items-center justify-between mb-1">
                         <span class="text-[10px] text-leather-600 font-bold uppercase tracking-wider">Trang sách đã lưu</span>
-                        <span class="text-[10px] text-ink-400">${p.time}</span>
+                        <span class="text-[10px] text-ink-400">${p.time}${p.editedAt ? ' • đã chỉnh sửa' : ''}</span>
                       </div>
                       <h4 class="font-serif font-bold text-sm text-ink-900">${p.bookTitle}</h4>
                       <p class="text-xs text-ink-700 italic line-clamp-2 mt-1">"${p.quote || p.content}"</p>
