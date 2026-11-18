@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "Thư Hiên — Đọc sách bên hiên nhà",
+  "short_name": "Thư Hiên",
+  "description": "Cộng đồng chia sẻ trang sách, cách đọc, địa điểm đọc sách, đổi và bán lại sách cũ.",
+  "lang": "vi",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF6EE",
+  "theme_color": "#FAF6EE",
+  "categories": ["books", "social", "lifestyle"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Chia sẻ", "short_name": "Chia sẻ", "url": "/#/chia-se", "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Mua bán & Trao đổi sách", "short_name": "Mua bán", "url": "/#/mua-ban", "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Hộp thư", "short_name": "Hộp thư", "url": "/#/hop-thu", "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ]
+}
