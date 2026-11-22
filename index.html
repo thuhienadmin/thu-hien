@@ -344,6 +344,8 @@
 
             <button type="button" id="menu-push" onclick="app.closeUserMenu(); app.togglePush();" class="hidden w-full text-left px-3 py-2 rounded-xl text-ink-800 hover:bg-parchment-100 flex items-center gap-2 font-medium transition"><span class="w-4 text-center" data-push-icon>🔔</span><span data-push-label>Bật thông báo đẩy</span></button>
 
+            <button type="button" id="menu-push-test" onclick="app.closeUserMenu(); app.testPush();" class="hidden w-full text-left px-3 py-2 rounded-xl text-ink-800 hover:bg-parchment-100 flex items-center gap-2 font-medium transition"><span class="w-4 text-center">🧪</span><span>Gửi thử thông báo</span></button>
+
             <button type="button" id="menu-install" onclick="app.closeUserMenu(); app.installApp();" class="hidden w-full text-left px-3 py-2 rounded-xl text-ink-800 hover:bg-parchment-100 flex items-center gap-2 font-medium transition"><span class="w-4 text-center">📲</span><span>Cài ứng dụng về máy</span></button>
 
             <button type="button" id="menu-admin" onclick="app.closeUserMenu(); app.switchTab('admin');" class="hidden w-full text-left px-3 py-2 rounded-xl text-ink-800 hover:bg-parchment-100 flex items-center gap-2 font-medium transition"><span class="w-4 text-center">📊</span><span>Bảng quản trị</span></button>
@@ -3530,6 +3532,8 @@
           if (sp) sp.innerText = on ? 'Tắt thông báo đẩy' : 'Bật thông báo đẩy';
           if (ic) ic.innerText = on ? '🔕' : '🔔';
         }
+        const mt = document.getElementById('menu-push-test');
+        if (mt) mt.classList.toggle('hidden', !(this.pushConfigured() && this.pushEnabled() && !!this.getCurrentUser()));
         if (typeof this.renderNotifications === 'function') this.renderNotifications();
       },
       togglePush() {
@@ -3617,6 +3621,24 @@
           if (!token) return;
           await fetch(ep.replace(/\/+$/, '') + '/thuhien/push', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ kind: kind, id: id }) });
         } catch (e) { /* gửi đẩy là việc phụ, bỏ qua lỗi */ }
+      },
+
+
+      async testPush() {
+        if (!this.requireLogin()) return;
+        const ep = this.VIDEO && this.VIDEO.endpoint;
+        if (!ep) { this.showToast('Chưa cấu hình địa chỉ Worker.'); return; }
+        this.showToast('Đang gửi thông báo thử...');
+        try {
+          const token = await this.getAuthToken();
+          if (!token) { this.showToast('Hãy đăng nhập lại rồi thử.'); return; }
+          const res = await fetch(ep.replace(/\/+$/, '') + '/thuhien/push-test', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: '{}' });
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok) { this.showToast('Chưa gửi được: ' + (j.error || ('lỗi ' + res.status))); return; }
+          if (!j.devices) { this.showToast('Chưa có thiết bị nào đăng ký. Hãy bật thông báo đẩy trước rồi thử lại.'); return; }
+          if (j.sent > 0) this.showToast('Đã gửi thông báo thử tới ' + j.sent + ' thiết bị. Hãy thoát ứng dụng, thông báo sẽ hiện sau vài giây.');
+          else this.showToast('Worker đã nhận lệnh nhưng Firebase từ chối gửi' + (j.detail ? ': ' + j.detail : '') + '.');
+        } catch (e) { this.showToast('Không kết nối được Worker. Kiểm tra mạng rồi thử lại.'); }
       },
 
 
